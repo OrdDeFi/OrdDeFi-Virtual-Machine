@@ -1,6 +1,9 @@
 package updater
 
-import "brc20defi_vm/bitcoin_cli_channel"
+import (
+	"brc20defi_vm/bitcoin_cli_channel"
+	"brc20defi_vm/inscription_parser"
+)
 
 func UpdateBlockNumber(blockNumber int) {
 	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
@@ -12,15 +15,11 @@ func UpdateBlockNumber(blockNumber int) {
 			err = "GetRawTransaction Failed"
 			break
 		}
-		tx := bitcoin_cli_channel.DecodeRawTransaction(*rawTx)
-		if tx == nil {
-			err = "DecodeRawTransaction Failed"
+		inscriptionContent, err := inscription_parser.ParseRawTransactionToInscription(*rawTx)
+		if err != nil {
 			break
-		} else {
-			for _, eachWitNess := range tx.TxIn[0].Witness {
-				println(string(eachWitNess))
-			}
 		}
+		println(inscriptionContent)
 	}
 	if err != "" {
 		println(err) // failing
