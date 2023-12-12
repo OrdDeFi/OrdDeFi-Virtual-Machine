@@ -19,7 +19,9 @@ func UpdateBlockNumber(blockNumber int) {
 		if err != nil {
 			break
 		}
-		println(inscriptionContent)
+		if inscriptionContent != nil {
+			println(*inscriptionContent)
+		}
 	}
 	if err != "" {
 		println(err) // failing
