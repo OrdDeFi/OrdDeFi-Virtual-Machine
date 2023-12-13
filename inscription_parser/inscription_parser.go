@@ -197,7 +197,7 @@ func parseScript(script []byte) (*string, []byte) {
 	return nil, nil
 }
 
-func parseTransactionToInscription(tx wire.MsgTx) (*string, []byte, error) {
+func ParseTransactionToInscription(tx wire.MsgTx) (*string, []byte, error) {
 	witness := tx.TxIn[0].Witness
 	if len(witness) == 0 {
 		// EmptyWitness
@@ -238,5 +238,5 @@ func ParseRawTransactionToInscription(rawTransaction string) (*string, []byte, e
 		err := errors.New("ParseRawTransaction -> DecodeRawTransaction Failed")
 		return nil, nil, err
 	}
-	return parseTransactionToInscription(*tx)
+	return ParseTransactionToInscription(*tx)
 }
