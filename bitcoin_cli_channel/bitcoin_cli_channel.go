@@ -27,16 +27,16 @@ func GetBlockCount() int {
 	return 0
 }
 
-func GetBlockHash(blockNumber int) string {
+func GetBlockHash(blockNumber int) *string {
 	cmd := exec.Command("bitcoin-cli", "getblockhash", strconv.Itoa(blockNumber))
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetBlockHash Error:", err)
-		return ""
+		return nil
 	}
 	outputStr := string(output)
 	outputStr = strings.Trim(outputStr, "\t\n")
-	return outputStr
+	return &outputStr
 }
 
 type BitcoinBlock struct {

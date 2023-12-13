@@ -8,9 +8,13 @@ import (
 )
 
 func UpdateBlockNumber(blockNumber int) {
-	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
-	block := bitcoin_cli_channel.GetBlock(blockHash)
 	var err error
+	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
+	if blockHash == nil {
+		err = errors.New("UpdateBlockNumber GetBlockHash failed")
+		return
+	}
+	block := bitcoin_cli_channel.GetBlock(*blockHash)
 	for _, txId := range block.Tx {
 		rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 		if rawTx == nil {
