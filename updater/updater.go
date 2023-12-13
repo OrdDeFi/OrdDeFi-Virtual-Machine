@@ -15,12 +15,13 @@ func UpdateBlockNumber(blockNumber int) {
 			err = "GetRawTransaction Failed"
 			break
 		}
-		inscriptionContent, err := inscription_parser.ParseRawTransactionToInscription(*rawTx)
+		contentType, content, err := inscription_parser.ParseRawTransactionToInscription(*rawTx)
 		if err != nil {
 			break
 		}
-		if inscriptionContent != nil {
-			println(*inscriptionContent)
+		if contentType != nil && content != nil {
+			println(*contentType, len(content))
+			println(string(content))
 		}
 	}
 	if err != "" {

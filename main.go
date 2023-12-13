@@ -17,11 +17,12 @@ func updateIndex() {
 }
 
 func parseRawTransaction(parseRawTransactionString string) {
-	r, err := inscription_parser.ParseRawTransactionToInscription(parseRawTransactionString)
+	contentType, content, err := inscription_parser.ParseRawTransactionToInscription(parseRawTransactionString)
 	if err != nil {
 		println("parserawtransaction error:", err)
 	} else {
-		println(*r)
+		println(*contentType, len(content))
+		println(string(content))
 	}
 }
 
