@@ -10,6 +10,9 @@ import (
 func updateIndex() {
 	println("BRC-20-DEFI indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
+	if blockNumber == 0 {
+		return
+	}
 	updater.UpdateBlockNumber(blockNumber)
 }
 
