@@ -1,7 +1,7 @@
 package tx_utils
 
 import (
-	"brc20defi_vm/bitcoin_cli_channel"
+	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
 	"errors"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/txscript"

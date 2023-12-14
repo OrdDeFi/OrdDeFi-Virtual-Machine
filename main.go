@@ -1,15 +1,15 @@
 package main
 
 import (
-	"brc20defi_vm/bitcoin_cli_channel"
-	"brc20defi_vm/inscription_parser"
-	"brc20defi_vm/updater"
+	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDefi-Virtual-Machine/inscription_parser"
+	"OrdDefi-Virtual-Machine/updater"
 	"errors"
 	"flag"
 )
 
 func updateIndex() {
-	println("BRC-20-DEFI indexer start to work.")
+	println("OrdDefi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
 		return
@@ -41,9 +41,9 @@ func main() {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 
 	var parseTransactionString string
-	flag.StringVar(&parseTransactionString, "parsetransaction", "", "brc20defi_vm -parsetransaction [txid]")
+	flag.StringVar(&parseTransactionString, "parsetransaction", "", "OrdDefi-Virtual-Machine -parsetransaction [txid]")
 	var parseRawTransactionString string
-	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "brc20defi_vm -parserawtransaction [raw transaction string]")
+	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDefi-Virtual-Machine -parserawtransaction [raw transaction string]")
 	flag.Parse()
 	if parseTransactionString != "" {
 		err := parseTransaction(parseTransactionString)

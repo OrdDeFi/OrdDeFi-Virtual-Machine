@@ -1,10 +1,10 @@
 package updater
 
 import (
-	"brc20defi_vm/bitcoin_cli_channel"
-	"brc20defi_vm/inscription_parser"
-	"brc20defi_vm/tx_utils"
-	"brc20defi_vm/virtual_machine"
+	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDefi-Virtual-Machine/inscription_parser"
+	"OrdDefi-Virtual-Machine/tx_utils"
+	"OrdDefi-Virtual-Machine/virtual_machine"
 	"errors"
 )
 

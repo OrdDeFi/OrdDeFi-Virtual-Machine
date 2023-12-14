@@ -1,4 +1,4 @@
-module brc20defi_vm
+module OrdDefi-Virtual-Machine
 
 go 1.19
 
