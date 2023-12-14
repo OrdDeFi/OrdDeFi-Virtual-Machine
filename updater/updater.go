@@ -4,6 +4,7 @@ import (
 	"brc20defi_vm/bitcoin_cli_channel"
 	"brc20defi_vm/inscription_parser"
 	"brc20defi_vm/tx_utils"
+	"brc20defi_vm/virtual_machine"
 	"errors"
 )
 
@@ -31,6 +32,7 @@ func UpdateBlockNumber(blockNumber int) {
 			break
 		}
 		if contentType != nil && content != nil {
+			virtual_machine.CompileInstructions(*contentType, content, tx, txId)
 			println("txId", txId)
 			firstInputAddress, err := tx_utils.ParseFirstInputAddress(tx)
 			if err != nil || firstInputAddress == nil {
