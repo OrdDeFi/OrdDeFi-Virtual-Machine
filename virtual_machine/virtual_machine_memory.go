@@ -50,7 +50,7 @@ type Transactions struct {
 /*
 LiquidityPairList
 @db_path db.lp_[coin-name]
-@desc Store all liquidity pairs associated with a coin
+@desc Store all liquidity providers associated with a coin
 @writing_op OpAddLiquidity
 */
 type LiquidityPairList struct {
@@ -60,7 +60,7 @@ type LiquidityPairList struct {
 /*
 LiquidityPair
 @db_path db.lp_[left-coin-name|right-coin-name]
-@desc Store liquidity pair metadata, totalValue, price
+@desc Store liquidity provider metadata, totalValue, price
 @writing_op OpAddLiquidity, OpRemoveLiquidity, OpSwap
 */
 type LiquidityPair struct {
@@ -71,7 +71,7 @@ type LiquidityPair struct {
 /*
 LiquidityPairBalance
 @db_path db.lp_[left-coin-name|right-coin-name]_[address]
-@desc Store liquidity pair balance of a single value
+@desc Store liquidity provider balance of a single value
 @writing_op OpAddLiquidity, OpRemoveLiquidity, OpSwap
 */
 type LiquidityPairBalance struct {

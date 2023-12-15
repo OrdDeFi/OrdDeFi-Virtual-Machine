@@ -1,4 +1,5 @@
 package virtual_machine
 
-type OpSwap struct {
+func ExecuteSwap(instruction OpSwapInstruction) {
+
 }

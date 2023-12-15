@@ -1,4 +1,5 @@
 package virtual_machine
 
-type OpDeploy struct {
+func ExecuteOpDeploy(instruction OpDeployInstruction) {
+
 }

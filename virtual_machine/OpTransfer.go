@@ -1,4 +1,5 @@
 package virtual_machine
 
-type OpTransfer struct {
+func ExecuteTransfer(instruction OpTransferInstruction) {
+
 }

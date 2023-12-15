@@ -1,4 +1,5 @@
 package virtual_machine
 
-type OpMint struct {
+func ExecuteOpMint(instruction OpMintInstruction) {
+
 }

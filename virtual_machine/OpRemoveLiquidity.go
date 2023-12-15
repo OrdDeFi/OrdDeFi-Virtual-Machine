@@ -1,4 +1,5 @@
 package virtual_machine
 
-type OpRemoveLiquidity struct {
+func ExecuteOpRemoveLiquidityProvider(instruction OpRemoveLiquidityProviderInstruction) {
+
 }
