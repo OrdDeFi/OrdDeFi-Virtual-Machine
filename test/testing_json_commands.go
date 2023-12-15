@@ -3,6 +3,9 @@ package test
 func TestingMultiCommandsAndTxid() ([]byte, string) {
 	command := `[
 		{"p":"orddefi","op":"deploy","tick":"odfi","max":"21000000","lim":"1000","alim":"1000","icon":""},
+		{"p":"orddefi","op":"deploy","tick":"test_fraction","max":"0.123","lim":"1000","alim":"1000","icon":""},
+		{"p":"orddefi","op":"deploy","tick":"test_fraction_2","max":"0.0123","lim":"1000","alim":"1000","icon":""},
+		{"p":"orddefi","op":"deploy","tick":"test_short_decimal","max":"21000000.123","lim":"1000","alim":"1000","icon":""},
 		{"p":"orddefi","op":"deploy","tick":"test_long_decimal","max":"9900 0000 0000 0000 0000.0123 4567 8901 2345 6789","lim":"1000","alim":"1000","icon":""},
 		{"p":"orddefi","op":"mint","tick":"odfi","amt":"1000"},
 		{"p":"orddefi","op":"mint","tick":"odgv","amt":"1000"},
