@@ -39,8 +39,8 @@ func bigFloatToInt10Pow18(num *big.Float) *big.Int {
 	if num.Sign() < 0 {
 		delta = -0.5
 	}
-	multiplier := int(math.Pow(10, 18))
-	num.Mul(num, new(big.Float).SetUint64(uint64(multiplier)))
+	multiplier := uint64(math.Pow(10, 18))
+	num.Mul(num, new(big.Float).SetUint64(multiplier))
 	num.Add(num, new(big.Float).SetFloat64(delta))
 	bigInt, _ := num.Int(nil)
 	return bigInt
@@ -119,9 +119,14 @@ func (num SafeNum) Add(rightNumber *SafeNum) *SafeNum {
 	resultInt := new(big.Int)
 	resultInt.Add(&num.decimal, &rightNumber.decimal)
 
-	cmdResult := num.decimal.Cmp(resultInt)
-	if cmdResult != -1 {
-		// O.G. value should < resultInt, to protect overflow
+	numCmpRes := num.decimal.Cmp(resultInt)
+	if numCmpRes != -1 {
+		// O.G. value should < resultInt, to protect from overflow
+		return nil
+	}
+	rightCmpRes := rightNumber.decimal.Cmp(resultInt)
+	if rightCmpRes != -1 {
+		// right value should < resultInt, to protect from overflow
 		return nil
 	}
 	safeNum := SafeNum{
@@ -145,9 +150,69 @@ func (num SafeNum) Subtract(rightNumber *SafeNum) *SafeNum {
 		return nil
 	}
 
-	cmdResult := num.decimal.Cmp(resultInt)
-	if cmdResult != 1 {
-		// O.G. value should > resultInt, to protect overflow
+	numCmpRes := num.decimal.Cmp(resultInt)
+	if numCmpRes != 1 {
+		// O.G. value should > resultInt, to protect from overflow
+		return nil
+	}
+	safeNum := SafeNum{
+		decimal: *resultInt,
+	}
+	return &safeNum
+}
+
+func (num SafeNum) Multiply(rightNumber *SafeNum) *SafeNum {
+	if rightNumber == nil {
+		return nil
+	} else if rightNumber.decimal.Sign() == 0 {
+		return &num
+	} else if rightNumber.decimal.Sign() < 0 {
+		return nil
+	}
+
+	resultInt := new(big.Int)
+	resultInt.Mul(&num.decimal, &rightNumber.decimal)
+	resultRightShift18 := new(big.Int)
+	multiplier := uint64(math.Pow(10, 18))
+	resultRightShift18.Div(resultInt, new(big.Int).SetUint64(multiplier))
+	if resultRightShift18.Sign() < 0 {
+		// negative mul result not allowed
+		return nil
+	}
+	numCmpRes := num.decimal.Cmp(resultRightShift18)
+	oneCmpRight := new(big.Int).SetUint64(multiplier).Cmp(&rightNumber.decimal)
+	if numCmpRes != oneCmpRight {
+		// O.G. value cmp resultInt, should be same as 1e18 cmp to right number, to protect from overflow
+		return nil
+	}
+	safeNum := SafeNum{
+		decimal: *resultRightShift18,
+	}
+	return &safeNum
+}
+
+func (num SafeNum) DivideBy(rightNumber *SafeNum) *SafeNum {
+	if rightNumber == nil {
+		return nil
+	} else if rightNumber.decimal.Sign() == 0 {
+		return &num
+	} else if rightNumber.decimal.Sign() < 0 {
+		return nil
+	}
+
+	resultLeftShift18 := new(big.Int)
+	multiplier := uint64(math.Pow(10, 18))
+	resultLeftShift18.Mul(&num.decimal, new(big.Int).SetUint64(multiplier))
+	resultInt := new(big.Int)
+	resultInt.Div(resultLeftShift18, &rightNumber.decimal)
+	if resultInt.Sign() < 0 {
+		// negative mul result not allowed
+		return nil
+	}
+	numCmpRes := num.decimal.Cmp(resultInt)
+	rightCmp1e18 := rightNumber.decimal.Cmp(new(big.Int).SetUint64(multiplier))
+	if numCmpRes != rightCmp1e18 {
+		// O.G. value cmp resultInt, should be same as right number cmp to 1e18, to protect from overflow
 		return nil
 	}
 	safeNum := SafeNum{
