@@ -2,6 +2,7 @@ package virtual_machine
 
 import (
 	"OrdDefi-Virtual-Machine/tx_utils"
+	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
 	"encoding/json"
 	"errors"
 	"github.com/btcsuite/btcd/wire"
@@ -21,55 +22,12 @@ func isValidContentType(contentType string) bool {
 	return false
 }
 
-type AbstractInstruction struct {
-	// TxId
-	TxId string
-
-	// Address
-	TxInAddr  string
-	TxOutAddr string
-
-	// General key
-	P  string `json:"p"`  // Protocol
-	Op string `json:"op"` // Operator
-
-	// Key for deploy / mint / transfer
-	Tick string `json:"tick"` // Coin name
-
-	// Key for mint / transfer / remove liquidity / swap
-	Amt string `json:"amt"` // @required. Amount for mint / transfer / remove liquidity(lp amount) / swap(costing coin amount)
-
-	// Key for deploy
-	Max     string `json:"max"`  // @required. Max amount in circulation
-	Lim     string `json:"lim"`  // @required. Max amount to be minted in a single tx
-	AddrLim string `json:"alim"` // @optional, default: infinite. Max amount to be minted in a single address
-	Icon    string `json:"icon"` // @optional. Icon for coin, in Base64 encoding
-
-	// Key for transfer
-	To string `json:"to"` // @optional. When to address passed, only self to self tx allowed to execute OpTransfer.
-
-	// Key for add liquidity / remove liquidity / swap
-	Ltick string `json:"lt"` // @required. Left coin at pair
-	Rtick string `json:"rt"` // @required. Right coin at pair
-
-	// Key for add liquidity
-	Lamt string `json:"lamt"` // @required. Left coin amount to adding into liquidity provider
-	Ramt string `json:"ramt"` // @required. Right coin amount to adding into liquidity provider
-
-	// Key for add liquidity
-	AllowSwap string `json:"as"` // @optional, default: 1. allow swap 1(true) / 0(false)
-
-	// Key for swap
-	Spend     string `json:"spend"` // @required. Spend which coin at swapping
-	Threshold string `json:"trhd"`  // @optional, default: 0.5%. Allowed threshold at swapping. If slippage > threshold, swap will be aborted. Both 0.005 or 0.5% format accepted
-}
-
-func onlySelfTxAllowed(instruction AbstractInstruction) bool {
+func onlySelfTxAllowed(instruction instruction_set.AbstractInstruction) bool {
 	op := instruction.Op
-	if op == OpNameAddLiquidityProvider || op == OpNameRemoveLiquidityProvider || op == OpNameSwap {
+	if op == instruction_set.OpNameAddLiquidityProvider || op == instruction_set.OpNameRemoveLiquidityProvider || op == instruction_set.OpNameSwap {
 		return true
 	}
-	if op == OpNameTransfer && instruction.To != "" {
+	if op == instruction_set.OpNameTransfer && instruction.To != "" {
 		return true
 	}
 	return false
@@ -80,17 +38,17 @@ preCompileInstructions
 1. Check content-type, only "text/plain" available as instructions;
 2. Parse content JSON string into []AbstractInstruction.
 */
-func preCompileInstructions(contentType string, content []byte) []AbstractInstruction {
+func preCompileInstructions(contentType string, content []byte) []instruction_set.AbstractInstruction {
 	if isValidContentType(contentType) == false {
 		return nil
 	}
-	var abstractInstruction AbstractInstruction
+	var abstractInstruction instruction_set.AbstractInstruction
 	err := json.Unmarshal(content, &abstractInstruction)
 	if err == nil {
-		res := []AbstractInstruction{abstractInstruction}
+		res := []instruction_set.AbstractInstruction{abstractInstruction}
 		return res
 	}
-	var instructions []AbstractInstruction
+	var instructions []instruction_set.AbstractInstruction
 	err2 := json.Unmarshal(content, &instructions)
 	if err2 == nil {
 		return instructions
@@ -98,7 +56,7 @@ func preCompileInstructions(contentType string, content []byte) []AbstractInstru
 	return nil
 }
 
-func filterAbstractInstructions(rawInstructions []AbstractInstruction, tx *wire.MsgTx, txId string) ([]interface{}, error) {
+func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstruction, tx *wire.MsgTx, txId string) ([]interface{}, error) {
 	var res []interface{}
 	for _, abstractInstruction := range rawInstructions {
 		abstractInstruction.P = strings.ToLower(abstractInstruction.P)
@@ -130,7 +88,7 @@ func filterAbstractInstructions(rawInstructions []AbstractInstruction, tx *wire.
 			}
 			// save txid to abstract instruction
 			abstractInstruction.TxId = txId
-			instruction := CompileInstruction(abstractInstruction)
+			instruction := instruction_set.CompileInstruction(abstractInstruction)
 			if instruction != nil {
 				res = append(res, *instruction)
 			}

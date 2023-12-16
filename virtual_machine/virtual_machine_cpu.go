@@ -1,19 +1,24 @@
 package virtual_machine
 
+import (
+	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDefi-Virtual-Machine/virtual_machine/operations"
+)
+
 func executeInstruction(instruction interface{}) {
 	switch value := instruction.(type) {
-	case OpDeployInstruction:
-		ExecuteOpDeploy(value)
-	case OpMintInstruction:
-		ExecuteOpMint(value)
-	case OpTransferInstruction:
-		ExecuteTransfer(value)
-	case OpAddLiquidityProviderInstruction:
-		ExecuteOpAddLiquidityProvider(value)
-	case OpRemoveLiquidityProviderInstruction:
-		ExecuteOpRemoveLiquidityProvider(value)
-	case OpSwapInstruction:
-		ExecuteSwap(value)
+	case instruction_set.OpDeployInstruction:
+		operations.ExecuteOpDeploy(value)
+	case instruction_set.OpMintInstruction:
+		operations.ExecuteOpMint(value)
+	case instruction_set.OpTransferInstruction:
+		operations.ExecuteTransfer(value)
+	case instruction_set.OpAddLiquidityProviderInstruction:
+		operations.ExecuteOpAddLiquidityProvider(value)
+	case instruction_set.OpRemoveLiquidityProviderInstruction:
+		operations.ExecuteOpRemoveLiquidityProvider(value)
+	case instruction_set.OpSwapInstruction:
+		operations.ExecuteSwap(value)
 	}
 }
 

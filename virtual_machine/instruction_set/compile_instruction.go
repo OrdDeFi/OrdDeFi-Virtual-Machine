@@ -1,4 +1,4 @@
-package virtual_machine
+package instruction_set
 
 const OpNameDeploy = "deploy"
 const OpNameMint = "mint"
