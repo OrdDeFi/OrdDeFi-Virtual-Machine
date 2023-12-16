@@ -36,7 +36,8 @@ func onlySelfTxAllowed(instruction instruction_set.AbstractInstruction) bool {
 /*
 preCompileInstructions
 1. Check content-type, only "text/plain" available as instructions;
-2. Parse content JSON string into []AbstractInstruction.
+2. Parse content JSON string into []AbstractInstruction;
+3. All content will be parsed as UTF-8.
 */
 func preCompileInstructions(contentType string, content []byte) []instruction_set.AbstractInstruction {
 	if isValidContentType(contentType) == false {
