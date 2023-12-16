@@ -22,6 +22,7 @@ type AbstractInstruction struct {
 	Max     string `json:"max"`  // @required. Max amount in circulation
 	Lim     string `json:"lim"`  // @required. Max amount to be minted in a single tx
 	AddrLim string `json:"alim"` // @optional, default: infinite. Max amount to be minted in a single address
+	Desc    string `json:"desc"` // @optional. Description for coin
 	Icon    string `json:"icon"` // @optional. Icon for coin, in Base64 encoding
 
 	// Key for transfer

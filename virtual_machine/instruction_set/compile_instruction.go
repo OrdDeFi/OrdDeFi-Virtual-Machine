@@ -13,6 +13,7 @@ type OpDeployInstruction struct {
 	Max     string // @required. Max amount in circulation
 	Lim     string // @required. Max amount to be minted in a single tx
 	AddrLim string // @optional, default: infinite. Max amount to be minted in a single address
+	Desc    string // @optional. Description for coin
 	Icon    string // @optional. Icon for coin, in Base64 encoding
 }
 
@@ -22,6 +23,7 @@ func compileOpDeployInstruction(instruction AbstractInstruction) *OpDeployInstru
 	op.Max = instruction.Max
 	op.Lim = instruction.Lim
 	op.AddrLim = instruction.AddrLim
+	op.Desc = instruction.Desc
 	op.Icon = instruction.Icon
 	return &op
 }
