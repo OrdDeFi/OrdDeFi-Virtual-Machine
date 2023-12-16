@@ -52,6 +52,13 @@ func preCompileInstructions(contentType string, content []byte) []instruction_se
 	var instructions []instruction_set.AbstractInstruction
 	err2 := json.Unmarshal(content, &instructions)
 	if err2 == nil {
+		for _, eachInst := range instructions {
+			lowerOp := strings.ToLower(eachInst.Op)
+			if lowerOp == "deploy" || lowerOp == "mint" {
+				// Bulk execute instructs doesn't allow "deploy" and "mint", otherwise all instructions in slice will be aborted.
+				return nil
+			}
+		}
 		return instructions
 	}
 	return nil
