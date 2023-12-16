@@ -84,10 +84,10 @@ func preCompileInstructions(contentType string, content []byte) []AbstractInstru
 	if isValidContentType(contentType) == false {
 		return nil
 	}
-	var instruction AbstractInstruction
-	err := json.Unmarshal(content, &instruction)
+	var abstractInstruction AbstractInstruction
+	err := json.Unmarshal(content, &abstractInstruction)
 	if err == nil {
-		res := []AbstractInstruction{instruction}
+		res := []AbstractInstruction{abstractInstruction}
 		return res
 	}
 	var instructions []AbstractInstruction

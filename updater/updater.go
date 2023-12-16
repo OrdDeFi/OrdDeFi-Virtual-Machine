@@ -35,7 +35,9 @@ func UpdateBlockNumber(blockNumber int) {
 			if err != nil {
 				break
 			}
-			virtual_machine.ExecuteInstructions(instructions)
+			if len(instructions) != 0 {
+				virtual_machine.ExecuteInstructions(instructions)
+			}
 		}
 	}
 	if err != nil {
