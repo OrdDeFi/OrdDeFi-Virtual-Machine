@@ -12,6 +12,8 @@ func checkTickLegal(tick string) bool {
 		return false
 	} else if strings.Contains(tick, "_") {
 		return false
+	} else if strings.Contains(tick, ":") {
+		return false
 	} else if strings.HasPrefix(tick, "$") {
 		return false
 	} else if strings.HasPrefix(tick, "@") {
