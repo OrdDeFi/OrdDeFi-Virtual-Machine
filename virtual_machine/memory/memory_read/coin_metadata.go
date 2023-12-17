@@ -1,20 +1,34 @@
 package memory_read
 
-import "OrdDeFi-Virtual-Machine/safe_number"
-
-func CoinMetadataSave(
-	coinName string,
-	max *safe_number.SafeNum,
-	lim *safe_number.SafeNum,
-	addrLim *safe_number.SafeNum,
-	desc string,
-	icon string) {
-}
+import (
+	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
+	"errors"
+)
 
 /*
-CoinMetadataQuery
-return max, lim, addrLim, desc, icon
+CoinMeta read coin metadata from db
 */
-func CoinMetadataQuery(coinName string) (*safe_number.SafeNum, *safe_number.SafeNum, *safe_number.SafeNum, *string, *string) {
-	return nil, nil, nil, nil, nil
+func CoinMeta(db *db_utils.OrdDB, coinName string) (*memory_const.CoinMeta, error) {
+	if coinName == "" {
+		return nil, errors.New("read CoinMeta error: coin name is empty")
+	}
+	key := memory_const.CoinMetadataTable + ":" + coinName
+	value, err := db.Read(key)
+	if err != nil {
+		if err.Error() == "leveldb: not found" {
+			return nil, nil
+		} else {
+			return nil, err
+		}
+	}
+	if value == nil {
+		return nil, errors.New("read CoinMeta error: coin not found in db")
+	}
+	coinMeta, err := memory_const.CoinMetaFromJsonString(*value)
+	if err != nil {
+		return nil, err
+	}
+	return coinMeta, nil
+
 }

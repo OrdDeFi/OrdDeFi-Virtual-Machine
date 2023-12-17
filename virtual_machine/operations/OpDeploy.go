@@ -5,6 +5,8 @@ import (
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
+	"errors"
 	"strings"
 )
 
@@ -32,10 +34,10 @@ func checkTickLegal(tick string) bool {
 	return length == 4
 }
 
-func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_utils.OrdDB) {
+func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_utils.OrdDB) error {
 	tick := instruction.Tick
 	if checkTickLegal(tick) == false {
-		return
+		return errors.New("Tick is not legal to deploy: " + tick)
 	}
 	maxValue := safe_number.SafeNumFromString(instruction.Max)
 	lim := safe_number.SafeNumFromString(instruction.Lim)
@@ -43,7 +45,17 @@ func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_uti
 	desc := instruction.Desc
 	icon := instruction.Icon
 	if maxValue != nil && lim != nil {
-		memory_read.CoinListSave(tick)
-		memory_read.CoinMetadataSave(tick, maxValue, lim, addrLim, desc, icon)
+		coinMeta, err := memory_read.CoinMeta(db, tick)
+		if err != nil {
+			return err
+		}
+		if coinMeta != nil {
+			return errors.New("Coin exist for name: " + tick)
+		}
+		err = memory_write.WriteDeployInfo(db, tick, maxValue, lim, addrLim, desc, icon)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }

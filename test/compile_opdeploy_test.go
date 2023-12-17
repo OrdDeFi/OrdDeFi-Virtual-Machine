@@ -40,9 +40,9 @@ func TestCompileDeployInSingleCommand(t *testing.T) {
 	}
 }
 
-func TestingDeployInSingleSliceCommands() (*instruction_set.OpDeployInstruction, error) {
+func TestingDeployInSingleSliceCommands(tick string) (*instruction_set.OpDeployInstruction, error) {
 	commands := `[
-		{"p":"orddefi","op":"deploy","tick":"abcd","max":"21000000.001","lim":"1000","alim":"1000","icon":""}
+		{"p":"orddefi","op":"deploy","tick":"` + tick + `","max":"21000000.001","lim":"1000","alim":"2000", "desc":"test_desc","icon":"test_icon"}
 	]`
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
@@ -72,7 +72,7 @@ func TestingDeployInSingleSliceCommands() (*instruction_set.OpDeployInstruction,
 }
 
 func TestCompileDeployInSingleSliceCommands(t *testing.T) {
-	_, err := TestingDeployInSingleSliceCommands()
+	_, err := TestingDeployInSingleSliceCommands("abcd")
 	if err != nil {
 		t.Errorf("%s", err.Error())
 	}
