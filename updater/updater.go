@@ -21,7 +21,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string) error {
 		return err
 	}
 	if dataDir == "" {
-		dataDir = "./storage"
+		dataDir = "./OrdDeFi_storage"
 	}
 	db, err := db_utils.OpenDB(dataDir)
 	if err != nil {
