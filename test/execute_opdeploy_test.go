@@ -34,12 +34,123 @@ func checkStringSlicesEqual(slice1, slice2 []string) bool {
 	return true
 }
 
+func TestExecuteDeployInvalidTick1(t *testing.T) {
+	// 1. compile instruction
+	instruction, err := TestingDeployInSingleSliceCommands("odfi")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick1 error: %s", err.Error())
+	}
+	if instruction == nil {
+		t.Errorf("TestExecuteDeployInvalidTick1 error: deploy instruction is nil")
+	}
+
+	// 2. open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick1 OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	// 3. execute deploy op
+	err = operations.ExecuteOpDeploy(*instruction, db)
+	if err == nil {
+		t.Errorf("TestExecuteDeployInvalidTick1 error: execute deploy error: forbidden tick")
+	}
+}
+
+func TestExecuteDeployInvalidTick2(t *testing.T) {
+	// 1. compile instruction
+	instruction, err := TestingDeployInSingleSliceCommands("odgv")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick2 error: %s", err.Error())
+	}
+	if instruction == nil {
+		t.Errorf("TestExecuteDeployInvalidTick2 error: deploy instruction is nil")
+	}
+
+	// 2. open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick2 OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	// 3. execute deploy op
+	err = operations.ExecuteOpDeploy(*instruction, db)
+	if err == nil {
+		t.Errorf("TestExecuteDeployInvalidTick2 error: execute deploy error: forbidden tick")
+	}
+}
+
+func TestExecuteDeployInvalidTick3(t *testing.T) {
+	// 1. compile instruction
+	instruction, err := TestingDeployInSingleSliceCommands("@points")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick3 error: %s", err.Error())
+	}
+	if instruction == nil {
+		t.Errorf("TestExecuteDeployInvalidTick3 error: deploy instruction is nil")
+	}
+
+	// 2. open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInvalidTick3 OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	// 3. execute deploy op
+	err = operations.ExecuteOpDeploy(*instruction, db)
+	if err == nil {
+		t.Errorf("TestExecuteDeployInvalidTick3 error: execute deploy error: forbidden tick")
+	}
+}
+
+func TestExecuteDeployExistingTick(t *testing.T) {
+	// 1. compile instruction
+	instruction, err := TestingDeployInSingleSliceCommands("abcd")
+	if err != nil {
+		t.Errorf("TestExecuteDeployExistingTick error: %s", err.Error())
+	}
+	if instruction == nil {
+		t.Errorf("TestExecuteDeployExistingTick error: deploy instruction is nil")
+	}
+
+	// 2. open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteDeployExistingTick OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	// 3. check existing
+	coinMeta, err := memory_read.CoinMeta(db, "abcd")
+	if err != nil {
+		t.Errorf("TestExecuteDeployExistingTick error: execute deploy error: %s", err.Error())
+	}
+	// 4. execute deploy op
+	err = operations.ExecuteOpDeploy(*instruction, db)
+	if coinMeta == nil {
+		if err != nil {
+			t.Errorf("TestExecuteDeployExistingTick error: execute deploy error: %s", err.Error())
+		}
+	} else {
+		if err == nil {
+			t.Errorf("TestExecuteDeployExistingTick error: execute deploy error: cannot deploy duplicated tick")
+		}
+	}
+}
+
 func TestExecuteDeployInBatchCommands(t *testing.T) {
 	// 1. compile instruction
 	randTick := randomTick()
 	instruction, err := TestingDeployInSingleSliceCommands(randTick)
 	if err != nil {
-		t.Errorf("%s", err.Error())
+		t.Errorf("TestExecuteDeployInBatchCommands error: %s", err.Error())
 	}
 	if instruction == nil {
 		t.Errorf("TestExecuteDeployInBatchCommands error: deploy instruction is nil")
@@ -48,7 +159,7 @@ func TestExecuteDeployInBatchCommands(t *testing.T) {
 	// 2. open db
 	db, err := db_utils.OpenDB("./test_db")
 	if err != nil {
-		t.Errorf("TestDBReadPrefix OpenDB error: %s", err.Error())
+		t.Errorf("TestExecuteDeployInBatchCommands OpenDB error: %s", err.Error())
 	}
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
