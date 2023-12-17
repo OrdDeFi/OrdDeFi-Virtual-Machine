@@ -9,14 +9,14 @@ import (
 	"os"
 )
 
-func updateIndex() error {
+func updateIndex(dataDir string) error {
 	println("OrdDefi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
 		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
 		return err
 	}
-	err := updater.UpdateBlockNumber(blockNumber)
+	err := updater.UpdateBlockNumber(blockNumber, dataDir)
 	return err
 }
 
@@ -47,6 +47,8 @@ func main() {
 	flag.StringVar(&parseTransactionString, "parsetransaction", "", "OrdDefi-Virtual-Machine -parsetransaction [txid]")
 	var parseRawTransactionString string
 	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDefi-Virtual-Machine -parserawtransaction [raw transaction string]")
+	var parseDataDir string
+	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDefi-Virtual-Machine -data-dir /path/of/storage")
 	flag.Parse()
 	if parseTransactionString != "" {
 		err := parseTransaction(parseTransactionString)
@@ -56,7 +58,7 @@ func main() {
 	} else if parseRawTransactionString != "" {
 		parseRawTransaction(parseRawTransactionString)
 	} else {
-		err := updateIndex()
+		err := updateIndex(parseDataDir)
 		if err != nil {
 			os.Exit(1)
 		}

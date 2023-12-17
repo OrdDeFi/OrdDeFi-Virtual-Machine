@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-func UpdateBlockNumber(blockNumber int) error {
+func UpdateBlockNumber(blockNumber int, dataDir string) error {
 	var err error
 	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
 	if blockHash == nil {
@@ -18,6 +18,9 @@ func UpdateBlockNumber(blockNumber int) error {
 	if block == nil {
 		err = errors.New("UpdateBlockNumber GetBlock failed")
 		return err
+	}
+	if dataDir == "" {
+		dataDir = "./storage"
 	}
 	for _, txId := range block.Tx {
 		rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
