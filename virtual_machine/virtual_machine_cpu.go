@@ -18,7 +18,9 @@ func executeInstruction(instruction interface{}) {
 	case instruction_set.OpRemoveLiquidityProviderInstruction:
 		operations.ExecuteOpRemoveLiquidityProvider(value)
 	case instruction_set.OpSwapInstruction:
-		operations.ExecuteSwap(value)
+		operations.ExecuteOpSwap(value)
+	case instruction_set.OpChangeVersionInstruction:
+		operations.ExecuteOpChangeVersion(value)
 	}
 }
 

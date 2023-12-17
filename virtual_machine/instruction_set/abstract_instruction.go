@@ -42,4 +42,7 @@ type AbstractInstruction struct {
 	// Key for swap
 	Spend     string `json:"spend"` // @required. Spend which coin at swapping
 	Threshold string `json:"trhd"`  // @optional, default: 0.5%. Allowed threshold at swapping. If slippage > threshold, swap will be aborted. Both 0.005 or 0.5% format accepted
+
+	FromVer string `json:"fromver"` // @required. Which version to change coins from
+	ToVer   string `json:"tover"`   // @required. Which version to change coins to
 }

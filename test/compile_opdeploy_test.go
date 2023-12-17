@@ -26,7 +26,7 @@ func TestCompileDeployInSingleCommand(t *testing.T) {
 		return
 	}
 	if len(instructions) != 1 {
-		t.Errorf("TestCommandParse CompileInstructions error: instructions should be nil")
+		t.Errorf("TestCommandParse CompileInstructions error: instructions length should be 1")
 		return
 	}
 	for _, instruction := range instructions {
@@ -60,7 +60,7 @@ func TestCompileDeployInSingleSliceCommands(t *testing.T) {
 		return
 	}
 	if len(instructions) != 1 {
-		t.Errorf("TestCommandParse CompileInstructions error: instructions should be nil")
+		t.Errorf("TestCommandParse CompileInstructions error: instructions length should be 1")
 		return
 	}
 	for _, instruction := range instructions {
