@@ -151,32 +151,32 @@ func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
 	case OpNameDeploy:
 		opDeploy := compileOpDeployInstruction(abstractInstruction)
 		if opDeploy != nil {
-			res = opDeploy
+			res = *opDeploy
 		}
 	case OpNameMint:
 		opMint := compileOpMintInstruction(abstractInstruction)
 		if opMint != nil {
-			res = opMint
+			res = *opMint
 		}
 	case OpNameTransfer:
 		opTransfer := compileOpTransferInstruction(abstractInstruction)
 		if opTransfer != nil {
-			res = opTransfer
+			res = *opTransfer
 		}
 	case OpNameAddLiquidityProvider:
 		opAddLiquidityProvider := compileOpAddLiquidityProviderInstruction(abstractInstruction)
 		if opAddLiquidityProvider != nil {
-			res = opAddLiquidityProvider
+			res = *opAddLiquidityProvider
 		}
 	case OpNameRemoveLiquidityProvider:
 		opRemoveLiquidityProvider := compileOpRemoveLiquidityProviderInstruction(abstractInstruction)
 		if opRemoveLiquidityProvider != nil {
-			res = opRemoveLiquidityProvider
+			res = *opRemoveLiquidityProvider
 		}
 	case OpNameSwap:
 		opSwap := compileOpSwapInstruction(abstractInstruction)
 		if opSwap != nil {
-			res = opSwap
+			res = *opSwap
 		}
 	}
 	if res != nil {
