@@ -1,4 +1,4 @@
-package memory
+package memory_read
 
 import "OrdDeFi-Virtual-Machine/safe_number"
 

@@ -4,7 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
-	"OrdDeFi-Virtual-Machine/virtual_machine/memory"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"strings"
 )
 
@@ -39,7 +39,7 @@ func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_uti
 	desc := instruction.Desc
 	icon := instruction.Icon
 	if maxValue != nil && lim != nil {
-		memory.CoinListSave(tick)
-		memory.CoinMetadataSave(tick, maxValue, lim, addrLim, desc, icon)
+		memory_read.CoinListSave(tick)
+		memory_read.CoinMetadataSave(tick, maxValue, lim, addrLim, desc, icon)
 	}
 }
