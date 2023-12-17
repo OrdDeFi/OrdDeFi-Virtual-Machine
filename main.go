@@ -6,15 +6,18 @@ import (
 	"OrdDefi-Virtual-Machine/updater"
 	"errors"
 	"flag"
+	"os"
 )
 
-func updateIndex() {
+func updateIndex() error {
 	println("OrdDefi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
-		return
+		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
+		return err
 	}
-	updater.UpdateBlockNumber(blockNumber)
+	err := updater.UpdateBlockNumber(blockNumber)
+	return err
 }
 
 func parseRawTransaction(parseRawTransactionString string) {
@@ -53,6 +56,9 @@ func main() {
 	} else if parseRawTransactionString != "" {
 		parseRawTransaction(parseRawTransactionString)
 	} else {
-		updateIndex()
+		err := updateIndex()
+		if err != nil {
+			os.Exit(1)
+		}
 	}
 }
