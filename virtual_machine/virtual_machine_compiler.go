@@ -54,7 +54,7 @@ func preCompileInstructions(contentType string, content []byte) []instruction_se
 	if err2 == nil {
 		for _, eachInst := range instructions {
 			lowerOp := strings.ToLower(eachInst.Op)
-			if lowerOp == "deploy" || lowerOp == "mint" {
+			if (lowerOp == "deploy" || lowerOp == "mint") && len(instructions) > 1 {
 				// Bulk execute instructs doesn't allow "deploy" and "mint", otherwise all instructions in slice will be aborted.
 				return nil
 			}
