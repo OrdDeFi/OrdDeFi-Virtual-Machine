@@ -1,7 +1,7 @@
 package inscription_parser
 
 import (
-	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"errors"
 	"github.com/btcsuite/btcd/wire"
 )

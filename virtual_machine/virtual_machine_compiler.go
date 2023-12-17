@@ -1,15 +1,15 @@
 package virtual_machine
 
 import (
-	"OrdDefi-Virtual-Machine/tx_utils"
-	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/tx_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"encoding/json"
 	"errors"
 	"github.com/btcsuite/btcd/wire"
 	"strings"
 )
 
-const POrdDefi = "orddefi"
+const POrdDeFi = "orddefi"
 
 func isValidContentType(contentType string) bool {
 	trimmedContentType := strings.TrimSpace(contentType)
@@ -76,7 +76,7 @@ func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstru
 		abstractInstruction.Ltick = strings.ToLower(abstractInstruction.Ltick)
 		abstractInstruction.Rtick = strings.ToLower(abstractInstruction.Rtick)
 		abstractInstruction.Spend = strings.ToLower(abstractInstruction.Spend)
-		if abstractInstruction.P == POrdDefi {
+		if abstractInstruction.P == POrdDeFi {
 			// parse output address
 			firstOutputAddress, err := tx_utils.ParseFirstOutputAddress(tx)
 			if err != nil {

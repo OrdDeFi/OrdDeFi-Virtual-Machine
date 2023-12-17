@@ -1,7 +1,7 @@
 package test
 
 import (
-	"OrdDefi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/db_utils"
 	"fmt"
 	"strconv"
 	"testing"

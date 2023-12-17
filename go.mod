@@ -1,4 +1,4 @@
-module OrdDefi-Virtual-Machine
+module OrdDeFi-Virtual-Machine
 
 go 1.19
 

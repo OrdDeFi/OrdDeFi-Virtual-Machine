@@ -1,9 +1,9 @@
 package virtual_machine
 
 import (
-	"OrdDefi-Virtual-Machine/db_utils"
-	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
-	"OrdDefi-Virtual-Machine/virtual_machine/operations"
+	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 )
 
 func executeInstruction(instruction interface{}, db *db_utils.OrdDB) {

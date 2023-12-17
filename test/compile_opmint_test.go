@@ -1,9 +1,9 @@
 package test
 
 import (
-	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
-	"OrdDefi-Virtual-Machine/virtual_machine"
-	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDeFi-Virtual-Machine/virtual_machine"
+	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"testing"
 )
 

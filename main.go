@@ -1,16 +1,16 @@
 package main
 
 import (
-	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
-	"OrdDefi-Virtual-Machine/inscription_parser"
-	"OrdDefi-Virtual-Machine/updater"
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDeFi-Virtual-Machine/inscription_parser"
+	"OrdDeFi-Virtual-Machine/updater"
 	"errors"
 	"flag"
 	"os"
 )
 
 func updateIndex(dataDir string) error {
-	println("OrdDefi indexer start to work.")
+	println("OrdDeFi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
 		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
@@ -44,11 +44,11 @@ func main() {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 
 	var parseTransactionString string
-	flag.StringVar(&parseTransactionString, "parsetransaction", "", "OrdDefi-Virtual-Machine -parsetransaction [txid]")
+	flag.StringVar(&parseTransactionString, "parsetransaction", "", "OrdDeFi-Virtual-Machine -parsetransaction [txid]")
 	var parseRawTransactionString string
-	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDefi-Virtual-Machine -parserawtransaction [raw transaction string]")
+	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDeFi-Virtual-Machine -parserawtransaction [raw transaction string]")
 	var parseDataDir string
-	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDefi-Virtual-Machine -data-dir /path/of/storage")
+	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
 	flag.Parse()
 	if parseTransactionString != "" {
 		err := parseTransaction(parseTransactionString)

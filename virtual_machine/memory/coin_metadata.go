@@ -1,6 +1,6 @@
 package memory
 
-import "OrdDefi-Virtual-Machine/safe_number"
+import "OrdDeFi-Virtual-Machine/safe_number"
 
 func CoinMetadataSave(
 	coinName string,

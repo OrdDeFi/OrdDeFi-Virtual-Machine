@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../OrdDefi-Virtual-Machine/.idea/OrdDefi-Virtual-Machine.iml" filepath="$PROJECT_DIR$/../OrdDefi-Virtual-Machine/.idea/OrdDefi-Virtual-Machine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OrdDeFi-Virtual-Machine.iml" filepath="$PROJECT_DIR$/.idea/OrdDeFi-Virtual-Machine.iml" />
     </modules>
   </component>
 </project>

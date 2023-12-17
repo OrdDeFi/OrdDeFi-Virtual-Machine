@@ -1,10 +1,10 @@
 package operations
 
 import (
-	"OrdDefi-Virtual-Machine/db_utils"
-	"OrdDefi-Virtual-Machine/safe_number"
-	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
-	"OrdDefi-Virtual-Machine/virtual_machine/memory"
+	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/safe_number"
+	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory"
 	"strings"
 )
 

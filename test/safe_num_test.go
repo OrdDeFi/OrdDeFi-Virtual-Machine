@@ -1,7 +1,7 @@
 package test
 
 import (
-	"OrdDefi-Virtual-Machine/safe_number"
+	"OrdDeFi-Virtual-Machine/safe_number"
 	"testing"
 )
 

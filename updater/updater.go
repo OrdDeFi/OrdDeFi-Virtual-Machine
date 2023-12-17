@@ -1,10 +1,10 @@
 package updater
 
 import (
-	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
-	"OrdDefi-Virtual-Machine/db_utils"
-	"OrdDefi-Virtual-Machine/inscription_parser"
-	"OrdDefi-Virtual-Machine/virtual_machine"
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/inscription_parser"
+	"OrdDeFi-Virtual-Machine/virtual_machine"
 	"errors"
 )
 
