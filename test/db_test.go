@@ -15,7 +15,7 @@ func TestDB(t *testing.T) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 
-	key := "coin_list"
+	key := "test:coin_list"
 	valueString := `["odfi","odgv"]`
 	err = db.Store(key, valueString)
 	if err != nil {
@@ -38,7 +38,7 @@ func TestDBRead(t *testing.T) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 
-	key := "coin_list"
+	key := "test:coin_list"
 	valueString := `["odfi","odgv"]`
 
 	resultString, err := db.Read(key)
@@ -57,7 +57,7 @@ func TestDBReadPrefix(t *testing.T) {
 	}
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
-	prefix := "coin:odfi:"
+	prefix := "test:coin:odfi:"
 	for i := 0; i < 20; i++ {
 		key := prefix + strconv.Itoa(i)
 		value := key + ":value"
@@ -88,7 +88,7 @@ func TestDBBatchStore(t *testing.T) {
 	var keyValues map[string]string
 	keyValues = make(map[string]string)
 	for i := 0; i < 20; i++ {
-		key := "key" + strconv.Itoa(i)
+		key := "test:key" + strconv.Itoa(i)
 		value := key + ":value"
 		keyValues[key] = value
 	}
@@ -97,7 +97,7 @@ func TestDBBatchStore(t *testing.T) {
 		t.Errorf("TestDBBatchStore StoreKeyValues error: %s", err.Error())
 	}
 	for i := 0; i < 20; i++ {
-		key := "key" + strconv.Itoa(i)
+		key := "test:key" + strconv.Itoa(i)
 		expectedValue := key + ":value"
 		value, err := db.Read(key)
 		if err != nil {
