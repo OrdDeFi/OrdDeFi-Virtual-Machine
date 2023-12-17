@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+const CurrentDBVersion = "1"
+
 type OrdDB struct {
 	db *leveldb.DB
 }
