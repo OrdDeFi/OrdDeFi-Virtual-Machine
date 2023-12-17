@@ -42,7 +42,7 @@ func TestCompileDeployInSingleCommand(t *testing.T) {
 
 func TestingDeployInSingleSliceCommands() (*instruction_set.OpDeployInstruction, error) {
 	commands := `[
-		{"p":"orddefi","op":"deploy","tick":"odfi","max":"21000000","lim":"1000","alim":"1000","icon":""}
+		{"p":"orddefi","op":"deploy","tick":"abcd","max":"21000000.001","lim":"1000","alim":"1000","icon":""}
 	]`
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
