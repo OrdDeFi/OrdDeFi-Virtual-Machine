@@ -23,6 +23,10 @@ func checkTickLegal(tick string) bool {
 		return false
 	} else if strings.HasPrefix(tick, "%") {
 		return false
+	} else if tick == "odfi" {
+		return false
+	} else if tick == "odgv" {
+		return false
 	}
 	length := len(tick)
 	return length == 4
