@@ -1,7 +1,10 @@
 package operations
 
-import "OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
+import (
+	"OrdDefi-Virtual-Machine/db_utils"
+	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
+)
 
-func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityProviderInstruction) {
+func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) {
 
 }

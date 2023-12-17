@@ -2,6 +2,7 @@ package updater
 
 import (
 	"OrdDefi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDefi-Virtual-Machine/db_utils"
 	"OrdDefi-Virtual-Machine/inscription_parser"
 	"OrdDefi-Virtual-Machine/virtual_machine"
 	"errors"
@@ -22,6 +23,11 @@ func UpdateBlockNumber(blockNumber int, dataDir string) error {
 	if dataDir == "" {
 		dataDir = "./storage"
 	}
+	db, err := db_utils.OpenDB(dataDir)
+	if err != nil {
+		return err
+	}
+	defer db_utils.CloseDB(db)
 	for _, txId := range block.Tx {
 		rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 		if rawTx == nil {
@@ -43,7 +49,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string) error {
 				break
 			}
 			if len(instructions) != 0 {
-				virtual_machine.ExecuteInstructions(instructions)
+				virtual_machine.ExecuteInstructions(instructions, db)
 			}
 		}
 	}

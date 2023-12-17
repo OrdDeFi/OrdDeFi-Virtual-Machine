@@ -1,31 +1,32 @@
 package virtual_machine
 
 import (
+	"OrdDefi-Virtual-Machine/db_utils"
 	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDefi-Virtual-Machine/virtual_machine/operations"
 )
 
-func executeInstruction(instruction interface{}) {
+func executeInstruction(instruction interface{}, db *db_utils.OrdDB) {
 	switch value := instruction.(type) {
 	case instruction_set.OpDeployInstruction:
-		operations.ExecuteOpDeploy(value)
+		operations.ExecuteOpDeploy(value, db)
 	case instruction_set.OpMintInstruction:
-		operations.ExecuteOpMint(value)
+		operations.ExecuteOpMint(value, db)
 	case instruction_set.OpTransferInstruction:
-		operations.ExecuteTransfer(value)
+		operations.ExecuteTransfer(value, db)
 	case instruction_set.OpAddLiquidityProviderInstruction:
-		operations.ExecuteOpAddLiquidityProvider(value)
+		operations.ExecuteOpAddLiquidityProvider(value, db)
 	case instruction_set.OpRemoveLiquidityProviderInstruction:
-		operations.ExecuteOpRemoveLiquidityProvider(value)
+		operations.ExecuteOpRemoveLiquidityProvider(value, db)
 	case instruction_set.OpSwapInstruction:
-		operations.ExecuteOpSwap(value)
+		operations.ExecuteOpSwap(value, db)
 	case instruction_set.OpChangeVersionInstruction:
-		operations.ExecuteOpChangeVersion(value)
+		operations.ExecuteOpChangeVersion(value, db)
 	}
 }
 
-func ExecuteInstructions(instructions []interface{}) {
+func ExecuteInstructions(instructions []interface{}, db *db_utils.OrdDB) {
 	for _, eachInstruction := range instructions {
-		executeInstruction(eachInstruction)
+		executeInstruction(eachInstruction, db)
 	}
 }

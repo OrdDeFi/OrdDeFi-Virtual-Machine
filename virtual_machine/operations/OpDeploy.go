@@ -1,6 +1,7 @@
 package operations
 
 import (
+	"OrdDefi-Virtual-Machine/db_utils"
 	"OrdDefi-Virtual-Machine/safe_number"
 	"OrdDefi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDefi-Virtual-Machine/virtual_machine/memory"
@@ -27,7 +28,7 @@ func checkTickLegal(tick string) bool {
 	return length == 4
 }
 
-func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction) {
+func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_utils.OrdDB) {
 	tick := instruction.Tick
 	if checkTickLegal(tick) == false {
 		return
