@@ -7,11 +7,32 @@ const CoinListTable = "coinlist"
 const CoinMetadataTable = "coinmeta"
 
 /*
+TotalMintedBalanceTable stores the value a coin has been already minted
+Path: TotalMintedBalanceTable:coin_name
+Value: balance string
+*/
+const TotalMintedBalanceTable = "totalminted"
+
+/*
+AddressMintedBalanceTable stores the value a coin has been already minted
+Path: AddressMintedBalanceTable:coin_name:address
+Value: balance string
+*/
+const AddressMintedBalanceTable = "addrminted"
+
+/*
 CoinBalanceTable stores a single coin's {address:balance}.
 Path: CoinBalanceTable:coin_name:address
 Value: balance string
 */
 const CoinBalanceTable = "coinbalance"
+
+/*
+AddressBalanceTable stores a single address's {coin|lp:balance}.
+Path: AddressBalanceTable:address:coin_name|lp_name
+Value: balance string
+*/
+const AddressBalanceTable = "addrbalance"
 
 // LpListTable stores all lp names
 const LpListTable = "lplist"
@@ -25,10 +46,3 @@ Path: LpBalanceTable:lp_name:address
 Value: balance string
 */
 const LpBalanceTable = "lpbalance"
-
-/*
-AddressBalanceTable stores a single address's {coin|lp:balance}.
-Path: AddressBalanceTable:address:coin_name|lp_name
-Value: balance string
-*/
-const AddressBalanceTable = "addrbalance"
