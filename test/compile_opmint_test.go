@@ -42,8 +42,13 @@ func TestCompileMintInSingleCommand(t *testing.T) {
 
 func TestingMintInSingleSliceCommands(tick string, ver string) (*instruction_set.OpMintInstruction, error) {
 	commands := `[
-		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000", "ver": "` + ver + `"}
+		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000"}
 	]`
+	if ver != "" {
+		commands = `[
+			{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000", "ver": "` + ver + `"}
+		]`
+	}
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {
