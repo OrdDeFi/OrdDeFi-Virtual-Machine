@@ -34,6 +34,7 @@ type OpMintInstruction struct {
 	TxOutAddr string
 	Tick      string // @required. Coin name to mint
 	Amt       string // @required. Amount to mint
+	Ver       string // @optional. Balance add to which version of VM. Default is v1 for !!ALL VERSIONS!! of VM.
 }
 
 func compileOpMintInstruction(instruction AbstractInstruction) *OpMintInstruction {
@@ -41,6 +42,7 @@ func compileOpMintInstruction(instruction AbstractInstruction) *OpMintInstructio
 	op.TxOutAddr = instruction.TxOutAddr
 	op.Tick = instruction.Tick
 	op.Amt = instruction.Amt
+	op.Ver = instruction.Ver
 	return &op
 }
 

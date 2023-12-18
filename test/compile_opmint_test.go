@@ -41,7 +41,7 @@ func TestCompileMintInSingleCommand(t *testing.T) {
 
 func TestCompileMintInSingleSliceCommands(t *testing.T) {
 	commands := `[
-		{"p":"orddefi","op":"mint","tick":"ODFI","amt":"1000"}
+		{"p":"orddefi","op":"mint","tick":"ODFI","amt":"1000", "ver": "2"}
 	]`
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
@@ -64,9 +64,13 @@ func TestCompileMintInSingleSliceCommands(t *testing.T) {
 		return
 	}
 	for _, instruction := range instructions {
-		switch instruction.(type) {
+		switch value := instruction.(type) {
 		case instruction_set.OpMintInstruction:
-			println("succeed")
+			if value.Ver != "2" {
+				t.Errorf("TestDeployInSingleCommand error: OpMint version error, expected 2")
+			} else {
+				println("succeed")
+			}
 		default:
 			t.Errorf("TestDeployInSingleCommand error: instruction type error, expected OpDeployInstruction")
 		}
