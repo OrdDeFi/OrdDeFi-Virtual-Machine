@@ -93,6 +93,9 @@ func trimFractionTail(fractionalPart string) string {
 
 func (num SafeNum) String() string {
 	intString := num.decimal.String()
+	if intString == "0" {
+		return intString
+	}
 	strLen := len(intString)
 	if strLen > 18 {
 		integerPart := intString[:strLen-18]
@@ -230,4 +233,22 @@ func (num SafeNum) DivideBy(rightNumber *SafeNum) *SafeNum {
 		decimal: *resultInt,
 	}
 	return &safeNum
+}
+
+func (num SafeNum) Min(rightNumber *SafeNum) *SafeNum {
+	if rightNumber == nil {
+		return nil
+	} else if num.decimal.Sign() < 0 {
+		return nil
+	} else if rightNumber.decimal.Sign() < 0 {
+		return nil
+	}
+
+	numCmpRes := num.decimal.Cmp(&rightNumber.decimal)
+	if numCmpRes == -1 || numCmpRes == 0 {
+		// num <= rightNumber
+		return &num
+	} else {
+		return rightNumber
+	}
 }

@@ -117,3 +117,30 @@ func TestDivideByFraction(t *testing.T) {
 		t.Errorf("%s / %s = %s; expected 11.1", num1, num2, res)
 	}
 }
+
+func TestMin1(t *testing.T) {
+	num1 := safe_number.SafeNumFromString("2.22")
+	num2 := safe_number.SafeNumFromString("3.33")
+	res := num1.Min(num2)
+	if res.String() != "2.22" {
+		t.Errorf("min(%s, %s) = %s; expected 2.22", num1, num2, res)
+	}
+}
+
+func TestMin2(t *testing.T) {
+	num1 := safe_number.SafeNumFromString("4.22")
+	num2 := safe_number.SafeNumFromString("3.33")
+	res := num1.Min(num2)
+	if res.String() != "3.33" {
+		t.Errorf("min(%s, %s) = %s; expected 3.33", num1, num2, res)
+	}
+}
+
+func TestMin3(t *testing.T) {
+	num1 := safe_number.SafeNumFromString("0")
+	num2 := safe_number.SafeNumFromString("3.33")
+	res := num1.Min(num2)
+	if res.String() != "0" {
+		t.Errorf("min(%s, %s) = %s; expected 0", num1, num2, res)
+	}
+}
