@@ -22,14 +22,14 @@ const AddressMintedBalanceTable = "addrminted"
 
 /*
 CoinBalanceTable stores a single coin's {address:balance}.
-Path: CoinBalanceTable:coin_name:address
+Path: CoinBalanceTable:version:coin_name|lp_name:address
 Value: balance string
 */
 const CoinBalanceTable = "coinbalance"
 
 /*
 AddressBalanceTable stores a single address's {coin|lp:balance}.
-Path: AddressBalanceTable:address:coin_name|lp_name
+Path: AddressBalanceTable:version:address:coin_name|lp_name
 Value: balance string
 */
 const AddressBalanceTable = "addrbalance"
