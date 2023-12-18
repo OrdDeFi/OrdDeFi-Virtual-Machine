@@ -116,6 +116,8 @@ func (num SafeNum) Add(rightNumber *SafeNum) *SafeNum {
 		return nil
 	} else if rightNumber.decimal.Sign() == 0 {
 		return &num
+	} else if num.decimal.Sign() < 0 {
+		return nil
 	} else if rightNumber.decimal.Sign() < 0 {
 		return nil
 	}
@@ -143,6 +145,8 @@ func (num SafeNum) Subtract(rightNumber *SafeNum) *SafeNum {
 		return nil
 	} else if rightNumber.decimal.Sign() == 0 {
 		return &num
+	} else if num.decimal.Sign() < 0 {
+		return nil
 	} else if rightNumber.decimal.Sign() < 0 {
 		return nil
 	}
@@ -168,7 +172,9 @@ func (num SafeNum) Multiply(rightNumber *SafeNum) *SafeNum {
 	if rightNumber == nil {
 		return nil
 	} else if rightNumber.decimal.Sign() == 0 {
-		return &num
+		return SafeNumFromString("0")
+	} else if num.decimal.Sign() < 0 {
+		return nil
 	} else if rightNumber.decimal.Sign() < 0 {
 		return nil
 	}
@@ -198,7 +204,9 @@ func (num SafeNum) DivideBy(rightNumber *SafeNum) *SafeNum {
 	if rightNumber == nil {
 		return nil
 	} else if rightNumber.decimal.Sign() == 0 {
-		return &num
+		return nil
+	} else if num.decimal.Sign() < 0 {
+		return nil
 	} else if rightNumber.decimal.Sign() < 0 {
 		return nil
 	}
