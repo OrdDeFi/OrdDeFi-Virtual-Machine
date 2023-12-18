@@ -7,6 +7,10 @@ import (
 	"errors"
 )
 
+/*
+Across all versions.
+*/
+
 func ODFIMeta() *memory_const.CoinMeta {
 	result := new(memory_const.CoinMeta)
 	result.Max = safe_number.SafeNumFromString("21000000")
@@ -55,5 +59,4 @@ func CoinMeta(db *db_utils.OrdDB, coinName string) (*memory_const.CoinMeta, erro
 		return nil, err
 	}
 	return coinMeta, nil
-
 }

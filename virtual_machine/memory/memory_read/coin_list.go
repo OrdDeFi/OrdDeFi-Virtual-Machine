@@ -6,6 +6,10 @@ import (
 	"encoding/json"
 )
 
+/*
+Across all versions.
+*/
+
 // AllDeployedCoins all coins except for odfi and odgv
 func AllDeployedCoins(db *db_utils.OrdDB) ([]string, error) {
 	r, err := db.Read(memory_const.CoinListTable)
