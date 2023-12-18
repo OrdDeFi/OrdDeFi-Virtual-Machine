@@ -2,9 +2,30 @@ package memory_read
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"errors"
 )
+
+func ODFIMeta() *memory_const.CoinMeta {
+	result := new(memory_const.CoinMeta)
+	result.Max = safe_number.SafeNumFromString("21000000")
+	result.Lim = safe_number.SafeNumFromString("1000")
+	result.AddrLim = safe_number.SafeNumFromString("1000")
+	result.Desc = "The major coin of OrdDeFi."
+	result.Icon = ""
+	return result
+}
+
+func ODGVMeta() *memory_const.CoinMeta {
+	result := new(memory_const.CoinMeta)
+	result.Max = safe_number.SafeNumFromString("21000000")
+	result.Lim = safe_number.SafeNumFromString("1000")
+	result.AddrLim = safe_number.SafeNumFromString("1000")
+	result.Desc = "The governance coin of OrdDeFi."
+	result.Icon = ""
+	return result
+}
 
 /*
 CoinMeta read coin metadata from db
@@ -12,6 +33,10 @@ CoinMeta read coin metadata from db
 func CoinMeta(db *db_utils.OrdDB, coinName string) (*memory_const.CoinMeta, error) {
 	if coinName == "" {
 		return nil, errors.New("read CoinMeta error: coin name is empty")
+	} else if coinName == "odfi" {
+		return ODFIMeta(), nil
+	} else if coinName == "odgv" {
+		return ODGVMeta(), nil
 	}
 	key := memory_const.CoinMetadataTable + ":" + coinName
 	value, err := db.Read(key)
