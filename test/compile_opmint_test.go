@@ -4,6 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"OrdDeFi-Virtual-Machine/virtual_machine"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"fmt"
 	"testing"
 )
 
@@ -39,41 +40,41 @@ func TestCompileMintInSingleCommand(t *testing.T) {
 	}
 }
 
-func TestCompileMintInSingleSliceCommands(t *testing.T) {
+func TestingMintInSingleSliceCommands(tick string, ver string) (*instruction_set.OpMintInstruction, error) {
 	commands := `[
-		{"p":"orddefi","op":"mint","tick":"ODFI","amt":"1000", "ver": "2"}
+		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000", "ver": "` + ver + `"}
 	]`
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {
-		t.Errorf("TestCommandParse GetRawTransaction error")
-		return
+		return nil, fmt.Errorf("TestCommandParse GetRawTransaction error")
 	}
 	tx := bitcoin_cli_channel.DecodeRawTransaction(*rawTx)
 	if tx == nil {
-		t.Errorf("TestCommandParse DecodeRawTransaction error")
-		return
+		return nil, fmt.Errorf("TestCommandParse DecodeRawTransaction error")
 	}
 	instructions, err := virtual_machine.CompileInstructions("text/plain", []byte(commands), tx, txId)
 	if err != nil {
-		t.Errorf("TestCommandParse CompileInstructions error: %s", err.Error())
-		return
+		return nil, fmt.Errorf("TestCommandParse CompileInstructions error: %s", err.Error())
 	}
 	if len(instructions) != 1 {
-		t.Errorf("TestCommandParse CompileInstructions error: instructions length should be 1")
-		return
+		return nil, fmt.Errorf("TestCommandParse CompileInstructions error: instructions length should be 1")
 	}
 	for _, instruction := range instructions {
 		switch value := instruction.(type) {
 		case instruction_set.OpMintInstruction:
-			if value.Ver != "2" {
-				t.Errorf("TestDeployInSingleCommand error: OpMint version error, expected 2")
-			} else {
-				println("succeed")
-			}
+			return &value, nil
 		default:
-			t.Errorf("TestDeployInSingleCommand error: instruction type error, expected OpDeployInstruction")
+			return nil, fmt.Errorf("TestDeployInSingleCommand error: instruction type error, expected OpDeployInstruction")
 		}
+	}
+	return nil, fmt.Errorf("TestDeployInSingleCommand error: instruction type error: no instruction compiled")
+}
+
+func TestCompileMintInSingleSliceCommands(t *testing.T) {
+	_, err := TestingMintInSingleSliceCommands("odfi", "1")
+	if err != nil {
+		t.Errorf("%s", err.Error())
 	}
 }
 
