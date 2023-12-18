@@ -2,6 +2,7 @@ package test
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"fmt"
 	"testing"
@@ -80,4 +81,23 @@ func TestExecuteMintVer2(t *testing.T) {
 	if err != nil {
 		t.Errorf("TestExecuteMintVer2 error: execute deploy error %s", err)
 	}
+}
+
+func TestReadBalance(t *testing.T) {
+	// 1. open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMintVer2 OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+	// 2. read balance
+	num, err := memory_read.Balance(db, "odfi", "bc1pq89nvjf7fd0kkyu8z825vyg48gupgmf9ngm5g9zk3hp8cyltd9nqr0fhj5", "1")
+	if err != nil {
+		t.Errorf("TestReadBalance error: execute deploy error %s", err)
+	}
+	if num == nil {
+		t.Errorf("TestReadBalance error: num should not be nil")
+	}
+
 }
