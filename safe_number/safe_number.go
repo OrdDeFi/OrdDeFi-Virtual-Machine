@@ -51,6 +51,9 @@ type SafeNum struct {
 }
 
 func SafeNumFromString(inputStr string) *SafeNum {
+	if inputStr == "" {
+		return nil
+	}
 	numStr := formalNumString(inputStr)
 	if numStr == nil {
 		return nil

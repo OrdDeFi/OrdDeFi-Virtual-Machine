@@ -19,7 +19,7 @@ func TotalMintedBalance(db *db_utils.OrdDB, coinName string) (*safe_number.SafeN
 	value, err := db.Read(key)
 	if err != nil {
 		if err.Error() == "leveldb: not found" {
-			return nil, nil
+			return safe_number.SafeNumFromString("0"), nil
 		} else {
 			return nil, err
 		}
@@ -42,7 +42,7 @@ func AddressMintedBalance(db *db_utils.OrdDB, coinName string, address string) (
 	value, err := db.Read(key)
 	if err != nil {
 		if err.Error() == "leveldb: not found" {
-			return nil, nil
+			return safe_number.SafeNumFromString("0"), nil
 		} else {
 			return nil, err
 		}
