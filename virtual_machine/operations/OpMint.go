@@ -75,7 +75,7 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	newAddressMinted := addressMinted.Add(mintingAmount)
 	newAddressMintedString := newAddressMinted.String()
 	// 4. calculating new balance
-	balance, err := memory_read.Balance(db, coinName, address, version)
+	balance, err := memory_read.AvailableBalance(db, coinName, address, version)
 	if err != nil {
 		return err
 	}

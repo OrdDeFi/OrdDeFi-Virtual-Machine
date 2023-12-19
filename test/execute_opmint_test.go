@@ -80,11 +80,14 @@ func testReadCoin(t *testing.T, coinName string) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 	// 2. read balance
-	num, err := memory_read.Balance(db, "odfi", "bc1pq89nvjf7fd0kkyu8z825vyg48gupgmf9ngm5g9zk3hp8cyltd9nqr0fhj5", "1")
+	available, transferable, err := memory_read.Balance(db, "odfi", "bc1pq89nvjf7fd0kkyu8z825vyg48gupgmf9ngm5g9zk3hp8cyltd9nqr0fhj5", "1")
 	if err != nil {
 		t.Errorf("TestReadBalance error: execute deploy error %s", err)
 	}
-	if num == nil {
+	if available == nil {
+		t.Errorf("TestReadBalance error: num should not be nil")
+	}
+	if transferable == nil {
 		t.Errorf("TestReadBalance error: num should not be nil")
 	}
 	// 3. read coin balance
