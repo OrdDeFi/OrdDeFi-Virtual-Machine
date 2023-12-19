@@ -128,13 +128,21 @@ func (num SafeNum) Add(rightNumber *SafeNum) *SafeNum {
 	resultInt.Add(&num.decimal, &rightNumber.decimal)
 
 	numCmpRes := num.decimal.Cmp(resultInt)
-	if numCmpRes != -1 {
+	if rightNumber.decimal.Sign() > 0 && numCmpRes != -1 {
 		// O.G. value should < resultInt, to protect from overflow
 		return nil
 	}
+	if rightNumber.decimal.Sign() == 0 && numCmpRes != 0 {
+		// O.G. value should == resultInt, to protect from overflow
+		return nil
+	}
 	rightCmpRes := rightNumber.decimal.Cmp(resultInt)
-	if rightCmpRes != -1 {
+	if num.decimal.Sign() > 0 && rightCmpRes != -1 {
 		// right value should < resultInt, to protect from overflow
+		return nil
+	}
+	if num.decimal.Sign() == 0 && rightCmpRes != 0 {
+		// right value should == resultInt, to protect from overflow
 		return nil
 	}
 	safeNum := SafeNum{

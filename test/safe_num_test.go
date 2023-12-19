@@ -28,11 +28,29 @@ func TestAdd(t *testing.T) {
 	}
 }
 
+func TestZeroAdd(t *testing.T) {
+	num1 := safe_number.SafeNumFromString("0")
+	num2 := safe_number.SafeNumFromString("1")
+	res := num1.Add(num2)
+	if res.String() != "1" {
+		t.Errorf("%s + %s = %s; expected 1", num1, num2, res)
+	}
+}
+
 func TestAddZero(t *testing.T) {
 	num1 := safe_number.SafeNumFromString("1")
 	num2 := safe_number.SafeNumFromString("0")
 	res := num1.Add(num2)
 	if res.String() != "1" {
+		t.Errorf("%s + %s = %s; expected 1", num1, num2, res)
+	}
+}
+
+func TestZeroAddZer0(t *testing.T) {
+	num1 := safe_number.SafeNumFromString("0")
+	num2 := safe_number.SafeNumFromString("0")
+	res := num1.Add(num2)
+	if res.String() != "0" {
 		t.Errorf("%s + %s = %s; expected 1", num1, num2, res)
 	}
 }
