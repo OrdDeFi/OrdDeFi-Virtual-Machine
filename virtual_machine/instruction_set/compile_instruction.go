@@ -31,15 +31,22 @@ func compileOpDeployInstruction(instruction AbstractInstruction) *OpDeployInstru
 
 // OpMintInstruction {"p":"orddefi","op":"mint","tick":"odfi","amt":"1000"}
 type OpMintInstruction struct {
-	TxOutAddr string
-	Tick      string // @required. Coin name to mint
-	Amt       string // @required. Amount to mint
-	Ver       string // @optional. Balance add to which version of VM. Default is v1 for !!ALL VERSIONS!! of VM.
+	TxOutAddr           string
+	PreviousOutputIndex int
+	Tick                string // @required. Coin name to mint
+	Amt                 string // @required. Amount to mint
+	Ver                 string // @optional. Balance add to which version of VM. Default is v1 for !!ALL VERSIONS!! of VM.
+}
+
+func (opMint OpMintInstruction) IsValidOpMintInstruction() bool {
+	valid := opMint.PreviousOutputIndex == 0
+	return valid
 }
 
 func compileOpMintInstruction(instruction AbstractInstruction) *OpMintInstruction {
 	op := OpMintInstruction{}
 	op.TxOutAddr = instruction.TxOutAddr
+	op.PreviousOutputIndex = instruction.PreviousOutputIndex
 	op.Tick = instruction.Tick
 	op.Amt = instruction.Amt
 	op.Ver = instruction.Ver

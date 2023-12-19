@@ -5,8 +5,9 @@ type AbstractInstruction struct {
 	TxId string
 
 	// Address
-	TxInAddr  string
-	TxOutAddr string
+	TxInAddr            string
+	TxOutAddr           string
+	PreviousOutputIndex int
 
 	// General key
 	P  string `json:"p"`  // Protocol

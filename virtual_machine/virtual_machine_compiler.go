@@ -86,6 +86,7 @@ func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstru
 				return nil, errors.New("filterAbstractInstructions ParseFirstOutputAddress got empty address")
 			}
 			abstractInstruction.TxOutAddr = *firstOutputAddress
+			abstractInstruction.PreviousOutputIndex = int(tx.TxIn[0].PreviousOutPoint.Index)
 			// parse input address if needed
 			if onlySelfTxAllowed(abstractInstruction) {
 				firstInputAddress, err := tx_utils.ParseFirstInputAddress(tx)

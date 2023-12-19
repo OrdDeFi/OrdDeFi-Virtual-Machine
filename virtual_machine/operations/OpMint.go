@@ -11,6 +11,9 @@ import (
 )
 
 func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.OrdDB) error {
+	if instruction.IsValidOpMintInstruction() == false {
+		return errors.New("repeat mint disabled")
+	}
 	// check if address is legal
 	address := instruction.TxOutAddr
 	if address == "" {
