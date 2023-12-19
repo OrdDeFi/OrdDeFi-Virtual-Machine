@@ -24,3 +24,21 @@ func Balance(db *db_utils.OrdDB, coinName string, address string, version string
 	num := safe_number.SafeNumFromString(*balanceString)
 	return num, nil
 }
+
+func AllCoinBalanceForAddress(db *db_utils.OrdDB, address string, version string) (map[string]string, error) {
+	if version == "" {
+		version = "1"
+	}
+	prefix := memory_const.AddressBalanceTable + ":v" + version + ":" + address + ":"
+	result, err := db.ReadAllPrefix(prefix)
+	return result, err
+}
+
+func AllAddressBalanceForCoin(db *db_utils.OrdDB, coinName string, version string) (map[string]string, error) {
+	if version == "" {
+		version = "1"
+	}
+	prefix := memory_const.CoinBalanceTable + ":v" + version + ":" + coinName + ":"
+	result, err := db.ReadAllPrefix(prefix)
+	return result, err
+}
