@@ -5,7 +5,9 @@ import (
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
+	"strconv"
 )
 
 func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.OrdDB) error {
@@ -24,8 +26,8 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 		return errors.New("CoinMeta not found named " + coinName)
 	}
 	// check if amt is legal
-	amount := safe_number.SafeNumFromString(instruction.Amt)
-	if amount == nil {
+	commandAmount := safe_number.SafeNumFromString(instruction.Amt)
+	if commandAmount == nil {
 		return errors.New("Amount parse failed: " + instruction.Amt)
 	}
 	// query total minted value
@@ -44,5 +46,33 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	if addressMinted == nil {
 		return errors.New("address minted returns nil: " + coinName + " @" + address)
 	}
-	return nil
+	// calculating params
+	// 1. calculating amount
+	remaining := coinMeta.Max.Subtract(totalMinted)
+	addrRemaining := coinMeta.AddrLim.Subtract(addressMinted)
+	minRemaining := remaining.Min(addrRemaining)
+	mintingAmount := minRemaining.Min(commandAmount)
+	// 2. calculating ver
+	version := "1" // DO NOT CHANGE! it should be always "1" by default, for all versions of VM
+	if instruction.Ver != "" {
+		versionInt, err := strconv.Atoi(instruction.Ver)
+		if err != nil {
+			return err
+		}
+		version = strconv.Itoa(versionInt)
+	}
+	// 3. calculating new total minted and address minted
+	newTotalMinted := totalMinted.Add(mintingAmount)
+	newTotalMintedString := newTotalMinted.String()
+	newAddressMinted := addressMinted.Add(mintingAmount)
+	newAddressMintedString := newAddressMinted.String()
+	// 4. calculating new balance
+	balance, err := memory_read.Balance(db, coinName, address, version)
+	if err != nil {
+		return err
+	}
+	newBalance := balance.Add(mintingAmount)
+	newBalanceString := newBalance.String()
+	err = memory_write.WriteMintInfo(db, coinName, address, newTotalMintedString, newAddressMintedString, newBalanceString, version)
+	return err
 }
