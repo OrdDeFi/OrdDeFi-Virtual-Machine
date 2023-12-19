@@ -52,6 +52,14 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	addrRemaining := coinMeta.AddrLim.Subtract(addressMinted)
 	minRemaining := remaining.Min(addrRemaining)
 	mintingAmount := minRemaining.Min(commandAmount)
+
+	if remaining.IsZero() {
+		return errors.New("Mint ended for " + coinName)
+	}
+	if addrRemaining.IsZero() {
+		return errors.New("Address reached limit for " + coinName)
+	}
+
 	// 2. calculating ver
 	version := "1" // DO NOT CHANGE! it should be always "1" by default, for all versions of VM
 	if instruction.Ver != "" {

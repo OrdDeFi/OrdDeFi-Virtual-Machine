@@ -260,3 +260,7 @@ func (num SafeNum) Min(rightNumber *SafeNum) *SafeNum {
 		return rightNumber
 	}
 }
+
+func (num SafeNum) IsZero() bool {
+	return num.decimal.Sign() == 0
+}
