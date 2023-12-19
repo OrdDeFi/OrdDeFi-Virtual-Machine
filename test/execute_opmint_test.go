@@ -128,11 +128,11 @@ func testReadAddress(t *testing.T, address string) {
 }
 
 func TestReadAddress1(t *testing.T) {
-	testReadAddress(t, "bc1qsl5psn0f6kk9rep0gejmnj9zgnts7gr40sv5xu")
+	testReadAddress(t, "39Vc3f9NsBoLPa2Qg7JFk34qhfQe8vRqaq")
 }
 
 func TestReadAddress2(t *testing.T) {
-	testReadAddress(t, "bc1qvp0m6efzkawm5ywnymket459dhtx326f64en6x")
+	testReadAddress(t, "bc1qrm3x757f5vp3skudtackrrac5qejp9h9xz403j")
 }
 
 func TestRemainingToMint(t *testing.T) {

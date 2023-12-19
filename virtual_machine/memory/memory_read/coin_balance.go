@@ -56,7 +56,7 @@ func AllCoinBalanceForAddress(db *db_utils.OrdDB, address string, version string
 	if version == "" {
 		version = "1"
 	}
-	prefix := memory_const.AddressBalanceTable + ":v" + version + ":" + address + ":"
+	prefix := memory_const.AddressCoinPrefix(address, version)
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }
@@ -65,7 +65,7 @@ func AllAddressBalanceForCoin(db *db_utils.OrdDB, coinName string, version strin
 	if version == "" {
 		version = "1"
 	}
-	prefix := memory_const.CoinBalanceTable + ":v" + version + ":" + coinName + ":"
+	prefix := memory_const.CoinAddressPrefix(coinName, version)
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }
