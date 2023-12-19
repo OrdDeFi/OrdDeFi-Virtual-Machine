@@ -40,7 +40,7 @@ func TestCompileMintInSingleCommand(t *testing.T) {
 	}
 }
 
-func TestingMintInSingleSliceCommands(tick string, ver string) (*instruction_set.OpMintInstruction, error) {
+func TestingMintInSingleSliceCommands(tick string, ver string, txId string) (*instruction_set.OpMintInstruction, error) {
 	commands := `[
 		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000"}
 	]`
@@ -49,7 +49,6 @@ func TestingMintInSingleSliceCommands(tick string, ver string) (*instruction_set
 			{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000", "ver": "` + ver + `"}
 		]`
 	}
-	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {
 		return nil, fmt.Errorf("TestCommandParse GetRawTransaction error")
@@ -77,7 +76,7 @@ func TestingMintInSingleSliceCommands(tick string, ver string) (*instruction_set
 }
 
 func TestCompileMintInSingleSliceCommands(t *testing.T) {
-	_, err := TestingMintInSingleSliceCommands("odfi", "1")
+	_, err := TestingMintInSingleSliceCommands("odfi", "1", "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc")
 	if err != nil {
 		t.Errorf("%s", err.Error())
 	}
