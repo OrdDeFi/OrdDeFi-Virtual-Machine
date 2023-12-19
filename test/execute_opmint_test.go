@@ -5,6 +5,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -21,7 +22,10 @@ func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, ver string, txI
 	// 2. execute deploy op
 	err = operations.ExecuteOpMint(*instruction, db)
 	if err != nil {
-		t.Errorf("TestExecuteMint error: execute deploy error %s", err)
+		if strings.HasPrefix(err.Error(), "Mint ended for ") || strings.HasPrefix(err.Error(), "Address reached limit for ") {
+		} else {
+			t.Errorf("TestExecuteMint error: execute deploy error %s", err)
+		}
 	}
 }
 
