@@ -5,8 +5,9 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"encoding/json"
 	"errors"
-	"github.com/btcsuite/btcd/wire"
 	"strings"
+
+	"github.com/btcsuite/btcd/wire"
 )
 
 const POrdDeFi = "orddefi"

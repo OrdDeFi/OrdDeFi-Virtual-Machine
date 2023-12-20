@@ -2,6 +2,7 @@ package test
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"fmt"
@@ -39,9 +40,16 @@ func TestExecuteMintODFI(t *testing.T) {
 	}
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
+	coinName := "odfi"
 
 	for _, txId := range TestingTxPool() {
-		TestingMintForParam(t, db, "odfi", txId)
+		TestingMintForParam(t, db, coinName, txId)
+	}
+	for _, address := range validTestingAddressPool() {
+		balance, _ := memory_read.AvailableBalance(db, coinName, address)
+		if !balance.IsEqualTo(safe_number.SafeNumFromString("1000")) {
+			t.Errorf("%s minted balance should be 1000, now is %s", address, balance.String())
+		}
 	}
 }
 

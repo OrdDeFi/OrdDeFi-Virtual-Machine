@@ -69,6 +69,19 @@ func TestingTxPool() []string {
 	return res
 }
 
+func validTestingAddressPool() []string {
+	res := []string{
+		"bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90",
+		"bc1qrm3x757f5vp3skudtackrrac5qejp9h9xz403j",
+		"bc1qwfn4fq5l86snpddxa7wy9jh6dc86vd6jdquw2g",
+		"bc1pf6glyanx859jq9du38ttwhnexzxwcwep0px9qcjt0x3y0fffeqqs8fjf6d",
+		"bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3",
+		"3KRsALnU2qi65YcntRwAXf7QKCdubf11He",
+		"bc1qhhvgvnkpvqfl8fdg9jyxxugpp8ref9q2l0qftm",
+	}
+	return res
+}
+
 func LargeTestingTxPool() []string {
 	res := []string{
 		"a0cc6892304db9f40387a2fee4655ef322b1620b35e8419730e0995b04983145",
