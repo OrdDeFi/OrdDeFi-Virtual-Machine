@@ -59,7 +59,7 @@ func TestExecuteMintODGV(t *testing.T) {
 	}
 }
 
-func testReadCoin(t *testing.T, coinName string) {
+func TestingReadCoin(t *testing.T, coinName string) {
 	// 1. open db
 	db, err := db_utils.OpenDB("./test_db")
 	if err != nil {
@@ -89,11 +89,11 @@ func testReadCoin(t *testing.T, coinName string) {
 }
 
 func TestReadODFIBalance(t *testing.T) {
-	testReadCoin(t, "odfi")
+	TestingReadCoin(t, "odfi")
 }
 
 func TestReadODGVBalance(t *testing.T) {
-	testReadCoin(t, "odgv")
+	TestingReadCoin(t, "odgv")
 }
 
 func testReadAddress(t *testing.T, address string) {
