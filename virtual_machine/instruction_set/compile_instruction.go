@@ -170,23 +170,19 @@ func checkTickLegal(tick string) bool {
 		return false
 	} else if strings.HasPrefix(tick, "%") {
 		return false
-	} else if tick == "odfi" {
-		return false
-	} else if tick == "odgv" {
-		return false
 	}
 	length := len(tick)
 	return length == 4
 }
 
 func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
-	if checkTickLegal(abstractInstruction.Tick) == false {
+	if abstractInstruction.Tick != "" && checkTickLegal(abstractInstruction.Tick) == false {
 		return nil
 	}
-	if checkTickLegal(abstractInstruction.Ltick) == false {
+	if abstractInstruction.Ltick != "" && checkTickLegal(abstractInstruction.Ltick) == false {
 		return nil
 	}
-	if checkTickLegal(abstractInstruction.Rtick) == false {
+	if abstractInstruction.Rtick != "" && checkTickLegal(abstractInstruction.Rtick) == false {
 		return nil
 	}
 	op := abstractInstruction.Op

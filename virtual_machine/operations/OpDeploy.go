@@ -11,6 +11,11 @@ import (
 
 func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_utils.OrdDB) error {
 	tick := instruction.Tick
+	if tick == "odfi" {
+		return errors.New("ExecuteOpMint error: tick cannot be odfi")
+	} else if tick == "odgv" {
+		return errors.New("ExecuteOpMint error: tick cannot be odgv")
+	}
 	maxValue := safe_number.SafeNumFromString(instruction.Max)
 	lim := safe_number.SafeNumFromString(instruction.Lim)
 	addrLim := safe_number.SafeNumFromString(instruction.AddrLim)
