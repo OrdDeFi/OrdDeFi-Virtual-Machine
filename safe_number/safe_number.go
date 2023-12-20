@@ -264,3 +264,13 @@ func (num SafeNum) Min(rightNumber *SafeNum) *SafeNum {
 func (num SafeNum) IsZero() bool {
 	return num.decimal.Sign() == 0
 }
+
+func (num SafeNum) IsNegative() bool {
+	return num.decimal.Sign() < 0
+}
+
+func (num SafeNum) IsEqualTo(rightNumber *SafeNum) bool {
+	rightDecimal := rightNumber.decimal
+	result := num.decimal.Cmp(&rightDecimal) == 0
+	return result
+}
