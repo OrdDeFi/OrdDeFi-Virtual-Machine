@@ -1,6 +1,7 @@
 package memory_write
 
 import (
+	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 )
 
@@ -24,4 +25,15 @@ func CoinBalanceDoubleWriteKVForTransferable(coinName string, address string, ne
 	batchWriting[balanceKey1] = newBalanceString
 	batchWriting[balanceKey2] = newBalanceString
 	return batchWriting
+}
+
+func CoinBalanceDoubleWriteKV(coinName string, address string, newBalanceString string, subAccount string) map[string]string {
+	if subAccount == db_utils.AvailableSubAccount {
+		return CoinBalanceDoubleWriteKVForAvailable(coinName, address, newBalanceString)
+	} else if subAccount == db_utils.TransferableSubAccount {
+		return CoinBalanceDoubleWriteKVForTransferable(coinName, address, newBalanceString)
+	} else {
+		return nil
+	}
+
 }
