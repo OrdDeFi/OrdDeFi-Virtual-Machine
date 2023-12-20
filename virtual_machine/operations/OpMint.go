@@ -7,11 +7,12 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
+	"strconv"
 )
 
 func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.OrdDB) error {
 	if instruction.IsValidOpMintInstruction() == false {
-		return errors.New("repeat mint disabled")
+		return errors.New("repeat mint disabled, used output index:" + strconv.Itoa(instruction.PreviousOutputIndex))
 	}
 	// check if address is legal
 	address := instruction.TxOutAddr
@@ -51,10 +52,21 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	// calculating params
 	// 1. calculating amount
 	remaining := coinMeta.Max.Subtract(totalMinted)
+	if remaining == nil {
+		return errors.New("OpMint calc remaining runtime error")
+	}
 	addrRemaining := coinMeta.AddrLim.Subtract(addressMinted)
+	if remaining == nil {
+		return errors.New("OpMint calc address remaining runtime error")
+	}
 	minRemaining := remaining.Min(addrRemaining)
+	if remaining == nil {
+		return errors.New("OpMint calc min remaining runtime error")
+	}
 	mintingAmount := minRemaining.Min(commandAmount)
-
+	if remaining == nil {
+		return errors.New("OpMint calc minting amount runtime error")
+	}
 	if remaining.IsZero() {
 		return errors.New("Mint ended for " + coinName)
 	}

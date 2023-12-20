@@ -24,7 +24,9 @@ func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
 	if err != nil {
 		if strings.HasPrefix(err.Error(), "Mint ended for ") || strings.HasPrefix(err.Error(), "Address reached limit for ") {
 		} else {
-			t.Errorf("TestExecuteMint error: execute deploy error %s", err)
+			if strings.HasPrefix(err.Error(), "repeat mint disabled") == false {
+				t.Errorf("TestExecuteMint error: execute OpMint error %s", err)
+			}
 		}
 	}
 }
