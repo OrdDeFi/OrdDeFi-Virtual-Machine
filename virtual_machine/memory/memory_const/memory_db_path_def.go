@@ -1,31 +1,33 @@
 package memory_const
 
-func CoinAddressPrefix(coinName string, version string) string {
-	path := CoinBalanceTable + ":v" + version + ":" + coinName + ":"
+import "OrdDeFi-Virtual-Machine/db_utils"
+
+func CoinAddressPrefix(coinName string) string {
+	path := CoinBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + coinName + ":"
 	return path
 }
 
-func CoinAddressAvailablePath(coinName string, address string, version string) string {
-	path := CoinAddressPrefix(coinName, version) + address + ":a"
+func CoinAddressAvailablePath(coinName string, address string) string {
+	path := CoinAddressPrefix(coinName) + address + ":a"
 	return path
 }
 
-func CoinAddressTransferablePath(coinName string, address string, version string) string {
-	path := CoinAddressPrefix(coinName, version) + address + ":t"
+func CoinAddressTransferablePath(coinName string, address string) string {
+	path := CoinAddressPrefix(coinName) + address + ":t"
 	return path
 }
 
-func AddressCoinPrefix(address string, version string) string {
-	path := CoinBalanceTable + ":v" + version + ":" + address + ":"
+func AddressCoinPrefix(address string) string {
+	path := CoinBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + address + ":"
 	return path
 }
 
-func AddressCoinAvailablePath(coinName string, address string, version string) string {
-	path := AddressCoinPrefix(address, version) + coinName + ":a"
+func AddressCoinAvailablePath(coinName string, address string) string {
+	path := AddressCoinPrefix(address) + coinName + ":a"
 	return path
 }
 
-func AddressCoinTransferablePath(coinName string, address string, version string) string {
-	path := AddressCoinPrefix(address, version) + coinName + ":t"
+func AddressCoinTransferablePath(coinName string, address string) string {
+	path := AddressCoinPrefix(address) + coinName + ":t"
 	return path
 }

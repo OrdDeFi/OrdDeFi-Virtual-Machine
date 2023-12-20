@@ -6,7 +6,6 @@ const OpNameTransfer = "transfer"
 const OpNameAddLiquidityProvider = "addlp"
 const OpNameRemoveLiquidityProvider = "rmlp"
 const OpNameSwap = "swap"
-const OpNameChangeVersion = "chver"
 
 // OpDeployInstruction {"p":"orddefi","op":"deploy","tick":"odfi","max":"21000000","lim":"1000","alim":"1000","icon":""}
 type OpDeployInstruction struct {
@@ -35,7 +34,6 @@ type OpMintInstruction struct {
 	PreviousOutputIndex int
 	Tick                string // @required. Coin name to mint
 	Amt                 string // @required. Amount to mint
-	Ver                 string // @optional. Balance add to which version of VM. Default is v1 for !!ALL VERSIONS!! of VM.
 }
 
 func (opMint OpMintInstruction) IsValidOpMintInstruction() bool {
@@ -49,7 +47,6 @@ func compileOpMintInstruction(instruction AbstractInstruction) *OpMintInstructio
 	op.PreviousOutputIndex = instruction.PreviousOutputIndex
 	op.Tick = instruction.Tick
 	op.Amt = instruction.Amt
-	op.Ver = instruction.Ver
 	return &op
 }
 
@@ -154,30 +151,6 @@ func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstructio
 	return &op
 }
 
-/*
-OpChangeVersionInstruction Move coins from a version to another.
-{"p":"orddefi","op":"chver","tick":"odfi","fromver":"1","tover":"2","amt":"10"} Move 10 odfi from v1 to v2.
-*/
-type OpChangeVersionInstruction struct {
-	TxInAddr  string
-	TxOutAddr string
-	Tick      string // @required. Coin name to change version
-	FromVer   string // @required. From version
-	ToVer     string // @required. To version
-	Amt       string // @required. Amount to change version
-}
-
-func compileOpChangeVersionInstruction(instruction AbstractInstruction) *OpChangeVersionInstruction {
-	op := OpChangeVersionInstruction{}
-	op.TxInAddr = instruction.TxInAddr
-	op.TxOutAddr = instruction.TxOutAddr
-	op.Tick = instruction.Tick
-	op.FromVer = instruction.FromVer
-	op.ToVer = instruction.ToVer
-	op.Amt = instruction.Amt
-	return &op
-}
-
 func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
 	op := abstractInstruction.Op
 	var res interface{}
@@ -211,11 +184,6 @@ func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
 		opSwap := compileOpSwapInstruction(abstractInstruction)
 		if opSwap != nil {
 			res = *opSwap
-		}
-	case OpNameChangeVersion:
-		opChangeVersion := compileOpChangeVersionInstruction(abstractInstruction)
-		if opChangeVersion != nil {
-			res = *opChangeVersion
 		}
 	}
 	if res != nil {

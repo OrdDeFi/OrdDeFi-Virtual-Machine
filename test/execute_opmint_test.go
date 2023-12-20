@@ -9,9 +9,9 @@ import (
 	"testing"
 )
 
-func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, ver string, txId string) {
+func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
 	// 1. compile instruction
-	instruction, err := TestingMintInSingleSliceCommands(tick, ver, txId)
+	instruction, err := TestingMintInSingleSliceCommands(tick, txId)
 	if err != nil {
 		t.Errorf("TestExecuteMint error: %s", err.Error())
 	}
@@ -39,7 +39,7 @@ func TestExecuteMint(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odfi", "", txId)
+		testForParam(t, db, "odfi", txId)
 	}
 }
 
@@ -53,7 +53,7 @@ func TestExecuteMintVer1(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odgv", "1", txId)
+		testForParam(t, db, "odgv", txId)
 	}
 }
 
@@ -67,7 +67,7 @@ func TestExecuteMintVer2(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odfi", "2", txId)
+		testForParam(t, db, "odfi", txId)
 	}
 }
 
@@ -80,7 +80,7 @@ func testReadCoin(t *testing.T, coinName string) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 	// 2. read balance
-	available, transferable, err := memory_read.Balance(db, "odfi", "bc1pq89nvjf7fd0kkyu8z825vyg48gupgmf9ngm5g9zk3hp8cyltd9nqr0fhj5", "1")
+	available, transferable, err := memory_read.Balance(db, "odfi", "bc1pq89nvjf7fd0kkyu8z825vyg48gupgmf9ngm5g9zk3hp8cyltd9nqr0fhj5")
 	if err != nil {
 		t.Errorf("TestReadBalance error: execute deploy error %s", err)
 	}
@@ -91,7 +91,7 @@ func testReadCoin(t *testing.T, coinName string) {
 		t.Errorf("TestReadBalance error: num should not be nil")
 	}
 	// 3. read coin balance
-	coinRes, err := memory_read.AllAddressBalanceForCoin(db, coinName, "")
+	coinRes, err := memory_read.AllAddressBalanceForCoin(db, coinName)
 	if err != nil {
 		t.Errorf("TestReadBalance AllAddressBalanceForCoin error: %s", err.Error())
 	}
@@ -118,7 +118,7 @@ func testReadAddress(t *testing.T, address string) {
 	fmt.Println("DB opened successfully.")
 
 	// 2. read address balance
-	coinRes, err := memory_read.AllCoinBalanceForAddress(db, address, "")
+	coinRes, err := memory_read.AllCoinBalanceForAddress(db, address)
 	if err != nil {
 		t.Errorf("TestReadBalance AllAddressBalanceForCoin error: %s", err.Error())
 	}

@@ -20,8 +20,6 @@ func executeInstruction(instruction interface{}, db *db_utils.OrdDB) {
 		operations.ExecuteOpRemoveLiquidityProvider(value, db)
 	case instruction_set.OpSwapInstruction:
 		operations.ExecuteOpSwap(value, db)
-	case instruction_set.OpChangeVersionInstruction:
-		operations.ExecuteOpChangeVersion(value, db)
 	}
 }
 

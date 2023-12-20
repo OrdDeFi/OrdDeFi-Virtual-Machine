@@ -11,12 +11,11 @@ func WriteMintInfo(
 	address string,
 	newTotalMintedString string,
 	newAddressMintedString string,
-	newBalanceString string,
-	version string) error {
+	newBalanceString string) error {
 	totalMintedKey := memory_const.TotalMintedBalanceTable + ":" + coinName
 	addressMintedKey := memory_const.AddressMintedBalanceTable + ":" + coinName + ":" + address
-	balanceKey1 := memory_const.CoinAddressAvailablePath(coinName, address, version)
-	balanceKey2 := memory_const.AddressCoinAvailablePath(coinName, address, version)
+	balanceKey1 := memory_const.CoinAddressAvailablePath(coinName, address)
+	balanceKey2 := memory_const.AddressCoinAvailablePath(coinName, address)
 	// Generate batch writing map
 	var batchWriting map[string]string
 	batchWriting = make(map[string]string)

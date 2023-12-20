@@ -10,8 +10,8 @@ import (
 For a single version.
 */
 
-func AvailableBalance(db *db_utils.OrdDB, coinName string, address string, version string) (*safe_number.SafeNum, error) {
-	balanceKey := memory_const.CoinAddressAvailablePath(coinName, address, version)
+func AvailableBalance(db *db_utils.OrdDB, coinName string, address string) (*safe_number.SafeNum, error) {
+	balanceKey := memory_const.CoinAddressAvailablePath(coinName, address)
 	balanceString, err := db.Read(balanceKey)
 	if err != nil {
 		if err.Error() == "leveldb: not found" {
@@ -25,8 +25,8 @@ func AvailableBalance(db *db_utils.OrdDB, coinName string, address string, versi
 	return num, nil
 }
 
-func TransferableBalance(db *db_utils.OrdDB, coinName string, address string, version string) (*safe_number.SafeNum, error) {
-	balanceKey := memory_const.CoinAddressTransferablePath(coinName, address, version)
+func TransferableBalance(db *db_utils.OrdDB, coinName string, address string) (*safe_number.SafeNum, error) {
+	balanceKey := memory_const.CoinAddressTransferablePath(coinName, address)
 	balanceString, err := db.Read(balanceKey)
 	if err != nil {
 		if err.Error() == "leveldb: not found" {
@@ -40,32 +40,26 @@ func TransferableBalance(db *db_utils.OrdDB, coinName string, address string, ve
 	return num, nil
 }
 
-func Balance(db *db_utils.OrdDB, coinName string, address string, version string) (*safe_number.SafeNum, *safe_number.SafeNum, error) {
-	available, err := AvailableBalance(db, coinName, address, version)
+func Balance(db *db_utils.OrdDB, coinName string, address string) (*safe_number.SafeNum, *safe_number.SafeNum, error) {
+	available, err := AvailableBalance(db, coinName, address)
 	if err != nil {
 		return nil, nil, err
 	}
-	transferable, err := TransferableBalance(db, coinName, address, version)
+	transferable, err := TransferableBalance(db, coinName, address)
 	if err != nil {
 		return nil, nil, err
 	}
 	return available, transferable, nil
 }
 
-func AllCoinBalanceForAddress(db *db_utils.OrdDB, address string, version string) (map[string]string, error) {
-	if version == "" {
-		version = "1"
-	}
-	prefix := memory_const.AddressCoinPrefix(address, version)
+func AllCoinBalanceForAddress(db *db_utils.OrdDB, address string) (map[string]string, error) {
+	prefix := memory_const.AddressCoinPrefix(address)
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }
 
-func AllAddressBalanceForCoin(db *db_utils.OrdDB, coinName string, version string) (map[string]string, error) {
-	if version == "" {
-		version = "1"
-	}
-	prefix := memory_const.CoinAddressPrefix(coinName, version)
+func AllAddressBalanceForCoin(db *db_utils.OrdDB, coinName string) (map[string]string, error) {
+	prefix := memory_const.CoinAddressPrefix(coinName)
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }

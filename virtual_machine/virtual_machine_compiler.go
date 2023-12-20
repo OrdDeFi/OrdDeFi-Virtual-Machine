@@ -26,8 +26,7 @@ func onlySelfTxAllowed(instruction instruction_set.AbstractInstruction) bool {
 	op := instruction.Op
 	if op == instruction_set.OpNameAddLiquidityProvider ||
 		op == instruction_set.OpNameRemoveLiquidityProvider ||
-		op == instruction_set.OpNameSwap ||
-		op == instruction_set.OpNameChangeVersion {
+		op == instruction_set.OpNameSwap {
 		return true
 	}
 	if op == instruction_set.OpNameTransfer && instruction.To != "" {
