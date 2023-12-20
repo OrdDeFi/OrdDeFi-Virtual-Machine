@@ -8,6 +8,11 @@ import (
 
 const CurrentDBVersion = "1"
 
+const (
+	AvailableSubAccount    = "a"
+	TransferableSubAccount = "t"
+)
+
 type OrdDB struct {
 	db *leveldb.DB
 }

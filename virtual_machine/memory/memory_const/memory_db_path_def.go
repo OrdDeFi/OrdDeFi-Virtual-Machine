@@ -8,12 +8,12 @@ func CoinAddressPrefix(coinName string) string {
 }
 
 func CoinAddressAvailablePath(coinName string, address string) string {
-	path := CoinAddressPrefix(coinName) + address + ":a"
+	path := CoinAddressPrefix(coinName) + address + ":" + db_utils.AvailableSubAccount
 	return path
 }
 
 func CoinAddressTransferablePath(coinName string, address string) string {
-	path := CoinAddressPrefix(coinName) + address + ":t"
+	path := CoinAddressPrefix(coinName) + address + ":" + db_utils.TransferableSubAccount
 	return path
 }
 
@@ -23,11 +23,11 @@ func AddressCoinPrefix(address string) string {
 }
 
 func AddressCoinAvailablePath(coinName string, address string) string {
-	path := AddressCoinPrefix(address) + coinName + ":a"
+	path := AddressCoinPrefix(address) + coinName + ":" + db_utils.AvailableSubAccount
 	return path
 }
 
 func AddressCoinTransferablePath(coinName string, address string) string {
-	path := AddressCoinPrefix(address) + coinName + ":t"
+	path := AddressCoinPrefix(address) + coinName + ":" + db_utils.TransferableSubAccount
 	return path
 }
