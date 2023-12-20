@@ -110,8 +110,9 @@ func TestExecuteDeployInvalidTick3(t *testing.T) {
 }
 
 func TestExecuteDeployExistingTick(t *testing.T) {
+	const tick = "abcd"
 	// 1. compile instruction
-	instruction, err := TestingDeployInSingleSliceCommands("abcd")
+	instruction, err := TestingDeployInSingleSliceCommands(tick)
 	if err != nil {
 		t.Errorf("TestExecuteDeployExistingTick error: %s", err.Error())
 	}
@@ -128,7 +129,7 @@ func TestExecuteDeployExistingTick(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	// 3. check existing
-	coinMeta, err := memory_read.CoinMeta(db, "abcd")
+	coinMeta, err := memory_read.CoinMeta(db, tick)
 	if err != nil {
 		t.Errorf("TestExecuteDeployExistingTick error: execute deploy error: %s", err.Error())
 	}
