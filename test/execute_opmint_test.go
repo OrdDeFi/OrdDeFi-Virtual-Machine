@@ -31,7 +31,7 @@ func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
 	}
 }
 
-func TestExecuteMint(t *testing.T) {
+func TestExecuteMintODFI(t *testing.T) {
 	// open db
 	db, err := db_utils.OpenDB("./test_db")
 	if err != nil {
@@ -45,7 +45,7 @@ func TestExecuteMint(t *testing.T) {
 	}
 }
 
-func TestExecuteMintVer1(t *testing.T) {
+func TestExecuteMintODGV(t *testing.T) {
 	// open db
 	db, err := db_utils.OpenDB("./test_db")
 	if err != nil {
@@ -56,20 +56,6 @@ func TestExecuteMintVer1(t *testing.T) {
 
 	for _, txId := range TestingTxPool() {
 		testForParam(t, db, "odgv", txId)
-	}
-}
-
-func TestExecuteMintVer2(t *testing.T) {
-	// open db
-	db, err := db_utils.OpenDB("./test_db")
-	if err != nil {
-		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
-	}
-	defer db_utils.CloseDB(db)
-	fmt.Println("DB opened successfully.")
-
-	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odfi", txId)
 	}
 }
 
