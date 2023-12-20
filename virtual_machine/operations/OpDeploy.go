@@ -7,38 +7,10 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
-	"strings"
 )
-
-func checkTickLegal(tick string) bool {
-	if strings.Contains(tick, "-") {
-		return false
-	} else if strings.Contains(tick, "_") {
-		return false
-	} else if strings.Contains(tick, ":") {
-		return false
-	} else if strings.HasPrefix(tick, "$") {
-		return false
-	} else if strings.HasPrefix(tick, "@") {
-		return false
-	} else if strings.HasPrefix(tick, "#") {
-		return false
-	} else if strings.HasPrefix(tick, "%") {
-		return false
-	} else if tick == "odfi" {
-		return false
-	} else if tick == "odgv" {
-		return false
-	}
-	length := len(tick)
-	return length == 4
-}
 
 func ExecuteOpDeploy(instruction instruction_set.OpDeployInstruction, db *db_utils.OrdDB) error {
 	tick := instruction.Tick
-	if checkTickLegal(tick) == false {
-		return errors.New("Tick is not legal to deploy: " + tick)
-	}
 	maxValue := safe_number.SafeNumFromString(instruction.Max)
 	lim := safe_number.SafeNumFromString(instruction.Lim)
 	addrLim := safe_number.SafeNumFromString(instruction.AddrLim)
