@@ -95,6 +95,9 @@ func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstru
 				if firstInputAddress == nil {
 					return nil, errors.New("filterAbstractInstructions ParseFirstInputAddress got empty address")
 				}
+				if *firstInputAddress != abstractInstruction.TxOutAddr {
+					return nil, errors.New("no privileges on cross-address " + abstractInstruction.Op)
+				}
 				abstractInstruction.TxInAddr = *firstInputAddress
 			}
 			// save txid to abstract instruction

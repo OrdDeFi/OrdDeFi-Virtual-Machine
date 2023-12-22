@@ -49,8 +49,16 @@ func TestingTransferInSingleSliceCommands(tick string, txId string, amt string, 
 func testTransferCommand(t *testing.T, db *db_utils.OrdDB, tick string, txId string, amt string, to string) {
 	// 1. compile instruction
 	instruction, err := TestingTransferInSingleSliceCommands(tick, txId, amt, to)
-	if err != nil {
+	if to != "" && err != nil {
 		if len(tick) == 4 {
+			if err.Error() != "TestCommandParse CompileInstructions error: no privileges on cross-address transfer" {
+				t.Errorf("testTransferCommand error: %s", err.Error())
+			}
+		}
+		return
+	}
+	if len(tick) != 4 && err != nil {
+		if err.Error() != "TestingTransferInSingleSliceCommands CompileInstructions error: instructions length should be 1" {
 			t.Errorf("testTransferCommand error: %s", err.Error())
 		}
 		return
