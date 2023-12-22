@@ -35,6 +35,14 @@ func onlySelfTxAllowed(instruction instruction_set.AbstractInstruction) bool {
 	return false
 }
 
+func disableBatchInstructionsForOpName(opName string) bool {
+	lowerOp := strings.ToLower(opName)
+	if lowerOp == instruction_set.OpNameDeploy || lowerOp == instruction_set.OpNameMint || lowerOp == instruction_set.OpNameTransfer {
+		return true
+	}
+	return false
+}
+
 /*
 preCompileInstructions
 1. Check content-type, only "text/plain" available as instructions;
@@ -55,8 +63,7 @@ func preCompileInstructions(contentType string, content []byte) []instruction_se
 	err2 := json.Unmarshal(content, &instructions)
 	if err2 == nil {
 		for _, eachInst := range instructions {
-			lowerOp := strings.ToLower(eachInst.Op)
-			if (lowerOp == "deploy" || lowerOp == "mint") && len(instructions) > 1 {
+			if disableBatchInstructionsForOpName(eachInst.Op) && len(instructions) > 1 {
 				// Bulk execute instructs doesn't allow "deploy" and "mint", otherwise all instructions in slice will be aborted.
 				return nil
 			}
