@@ -155,7 +155,7 @@ func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstructio
 	return &op
 }
 
-func checkTickLegal(tick string) bool {
+func CheckTickLegal(tick string) bool {
 	if strings.Contains(tick, "-") {
 		return false
 	} else if strings.Contains(tick, "_") {
@@ -176,13 +176,13 @@ func checkTickLegal(tick string) bool {
 }
 
 func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
-	if abstractInstruction.Tick != "" && checkTickLegal(abstractInstruction.Tick) == false {
+	if abstractInstruction.Tick != "" && CheckTickLegal(abstractInstruction.Tick) == false {
 		return nil
 	}
-	if abstractInstruction.Ltick != "" && checkTickLegal(abstractInstruction.Ltick) == false {
+	if abstractInstruction.Ltick != "" && CheckTickLegal(abstractInstruction.Ltick) == false {
 		return nil
 	}
-	if abstractInstruction.Rtick != "" && checkTickLegal(abstractInstruction.Rtick) == false {
+	if abstractInstruction.Rtick != "" && CheckTickLegal(abstractInstruction.Rtick) == false {
 		return nil
 	}
 	op := abstractInstruction.Op
