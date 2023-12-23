@@ -31,3 +31,7 @@ func AddressCoinTransferablePath(coinName string, address string) string {
 	path := AddressCoinPrefix(address) + coinName + ":" + db_utils.TransferableSubAccount
 	return path
 }
+
+func UTXOCarryingBalancePath(txId string) string {
+	return UTXOCarryingBalanceTable + ":" + txId + ":0" /*indicates the output index, which is always 0 */
+}

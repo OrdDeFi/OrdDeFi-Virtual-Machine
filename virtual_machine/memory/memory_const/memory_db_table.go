@@ -28,6 +28,12 @@ Value: balance string
 const CoinBalanceTable = "coinbalance"
 
 /*
+UTXOCarryingBalanceTable stores token balance in UTXO.
+The balance cast from available status to transferable by OpTransfer.
+*/
+const UTXOCarryingBalanceTable = "utxobalance"
+
+/*
 AddressBalanceTable stores a single address's {coin|lp:balance}.
 Path: AddressBalanceTable:version:address:coin_name|lp_name
 Value: balance string
