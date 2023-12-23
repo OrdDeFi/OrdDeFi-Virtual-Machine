@@ -4,6 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
@@ -101,9 +102,25 @@ func executeImmediateTransfer(instruction instruction_set.OpTransferInstruction,
 }
 
 func executeUTXOTransfer(instruction instruction_set.OpTransferInstruction, db *db_utils.OrdDB) error {
+	amountSafeNum := safe_number.SafeNumFromString(instruction.Amt)
+	if amountSafeNum == nil {
+		return nil
+	}
 	// remove from current address available, add to current address transferable
-	// save a record on instruction.TxId, content: coinName:amountString
-	return nil
+	batchKV, err := performTransferBatchWriteKV(
+		db, instruction.Tick,
+		instruction.TxOutAddr, db_utils.AvailableSubAccount,
+		instruction.TxOutAddr, db_utils.TransferableSubAccount,
+		amountSafeNum,
+	)
+	if err != nil {
+		return err
+	}
+	// save a record on UTXOCarryingBalance:txId:0:coinName, content: amountString
+	utxoCarryingBalancePath := memory_const.UTXOCarryingBalancePath(instruction.TxId)
+	batchKV[utxoCarryingBalancePath] = instruction.TxOutAddr + ":" + instruction.Tick + ":" + amountSafeNum.String()
+	err = db.StoreKeyValues(batchKV)
+	return err
 }
 
 func ExecuteTransfer(instruction instruction_set.OpTransferInstruction, db *db_utils.OrdDB) error {
