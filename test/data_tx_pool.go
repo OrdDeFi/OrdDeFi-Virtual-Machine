@@ -14,6 +14,22 @@ func TestingMultiOpReturn() []string {
 	return res
 }
 
+func TestingAllowedRepeatMint() []string {
+	res := []string{
+		"12594be6645bcaa0e7de1c948caee7cd8e49e9c7817d89ea629e61687e317575",
+	}
+	return res
+}
+
+func TestingForbiddenRepeatMint() []string {
+	res := []string{
+		"f4905daeb80419902c1f76cd5e841e5f5a2566956c5932be50667fbf53c3a552",
+		"d7c222ec5fed2217541afbbba310d3de61e6fd291930341b1868ca933ed62bc8",
+		"fa44487e96553a7e38de7ddd2ed741f0b626c6d57184ca1f1c54d124eeea31bf",
+	}
+	return res
+}
+
 func TestingOpReturnFirst() []string {
 	res := []string{
 		"",
