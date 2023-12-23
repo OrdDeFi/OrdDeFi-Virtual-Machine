@@ -12,6 +12,12 @@ import (
 /*
 UTXOCarryingBalance
 :return &address, &coinName, coinAmount, error
+
+Discussion:
+If there is no record on this UTXO(txId:0), returns nil, nil, nil, nil.
+In other words, if this method works without error, there are 2 kinds of return:
+ 1. UTXO contains nothing, returns nil, nil, nil, nil
+ 2. UTXO contains coins, returns &address, &coinName, coinAmount, error
 */
 func UTXOCarryingBalance(db *db_utils.OrdDB, txId string) (*string, *string, *safe_number.SafeNum, error) {
 	key := memory_const.UTXOCarryingBalancePath(txId)

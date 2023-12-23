@@ -160,9 +160,54 @@ func txOutputSatMap(tx *wire.MsgTx) ([]outputLocationMap, error) {
 	return result, nil
 }
 
+func containsTransferUTXOInTxIn(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
+	// tx nil protection
+	if tx == nil {
+		return false, errors.New("tx is nil")
+	}
+	// If one TxIn contains coins, returns true. Otherwise false.
+	contains := false
+	for _, input := range tx.TxIn {
+		// previousOutputIndex != 0 cannot be a UTXO which contains coins.
+		previousOutputIndex := input.PreviousOutPoint.Index
+		if previousOutputIndex != 0 {
+			// All UTXOs `carrying transferable tokens` are created at TxOut[0].
+			// So if the `previousOutputIndex` is not 0, the input UTXO could not be a `carrying transferable tokens` UTXO.
+			continue
+		}
+		// Query coin info from DB:
+		previousTxId := input.PreviousOutPoint.Hash.String()
+		address, tick, amount, err := memory_read.UTXOCarryingBalance(db, previousTxId)
+		// Return error if DB returns error
+		if err != nil {
+			return false, err
+		}
+		if address == nil && tick == nil && amount == nil {
+			// This UTXO contains nothing, let's seek the next one
+			continue
+		} else if address != nil && tick != nil && amount != nil {
+			// Found coin in one UTXO, then the whole tx contains UTXO
+			contains = true
+			break
+		} else {
+			// Shouldn't been there, something wrong at DB writing.
+			return false, errors.New("containsTransferUTXOInTxIn error: DB interrupted")
+		}
+	}
+	return contains, nil
+}
+
 func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 	if tx == nil {
 		return false, errors.New("tx is nil")
 	}
-	return false, nil
+	anyInputCarryingCoins, err := containsTransferUTXOInTxIn(db, tx)
+	if err != nil {
+		return false, err
+	}
+	if anyInputCarryingCoins == false {
+		return false, nil
+	}
+	// perform transfer coins
+	return true, nil
 }
