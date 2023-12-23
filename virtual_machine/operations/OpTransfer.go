@@ -3,6 +3,7 @@ package operations
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
+	"OrdDeFi-Virtual-Machine/tx_utils"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
@@ -129,6 +130,34 @@ func ExecuteTransfer(instruction instruction_set.OpTransferInstruction, db *db_u
 	} else {
 		return executeUTXOTransfer(instruction, db)
 	}
+}
+
+type outputLocationMap struct {
+	satLocation int64
+	address     string
+}
+
+func txOutputSatMap(tx *wire.MsgTx) ([]outputLocationMap, error) {
+	// int64 range [-9223372036854775808, 9223372036854775807] covers 2100000000000000
+	var result []outputLocationMap
+	var currentSat int64
+	currentSat = 0
+	for _, output := range tx.TxOut {
+		address, err := tx_utils.ParseOutputAddress(output)
+		if err != nil {
+			return nil, err
+		}
+		if address == nil {
+			// output is OpReturn
+			continue
+		}
+		mapObject := new(outputLocationMap)
+		mapObject.satLocation = currentSat
+		mapObject.address = *address
+		result = append(result, *mapObject)
+		currentSat = currentSat + output.Value
+	}
+	return result, nil
 }
 
 func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
