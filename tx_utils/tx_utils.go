@@ -40,6 +40,22 @@ func ParseFirstInputAddress(tx *wire.MsgTx) (*string, error) {
 	return &address, nil
 }
 
+func ParseOutputAddress(output *wire.TxOut) (*string, error) {
+	scriptType, outputAddress, _, err := txscript.ExtractPkScriptAddrs(output.PkScript, &chaincfg.MainNetParams)
+	if err != nil {
+		return nil, err
+	}
+	if scriptType == txscript.NullDataTy {
+		// output is OpReturn
+		return nil, nil
+	} else if scriptType == txscript.NonStandardTy {
+		// output is non-standard OpReturn
+		return nil, nil
+	}
+	address := outputAddress[0].EncodeAddress()
+	return &address, nil
+}
+
 func ParseFirstOutputAddress(tx *wire.MsgTx) (*string, error) {
 	if tx == nil {
 		return nil, errors.New("ParseFirstOutputAddress error: transaction is nil")
@@ -47,15 +63,15 @@ func ParseFirstOutputAddress(tx *wire.MsgTx) (*string, error) {
 	var err error
 	address := ""
 	for _, output := range tx.TxOut {
-		scriptType, outputAddress, _, err := txscript.ExtractPkScriptAddrs(output.PkScript, &chaincfg.MainNetParams)
+		addressPointer, err := ParseOutputAddress(output)
 		if err != nil {
 			break
 		}
-		if scriptType == txscript.NullDataTy {
-			// First output is OpReturn, using next output
+		if addressPointer == nil {
+			// kind of OpReturn
 			continue
 		}
-		address = outputAddress[0].EncodeAddress()
+		address = *addressPointer
 		break
 	}
 	if err != nil {
