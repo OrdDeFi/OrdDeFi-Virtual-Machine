@@ -8,36 +8,42 @@ import (
 	"github.com/btcsuite/btcd/wire"
 )
 
-func ParseFirstInputAddress(tx *wire.MsgTx) (*string, error) {
-	if tx == nil {
-		return nil, errors.New("ParseInputAddress error: transaction is nil")
-	}
-	if len(tx.TxIn) == 0 {
-		return nil, errors.New("ParseFirstInputAddress error: TxIn is empty")
-	}
-	previousTxId := tx.TxIn[0].PreviousOutPoint.Hash.String()
-	previousOutputIndex := tx.TxIn[0].PreviousOutPoint.Index
+func ParseInputAddressAndValue(txIn *wire.TxIn) (*string, *int64, error) {
+	previousTxId := txIn.PreviousOutPoint.Hash.String()
+	previousOutputIndex := txIn.PreviousOutPoint.Index
 	previousRawTx := bitcoin_cli_channel.GetRawTransaction(previousTxId)
 	if previousRawTx == nil {
-		return nil, errors.New("ParseFirstInputAddress GetRawTransaction failed")
+		return nil, nil, errors.New("ParseInputAddressAndValue GetRawTransaction failed")
 	}
 	previousTx := bitcoin_cli_channel.DecodeRawTransaction(*previousRawTx)
 	if previousTx == nil {
-		return nil, errors.New("ParseFirstInputAddress DecodeRawTransaction failed")
+		return nil, nil, errors.New("ParseInputAddressAndValue DecodeRawTransaction failed")
 	}
 	if int(previousOutputIndex) >= len(previousTx.TxOut) {
-		return nil, errors.New("ParseFirstInputAddress previousTxOut outbound")
+		return nil, nil, errors.New("ParseInputAddressAndValue previousTxOut outbound")
 	}
 	previousOutput := previousTx.TxOut[previousOutputIndex]
 	_, previousOutputAddress, _, err := txscript.ExtractPkScriptAddrs(previousOutput.PkScript, &chaincfg.MainNetParams)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	address := previousOutputAddress[0].EncodeAddress()
 	if address == "" {
-		return nil, errors.New("ParseFirstInputAddress error: parse address failed")
+		return nil, nil, errors.New("ParseInputAddressAndValue error: parse address failed")
 	}
-	return &address, nil
+	value := previousOutput.Value
+	return &address, &value, nil
+}
+
+func ParseFirstInputAddress(tx *wire.MsgTx) (*string, error) {
+	if tx == nil {
+		return nil, errors.New("ParseFirstInputAddress error: transaction is nil")
+	}
+	if len(tx.TxIn) == 0 {
+		return nil, errors.New("ParseFirstInputAddress error: TxIn is empty")
+	}
+	addrPointer, _, err := ParseInputAddressAndValue(tx.TxIn[0])
+	return addrPointer, err
 }
 
 func ParseOutputAddress(output *wire.TxOut) (*string, error) {
