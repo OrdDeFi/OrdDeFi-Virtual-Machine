@@ -114,9 +114,9 @@ func ExecuteTransfer(instruction instruction_set.OpTransferInstruction, db *db_u
 	}
 }
 
-func ApplyUTXOTransfer(tx *wire.MsgTx) error {
+func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 	if tx == nil {
-		return errors.New("tx is nil")
+		return false, errors.New("tx is nil")
 	}
-	return nil
+	return false, nil
 }

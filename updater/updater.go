@@ -5,6 +5,7 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/inscription_parser"
 	"OrdDeFi-Virtual-Machine/virtual_machine"
+	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"errors"
 )
 
@@ -38,6 +39,14 @@ func UpdateBlockNumber(blockNumber int, dataDir string) error {
 		if tx == nil {
 			err = errors.New("ParseRawTransaction -> DecodeRawTransaction Failed")
 			break
+		}
+		utxoTransferApplied, err := operations.ApplyUTXOTransfer(db, tx)
+		if err != nil {
+			break
+		}
+		if utxoTransferApplied {
+			// If UTXO transfer applied, stop executing any instruction in this tx to avoid security issue.
+			continue
 		}
 		contentType, content, err := inscription_parser.ParseTransactionToInscription(*tx)
 		if err != nil {
