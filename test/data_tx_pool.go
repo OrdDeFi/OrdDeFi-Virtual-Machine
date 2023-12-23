@@ -1,5 +1,26 @@
 package test
 
+func TestingNonStandardTy() []string {
+	res := []string{
+		"b8efa17bca85a96a999ef9a9d1a751a5035522ca8670599a366f789c861ff1a5",
+	}
+	return res
+}
+
+func TestingMultiOpReturn() []string {
+	res := []string{
+		"cb2de193ae12dccba74f952251dd926be71fc981ffee4017dbf6520839ebede1",
+	}
+	return res
+}
+
+func TestingOpReturnFirst() []string {
+	res := []string{
+		"",
+	}
+	return res
+}
+
 func TestingTxPool() []string {
 	res := []string{
 		"a0cc6892304db9f40387a2fee4655ef322b1620b35e8419730e0995b04983145",
