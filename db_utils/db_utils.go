@@ -77,7 +77,11 @@ func (db OrdDB) ReadAllPrefix(prefixString string) (map[string]string, error) {
 func (db OrdDB) StoreKeyValues(keyValues map[string]string) error {
 	batch := new(leveldb.Batch)
 	for key, value := range keyValues {
-		batch.Put([]byte(key), []byte(value))
+		if value == "" {
+			batch.Delete([]byte(key))
+		} else {
+			batch.Put([]byte(key), []byte(value))
+		}
 	}
 	err := db.db.Write(batch, nil)
 	return err
