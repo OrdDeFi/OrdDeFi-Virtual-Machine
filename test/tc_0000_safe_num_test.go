@@ -12,6 +12,23 @@ func TestEmptyString(t *testing.T) {
 	}
 }
 
+func TestLongString1(t *testing.T) {
+	testString := "21012345678901234567890123456789.000000000000000001"
+	num := safe_number.SafeNumFromString(testString)
+	numStr := num.String()
+	if numStr != testString {
+		t.Errorf("SafeNumFromString(\"\") = %s; expected %s", numStr, testString)
+	}
+}
+
+func TestLongString2(t *testing.T) {
+	testString := "210123456789012345678901234567890.000000000000000001"
+	num := safe_number.SafeNumFromString(testString)
+	if num != nil {
+		t.Errorf("SafeNumFromString(\"\") = %s; expected nil", num)
+	}
+}
+
 func TestNegative(t *testing.T) {
 	num := safe_number.SafeNumFromString("-1")
 	if num != nil {

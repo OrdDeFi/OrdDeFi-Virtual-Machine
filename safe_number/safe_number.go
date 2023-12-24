@@ -6,11 +6,23 @@ import (
 	"strings"
 )
 
+func checkLengthLegal(inputStr string) bool {
+	components := strings.Split(inputStr, ".")
+	if len(components[0]) > 32 {
+		return false
+	}
+	return true
+}
+
 func formalNumString(inputStr string) *string {
+
 	trimmedStr := strings.Replace(inputStr, " ", "", -1)
 	trimmedStr = strings.Replace(trimmedStr, "\n", "", -1)
 	trimmedStr = strings.Replace(trimmedStr, "\t", "", -1)
 	if trimmedStr == "" {
+		return nil
+	}
+	if checkLengthLegal(trimmedStr) == false {
 		return nil
 	}
 	components := strings.Split(trimmedStr, ".")
