@@ -202,6 +202,18 @@ func containsTransferUTXOInTxIn(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error
 	return contains, nil
 }
 
+func calculatingAddress(outputMap []outputLocationMap, satIndex int64, selfTransferAddress string) string {
+	for _, object := range outputMap {
+		if object.satLocation < satIndex {
+			continue
+		} else {
+			address := object.address
+			return address
+		}
+	}
+	return selfTransferAddress
+}
+
 func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 	if tx == nil {
 		return false, errors.New("tx is nil")
