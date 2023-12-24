@@ -62,16 +62,20 @@ func TestInValidToParam(t *testing.T) {
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {
 		t.Errorf("TestCommandParse GetRawTransaction error")
+		return
 	}
 	tx := bitcoin_cli_channel.DecodeRawTransaction(*rawTx)
 	if tx == nil {
 		t.Errorf("TestCommandParse DecodeRawTransaction error")
+		return
 	}
 	instructions, err := virtual_machine.CompileInstructions("text/plain", []byte(commands), tx, txId)
 	if err != nil {
 		t.Errorf("TestCommandParse CompileInstructions error: %s", err.Error())
+		return
 	}
 	if len(instructions) != 0 {
 		t.Errorf("TestCommandParse instructions count is not 1")
+		return
 	}
 }
