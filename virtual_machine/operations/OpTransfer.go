@@ -157,6 +157,11 @@ func txOutputSatMap(tx *wire.MsgTx) ([]outputLocationMap, error) {
 		result = append(result, *mapObject)
 		currentSat = currentSat + output.Value
 	}
+	// Appending tail info, for calculating transaction fee(gas) burning sats
+	mapObject := new(outputLocationMap)
+	mapObject.satLocation = currentSat
+	mapObject.address = ""
+	result = append(result, *mapObject)
 	return result, nil
 }
 
