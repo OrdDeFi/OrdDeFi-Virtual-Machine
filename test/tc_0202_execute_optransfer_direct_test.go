@@ -46,25 +46,25 @@ func TestingTransferInSingleSliceCommands(tick string, txId string, amt string, 
 	return nil, fmt.Errorf("TestingTransferInSingleSliceCommands error: instruction type error: no instruction compiled")
 }
 
-func testTransferCommand(t *testing.T, db *db_utils.OrdDB, tick string, txId string, amt string, to string) {
+func testDirectTransferCommand(t *testing.T, db *db_utils.OrdDB, tick string, txId string, amt string, to string) {
 	// 1. compile instruction
 	instruction, err := TestingTransferInSingleSliceCommands(tick, txId, amt, to)
 	if to != "" && err != nil {
 		if len(tick) == 4 {
 			if err.Error() != "TestCommandParse CompileInstructions error: no privileges on cross-address transfer" {
-				t.Errorf("testTransferCommand error: %s", err.Error())
+				t.Errorf("testDirectTransferCommand error: %s", err.Error())
 			}
 		}
 		return
 	}
 	if len(tick) != 4 && err != nil {
 		if err.Error() != "TestingTransferInSingleSliceCommands CompileInstructions error: instructions length should be 1" {
-			t.Errorf("testTransferCommand error: %s", err.Error())
+			t.Errorf("testDirectTransferCommand error: %s", err.Error())
 		}
 		return
 	}
 	if instruction == nil {
-		t.Errorf("testTransferCommand error: transfer instruction is nil")
+		t.Errorf("testDirectTransferCommand error: transfer instruction is nil")
 		return
 	}
 
@@ -79,12 +79,12 @@ func testTransferCommand(t *testing.T, db *db_utils.OrdDB, tick string, txId str
 
 func testDirectBalanceNotEnough(t *testing.T, db *db_utils.OrdDB, tick string) {
 	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
-	testTransferCommand(t, db, tick, txId, "1001", "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
+	testDirectTransferCommand(t, db, tick, txId, "1001", "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
 }
 
 func testDirectNormalTransfer(t *testing.T, db *db_utils.OrdDB, tick string) {
 	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
-	testTransferCommand(t, db, tick, txId, "50", "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
+	testDirectTransferCommand(t, db, tick, txId, "50", "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
 }
 
 func TestDirectTransfer(t *testing.T) {
@@ -99,26 +99,6 @@ func TestDirectTransfer(t *testing.T) {
 	testDirectNormalTransfer(t, db, "shift")
 	testDirectBalanceNotEnough(t, db, "odfi")
 	testDirectNormalTransfer(t, db, "odfi")
-}
-
-func testUTXOIllegalTick(t *testing.T, db *db_utils.OrdDB, tick string) {
-
-}
-
-func testUTXOBalanceNotEnough(t *testing.T, db *db_utils.OrdDB, tick string) {
-
-}
-
-func testUTXONormalTransfer(t *testing.T, db *db_utils.OrdDB, tick string) {
-
-}
-
-func TestUTXOTransfer(t *testing.T) {
-
-}
-
-func TestUTXOTransferArriving(t *testing.T) {
-
 }
 
 func TestReadODFIBalanceAfterTransfer(t *testing.T) {
