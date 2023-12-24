@@ -8,9 +8,21 @@ import (
 	"github.com/btcsuite/btcd/wire"
 )
 
+/*
+ParseInputAddressAndValue
+returns &inputAddress, &inputValue, err
+1. If txIn is not coinbase, inputAddress and inputValue are not nil, err is nil
+2. If txIn is coinbase, inputAddress and inputValue are nil, err is nil
+There couldn't be a situation ((address is nil) && (inputValue is not nil)), or ((address is not nil) && (inputValue is nil))
+*/
 func ParseInputAddressAndValue(txIn *wire.TxIn) (*string, *int64, error) {
+	const coinbaseOutputIndex uint32 = 4294967295
+	const coinbaseTxId = "0000000000000000000000000000000000000000000000000000000000000000"
 	previousTxId := txIn.PreviousOutPoint.Hash.String()
 	previousOutputIndex := txIn.PreviousOutPoint.Index
+	if previousTxId == coinbaseTxId && previousOutputIndex == coinbaseOutputIndex {
+		return nil, nil, nil
+	}
 	previousRawTx := bitcoin_cli_channel.GetRawTransaction(previousTxId)
 	if previousRawTx == nil {
 		return nil, nil, errors.New("ParseInputAddressAndValue GetRawTransaction failed")
