@@ -3,6 +3,7 @@ package tx_utils
 import (
 	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"errors"
+	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
@@ -99,4 +100,12 @@ func ParseFirstOutputAddress(tx *wire.MsgTx) (*string, error) {
 		return nil, errors.New("ParseFirstOutputAddress error: parse address failed")
 	}
 	return &address, nil
+}
+
+func IsValidateBitcoinAddress(address string) bool {
+	_, err := btcutil.DecodeAddress(address, &chaincfg.MainNetParams)
+	if err != nil {
+		return false
+	}
+	return true
 }
