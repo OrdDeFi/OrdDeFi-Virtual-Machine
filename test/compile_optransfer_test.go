@@ -18,8 +18,13 @@ func TestParseCoinbaseTxInput(t *testing.T) {
 		t.Errorf("TestParseCoinbaseTxInput DecodeRawTransaction error")
 		return
 	}
-	for _, input := range tx.TxIn {
+	for i, input := range tx.TxIn {
 		address, inputValue, err := tx_utils.ParseInputAddressAndValue(input)
+		if address != nil && inputValue != nil {
+			println(i, *address, *inputValue)
+		} else {
+			println(i, "nil", "nil")
+		}
 		if err != nil {
 			t.Errorf("TestParseCoinbaseTxInput ParseInputAddressAndValue error %s", err)
 			return
