@@ -225,6 +225,79 @@ func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 	if anyInputCarryingCoins == false {
 		return false, nil
 	}
+	// 0. Generate output index map
+	outputSatMap, err := txOutputSatMap(tx)
+	if err != nil {
+		return false, err
+	}
 	// perform transfer coins
+	// 1. Keeps the current sat index in `currentInputSatIndex` and `nextInputSatIndex`
+	var currentInputSatIndex int64
+	var nextInputSatIndex int64
+	currentInputSatIndex = 0
+	nextInputSatIndex = 0
+	for _, input := range tx.TxIn {
+		// 2. Shift sat index from last loop `nextInputSatIndex` into `currentInputSatIndex`
+		currentInputSatIndex = nextInputSatIndex
+		// 3. Parse input, save input value for calculating UTXO (which carrying coins) routing info
+		inputAddress, inputValue, err := tx_utils.ParseInputAddressAndValue(input)
+		if err != nil {
+			return false, err
+		}
+		if inputAddress == nil || inputValue == nil {
+			// This is a coinbase tx, which doesn't contain input.
+			// So there won't be any witness script or UTXO moving instruction.
+			return false, nil
+		}
+		// 3.1 Record input sat index for next loop
+		nextInputSatIndex = nextInputSatIndex + *inputValue
+
+		// 4. Check UTXO routing
+		// 4.1 previousOutputIndex != 0 cannot be an UTXO which contains coins. Because the UTXO cannot receive OrdDeFi instruction.
+		previousOutputIndex := input.PreviousOutPoint.Index
+		if previousOutputIndex != 0 {
+			// All UTXOs `carrying transferable tokens` are created at TxOut[0].
+			// So if the `previousOutputIndex` is not 0, the input UTXO could not be a `carrying transferable tokens` UTXO.
+			continue
+		}
+		// 4.2 Query coin info from DB:
+		previousTxId := input.PreviousOutPoint.Hash.String()
+		address, tick, amount, err := memory_read.UTXOCarryingBalance(db, previousTxId)
+		// 4.3 Return error if DB returns error
+		if err != nil {
+			return false, err
+		}
+		if address == nil && tick == nil && amount == nil {
+			// 4.4 This UTXO contains nothing, let's seek the next one
+			continue
+		} else if address != nil && tick != nil && amount != nil {
+			// 5 Update DB
+			// 5.1 Calculate with address should this UTXO run into
+			toAddress := calculatingAddress(outputSatMap, currentInputSatIndex, *inputAddress)
+			if toAddress == "" {
+				return false, errors.New("calculatingAddress error, toAddress is nil")
+			}
+			// 5.2 Generate updating value KV
+			batchKV, err := performTransferBatchWriteKV(
+				db, *tick,
+				*inputAddress, db_utils.TransferableSubAccount,
+				toAddress, db_utils.AvailableSubAccount,
+				amount,
+			)
+			if err != nil {
+				return false, err
+			}
+			// 5.3 Remove UTXO carrying coins info
+			batchKV[previousTxId] = ""
+			err = db.StoreKeyValues(batchKV)
+			if err != nil {
+				return false, err
+			}
+			continue
+		} else {
+			// 4.5 Shouldn't been there, something wrong at DB writing.
+			return false, errors.New("containsTransferUTXOInTxIn error: DB interrupted")
+		}
+	}
 	return true, nil
 }
