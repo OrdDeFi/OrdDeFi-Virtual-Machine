@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func testForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
+func TestingMintForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
 	// 1. compile instruction
 	instruction, err := TestingMintInSingleSliceCommands(tick, txId)
 	if err != nil {
@@ -41,7 +41,7 @@ func TestExecuteMintODFI(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odfi", txId)
+		TestingMintForParam(t, db, "odfi", txId)
 	}
 }
 
@@ -55,7 +55,7 @@ func TestExecuteMintODGV(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		testForParam(t, db, "odgv", txId)
+		TestingMintForParam(t, db, "odgv", txId)
 	}
 }
 
