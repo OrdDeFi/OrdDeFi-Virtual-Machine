@@ -1,6 +1,7 @@
 package instruction_set
 
 import (
+	"OrdDeFi-Virtual-Machine/tx_utils"
 	"strings"
 )
 
@@ -183,6 +184,9 @@ func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
 		return nil
 	}
 	if abstractInstruction.Rtick != "" && CheckTickLegal(abstractInstruction.Rtick) == false {
+		return nil
+	}
+	if abstractInstruction.To != "" && tx_utils.IsValidateBitcoinAddress(abstractInstruction.To) == false {
 		return nil
 	}
 	op := abstractInstruction.Op
