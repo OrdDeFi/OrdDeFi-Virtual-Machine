@@ -2,10 +2,25 @@ package test
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"fmt"
 	"strconv"
 	"testing"
 )
+
+func TestLPPath(t *testing.T) {
+	expectedPath := "lpaddrbalance:v1:odgv-odfi:bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h"
+	path := memory_const.LPAddressPath("odgv-odfi", "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h")
+	if path != expectedPath {
+		t.Errorf("DB path error, got %s, expected %s", path, expectedPath)
+	}
+
+	expectedPath = "addrlpbalance:v1:bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h:odgv-odfi"
+	path = memory_const.AddressLPPath("odgv-odfi", "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h")
+	if path != expectedPath {
+		t.Errorf("DB path error, got %s, expected %s", path, expectedPath)
+	}
+}
 
 func TestDB(t *testing.T) {
 	db, err := db_utils.OpenDB("./test_db")

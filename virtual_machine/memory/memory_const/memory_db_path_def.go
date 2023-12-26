@@ -35,3 +35,23 @@ func AddressCoinTransferablePath(coinName string, address string) string {
 func UTXOCarryingBalancePath(txId string) string {
 	return UTXOCarryingBalanceTable + ":" + txId + ":0" /*indicates the output index, which is always 0 */
 }
+
+func LPAddressPrefix(lpName string) string {
+	path := LPAddressBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + lpName + ":"
+	return path
+}
+
+func LPAddressPath(lpName string, address string) string {
+	path := LPAddressPrefix(lpName) + address
+	return path
+}
+
+func AddressLPPrefix(address string) string {
+	path := AddressLPBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + address + ":"
+	return path
+}
+
+func AddressLPPath(lpName string, address string) string {
+	path := AddressLPPrefix(address) + lpName
+	return path
+}
