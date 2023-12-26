@@ -15,7 +15,7 @@ func WriteMintInfo(
 	totalMintedKey := memory_const.TotalMintedBalanceTable + ":" + coinName
 	addressMintedKey := memory_const.AddressMintedBalanceTable + ":" + coinName + ":" + address
 
-	batchWriting := CoinBalanceDoubleWriteKVForAvailable(coinName, address, newBalanceString)
+	batchWriting := CoinBalanceDoubleWriteKV(coinName, address, newBalanceString, db_utils.AvailableSubAccount)
 	batchWriting[totalMintedKey] = newTotalMintedString
 	batchWriting[addressMintedKey] = newAddressMintedString
 	err := db.StoreKeyValues(batchWriting)

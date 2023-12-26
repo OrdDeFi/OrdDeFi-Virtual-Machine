@@ -5,7 +5,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 )
 
-func CoinBalanceDoubleWriteKVForAvailable(coinName string, address string, newBalanceString string) map[string]string {
+func coinBalanceDoubleWriteKVForAvailable(coinName string, address string, newBalanceString string) map[string]string {
 	balanceKey1 := memory_const.CoinAddressAvailablePath(coinName, address)
 	balanceKey2 := memory_const.AddressCoinAvailablePath(coinName, address)
 	// Generate batch writing map
@@ -16,7 +16,7 @@ func CoinBalanceDoubleWriteKVForAvailable(coinName string, address string, newBa
 	return batchWriting
 }
 
-func CoinBalanceDoubleWriteKVForTransferable(coinName string, address string, newBalanceString string) map[string]string {
+func coinBalanceDoubleWriteKVForTransferable(coinName string, address string, newBalanceString string) map[string]string {
 	balanceKey1 := memory_const.CoinAddressTransferablePath(coinName, address)
 	balanceKey2 := memory_const.AddressCoinTransferablePath(coinName, address)
 	// Generate batch writing map
@@ -29,9 +29,9 @@ func CoinBalanceDoubleWriteKVForTransferable(coinName string, address string, ne
 
 func CoinBalanceDoubleWriteKV(coinName string, address string, newBalanceString string, subAccount string) map[string]string {
 	if subAccount == db_utils.AvailableSubAccount {
-		return CoinBalanceDoubleWriteKVForAvailable(coinName, address, newBalanceString)
+		return coinBalanceDoubleWriteKVForAvailable(coinName, address, newBalanceString)
 	} else if subAccount == db_utils.TransferableSubAccount {
-		return CoinBalanceDoubleWriteKVForTransferable(coinName, address, newBalanceString)
+		return coinBalanceDoubleWriteKVForTransferable(coinName, address, newBalanceString)
 	} else {
 		return nil
 	}
