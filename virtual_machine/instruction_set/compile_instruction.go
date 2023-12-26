@@ -148,10 +148,28 @@ type OpRemoveLiquidityProviderInstruction struct {
 }
 
 /*
-extractParams alphabetical compare ltick and rtick, make smaller be the actual left
+ExtractParams alphabetical compare ltick and rtick, make smaller be the actual left
 return actualLtick, actualRtick, amt
 */
-func (op OpRemoveLiquidityProviderInstruction) extractParams() (*string, *string, *safe_number.SafeNum) {
+func (op OpRemoveLiquidityProviderInstruction) ExtractParams() (*string, *string, *safe_number.SafeNum) {
+	if op.Ltick == "" || op.Rtick == "" {
+		return nil, nil, nil
+	}
+	cmpRes := strings.Compare(op.Ltick, op.Rtick)
+	if cmpRes == 0 {
+		return nil, nil, nil
+	}
+	ltick := op.Ltick
+	rtick := op.Rtick
+	amt := safe_number.SafeNumFromString(op.Amt)
+	if amt == nil {
+		return nil, nil, nil
+	}
+	if cmpRes < 0 {
+		return &ltick, &rtick, amt
+	} else if cmpRes > 0 {
+		return &rtick, &ltick, amt
+	}
 	return nil, nil, nil
 }
 
@@ -181,11 +199,32 @@ type OpSwapInstruction struct {
 }
 
 /*
-extractParams alphabetical compare ltick and rtick, make smaller be the actual left
-return actualLtick, actualRtick
+ExtractParams alphabetical compare ltick and rtick, make smaller be the actual left
+return actualLtick, actualRtick, amt
 */
-func (op OpSwapInstruction) extractParams() (*string, *string) {
-	return nil, nil
+func (op OpSwapInstruction) ExtractParams() (*string, *string, *safe_number.SafeNum) {
+	if op.Ltick == "" || op.Rtick == "" {
+		return nil, nil, nil
+	}
+	if op.Ltick != op.Spend && op.Rtick != op.Spend {
+		return nil, nil, nil
+	}
+	cmpRes := strings.Compare(op.Ltick, op.Rtick)
+	if cmpRes == 0 {
+		return nil, nil, nil
+	}
+	ltick := op.Ltick
+	rtick := op.Rtick
+	amt := safe_number.SafeNumFromString(op.Amt)
+	if amt == nil {
+		return nil, nil, nil
+	}
+	if cmpRes < 0 {
+		return &ltick, &rtick, amt
+	} else if cmpRes > 0 {
+		return &rtick, &ltick, amt
+	}
+	return nil, nil, nil
 }
 
 func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstruction {
