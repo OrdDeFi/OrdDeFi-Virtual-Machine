@@ -1,5 +1,11 @@
 package memory_read
 
+import "OrdDeFi-Virtual-Machine/db_utils"
+
 /*
-For a single version.
+AllLiquidityPairs
+Read all liquidity pairs
 */
+func AllLiquidityPairs(db *db_utils.OrdDB) ([]string, error) {
+	return nil, nil
+}
