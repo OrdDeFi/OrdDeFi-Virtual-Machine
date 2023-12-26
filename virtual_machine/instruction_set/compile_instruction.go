@@ -1,6 +1,7 @@
 package instruction_set
 
 import (
+	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/tx_utils"
 	"strings"
 )
@@ -95,6 +96,14 @@ type OpAddLiquidityProviderInstruction struct {
 	AllowSwap string // @optional, default: 1. allow swap 1(true) / 0(false)
 }
 
+/*
+extractParams alphabetical compare ltick and rtick, make smaller be the actual left
+return actualLtick, actualRtick, actualLamt, actualRamt
+*/
+func (op OpAddLiquidityProviderInstruction) extractParams() (*string, *string, *safe_number.SafeNum, *safe_number.SafeNum) {
+	return nil, nil, nil, nil
+}
+
 func compileOpAddLiquidityProviderInstruction(instruction AbstractInstruction) *OpAddLiquidityProviderInstruction {
 	op := OpAddLiquidityProviderInstruction{}
 	op.TxInAddr = instruction.TxInAddr
@@ -117,6 +126,14 @@ type OpRemoveLiquidityProviderInstruction struct {
 	Ltick     string // @required. Left coin at pair
 	Rtick     string // @required. Right coin at pair
 	Amt       string // @required. Amount to remove LP
+}
+
+/*
+extractParams alphabetical compare ltick and rtick, make smaller be the actual left
+return actualLtick, actualRtick, amt
+*/
+func (op OpRemoveLiquidityProviderInstruction) extractParams() (*string, *string, *safe_number.SafeNum) {
+	return nil, nil, nil
 }
 
 func compileOpRemoveLiquidityProviderInstruction(instruction AbstractInstruction) *OpRemoveLiquidityProviderInstruction {
@@ -142,6 +159,14 @@ type OpSwapInstruction struct {
 	Spend     string // @required. Spend which coin at swapping. e.g. "odgv"
 	Amt       string // @required. Amount to spend for the spending coin
 	Threshold string // @optional, default: 0.005. Allowed threshold at swapping. If slippage > threshold, swap will be aborted
+}
+
+/*
+extractParams alphabetical compare ltick and rtick, make smaller be the actual left
+return actualLtick, actualRtick
+*/
+func (op OpSwapInstruction) extractParams() (*string, *string) {
+	return nil, nil
 }
 
 func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstruction {
