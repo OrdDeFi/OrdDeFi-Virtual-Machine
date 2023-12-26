@@ -56,7 +56,7 @@ func TestValidToParam(t *testing.T) {
 	}
 }
 
-func TestInValidToParam(t *testing.T) {
+func TestInvalidToParam(t *testing.T) {
 	txId := TestingTxPool()[0]
 	commands := `{"p":"orddefi","op":"transfer","tick":"odfi","amt":"1000","to":"abcd"}`
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
