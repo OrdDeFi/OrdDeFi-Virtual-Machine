@@ -21,24 +21,24 @@ Value: balance string
 const AddressMintedBalanceTable = "addrminted"
 
 /*
-CoinBalanceTable stores a single coin's {address:balance}.
-Path: CoinBalanceTable:version:coin_name|lp_name:address
+CoinAddressBalanceTable stores a single coin's {address:balance}.
+Path: CoinAddressBalanceTable:version:coin_name|lp_name:address
 Value: balance string
 */
-const CoinBalanceTable = "coinbalance"
+const CoinAddressBalanceTable = "coinaddrbalance"
+
+/*
+AddressCoinBalanceTable stores a single address's {coin|lp:balance}.
+Path: AddressBalanceTable:version:address:coin_name|lp_name
+Value: balance string
+*/
+const AddressCoinBalanceTable = "addrcoinbalance"
 
 /*
 UTXOCarryingBalanceTable stores token balance in UTXO.
 The balance cast from available status to transferable by OpTransfer.
 */
 const UTXOCarryingBalanceTable = "utxobalance"
-
-/*
-AddressBalanceTable stores a single address's {coin|lp:balance}.
-Path: AddressBalanceTable:version:address:coin_name|lp_name
-Value: balance string
-*/
-const AddressBalanceTable = "addrbalance"
 
 // LpListTable stores all lp names
 const LpListTable = "lplist"

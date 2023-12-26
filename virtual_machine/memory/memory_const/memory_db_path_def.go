@@ -3,7 +3,7 @@ package memory_const
 import "OrdDeFi-Virtual-Machine/db_utils"
 
 func CoinAddressPrefix(coinName string) string {
-	path := CoinBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + coinName + ":"
+	path := CoinAddressBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + coinName + ":"
 	return path
 }
 
@@ -18,7 +18,7 @@ func CoinAddressTransferablePath(coinName string, address string) string {
 }
 
 func AddressCoinPrefix(address string) string {
-	path := CoinBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + address + ":"
+	path := AddressCoinBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + address + ":"
 	return path
 }
 
