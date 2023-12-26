@@ -40,6 +40,7 @@ func TestingOpReturnFirst() []string {
 func TestingTxPool() []string {
 	res := []string{
 		"a0cc6892304db9f40387a2fee4655ef322b1620b35e8419730e0995b04983145",
+		"61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e",
 		"61587d2f1671d8cc18255f0c550e41b06d165ba8bfe9b3c7437f41aa8f1438ff",
 		"c9cd642303bb453c0d5306cd24900cef8b3d680962f898da8ff5c82a9bdb120d",
 		"3fffd663a0a7a75ce1e0d43d488f01ed164b4066dc3cbca29e9f5cefed825d03",

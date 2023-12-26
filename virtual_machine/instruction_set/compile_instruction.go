@@ -101,6 +101,25 @@ extractParams alphabetical compare ltick and rtick, make smaller be the actual l
 return actualLtick, actualRtick, actualLamt, actualRamt
 */
 func (op OpAddLiquidityProviderInstruction) extractParams() (*string, *string, *safe_number.SafeNum, *safe_number.SafeNum) {
+	if op.Ltick == "" || op.Rtick == "" {
+		return nil, nil, nil, nil
+	}
+	cmpRes := strings.Compare(op.Ltick, op.Rtick)
+	if cmpRes == 0 {
+		return nil, nil, nil, nil
+	}
+	ltick := op.Ltick
+	rtick := op.Rtick
+	lamt := safe_number.SafeNumFromString(op.Lamt)
+	ramt := safe_number.SafeNumFromString(op.Ramt)
+	if lamt == nil || ramt == nil {
+		return nil, nil, nil, nil
+	}
+	if cmpRes < 0 {
+		return &ltick, &rtick, lamt, ramt
+	} else if cmpRes > 0 {
+		return &rtick, &ltick, ramt, lamt
+	}
 	return nil, nil, nil, nil
 }
 
