@@ -6,9 +6,9 @@ import (
 )
 
 /*
-LiquidityPairBalance
+LiquidityProviderBalance
 Read lp token amount owning by address
 */
-func LiquidityPairBalance(db *db_utils.OrdDB, coinName string, address string) (*safe_number.SafeNum, error) {
+func LiquidityProviderBalance(db *db_utils.OrdDB, coinName string, address string) (*safe_number.SafeNum, error) {
 	return nil, nil
 }

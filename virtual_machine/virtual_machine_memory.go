@@ -48,32 +48,32 @@ type Transactions struct {
 }
 
 /*
-LiquidityPairList
+LiquidityProviderList
 @db_path db.lp_[coin-name]
 @desc Store all liquidity providers associated with a coin
 @writing_op OpAddLiquidity
 */
-type LiquidityPairList struct {
+type LiquidityProviderList struct {
 	pairs []string
 }
 
 /*
-LiquidityPair
+LiquidityProvider
 @db_path db.lp_[left-coin-name|right-coin-name]
 @desc Store liquidity provider metadata, totalValue, price
 @writing_op OpAddLiquidity, OpRemoveLiquidity, OpSwap
 */
-type LiquidityPair struct {
+type LiquidityProvider struct {
 	total big.Float
 	price big.Float
 }
 
 /*
-LiquidityPairBalance
+LiquidityProviderBalance
 @db_path db.lp_[left-coin-name|right-coin-name]_[address]
 @desc Store liquidity provider balance of a single value
 @writing_op OpAddLiquidity, OpRemoveLiquidity, OpSwap
 */
-type LiquidityPairBalance struct {
+type LiquidityProviderBalance struct {
 	value big.Float
 }

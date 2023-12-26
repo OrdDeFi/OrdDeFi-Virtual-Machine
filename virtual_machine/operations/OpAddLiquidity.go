@@ -28,7 +28,7 @@ func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityPro
 	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
 		return errors.New("OpAddLiquidityProvider error: params extracting error")
 	}
-	coinMap, err := memory_read.LiquidityPairMetadata(*lTick, *rTick)
+	coinMap, err := memory_read.LiquidityProviderMetadata(*lTick, *rTick)
 	if err != nil {
 		return err
 	}

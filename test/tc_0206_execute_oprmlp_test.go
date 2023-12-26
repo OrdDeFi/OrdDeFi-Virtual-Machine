@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestRemoveLiquidityPair(t *testing.T) {
+func TestRemoveLiquidityProvider(t *testing.T) {
 	// open db
 	db, err := db_utils.OpenDB("./test_db")
 	if err != nil {
