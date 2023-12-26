@@ -5,11 +5,19 @@ import (
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
 )
 
 func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {
-	return nil
+	// extract params
+	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
+	address := instruction.TxOutAddr
+	if lAmt.IsZero() || rAmt.IsZero() {
+		return errors.New("createLP error: lamt or ramt is 0")
+	}
+	err := memory_write.WriteCreateLPInfo(db, *lTick, *rTick, lAmt, rAmt, address)
+	return err
 }
 
 func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, coinMap map[string]safe_number.SafeNum) error {
