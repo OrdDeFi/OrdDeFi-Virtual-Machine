@@ -97,10 +97,10 @@ type OpAddLiquidityProviderInstruction struct {
 }
 
 /*
-extractParams alphabetical compare ltick and rtick, make smaller be the actual left
+ExtractParams alphabetical compare ltick and rtick, make smaller be the actual left
 return actualLtick, actualRtick, actualLamt, actualRamt
 */
-func (op OpAddLiquidityProviderInstruction) extractParams() (*string, *string, *safe_number.SafeNum, *safe_number.SafeNum) {
+func (op OpAddLiquidityProviderInstruction) ExtractParams() (*string, *string, *safe_number.SafeNum, *safe_number.SafeNum) {
 	if op.Ltick == "" || op.Rtick == "" {
 		return nil, nil, nil, nil
 	}

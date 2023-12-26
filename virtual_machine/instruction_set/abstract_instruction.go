@@ -30,8 +30,8 @@ type AbstractInstruction struct {
 	To string `json:"to"` // @optional. When to address passed, only self to self tx allowed to execute OpTransfer.
 
 	// Keys for add liquidity / remove liquidity / swap
-	Ltick string `json:"lt"` // @required. Left coin at pair
-	Rtick string `json:"rt"` // @required. Right coin at pair
+	Ltick string `json:"ltick"` // @required. Left coin at pair
+	Rtick string `json:"rtick"` // @required. Right coin at pair
 
 	// Keys for add liquidity
 	Lamt string `json:"lamt"` // @required. Left coin amount to adding into liquidity provider
