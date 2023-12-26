@@ -2,7 +2,9 @@ package operations
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"errors"
 )
 
@@ -10,7 +12,11 @@ func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db 
 	return nil
 }
 
-func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {
+func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, coinMap map[string]safe_number.SafeNum) error {
+	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
+	x := coinMap[*lTick]
+	y := coinMap[*rTick]
+	println(x.String(), y.String(), lAmt.String(), rAmt.String())
 	return nil
 }
 
@@ -18,5 +24,17 @@ func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityPro
 	if instruction.TxInAddr != instruction.TxOutAddr {
 		return errors.New("no privileges on cross-address add liquidity provider")
 	}
-	return nil
+	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
+		return errors.New("OpAddLiquidityProvider error: params extracting error")
+	}
+	coinMap, err := memory_read.LiquidityPairMetadata(*lTick, *rTick)
+	if err != nil {
+		return err
+	}
+	if coinMap == nil {
+		return createLP(instruction, db)
+	} else {
+		return addToExistingLP(instruction, db, coinMap)
+	}
 }
