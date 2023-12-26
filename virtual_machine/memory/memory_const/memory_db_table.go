@@ -28,7 +28,7 @@ Value: balance string
 const CoinAddressBalanceTable = "coinaddrbalance"
 
 /*
-AddressCoinBalanceTable stores a single address's {coin|lp:balance}.
+AddressCoinBalanceTable stores a single address's {coin:balance}.
 Path: AddressBalanceTable:version:address:coin_name|lp_name
 Value: balance string
 */
@@ -47,8 +47,15 @@ const LpListTable = "lplist"
 const LpMetadataTable = "lpmeta"
 
 /*
-LpBalanceTable stores a single lp's {address:balance}.
+LPAddressBalanceTable stores a single lp's {address:balance}.
 Path: LpBalanceTable:lp_name:address
 Value: balance string
 */
-const LpBalanceTable = "lpbalance"
+const LPAddressBalanceTable = "lpaddrbalance"
+
+/*
+AddressLPBalanceTable stores a single address's {lp:balance}.
+Path: LpBalanceTable:lp_name:address
+Value: balance string
+*/
+const AddressLPBalanceTable = "addrlpbalance"
