@@ -39,6 +39,39 @@ func getDiscount(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 	return DiscountForODFIAmount(totalValue)
 }
 
+/*
+getLPTakerFee
+Trading **** at any pair, this pair will take 0.18% of consumed ****.
+Final charged fee is affected by discount value.
+*/
+func getLPTakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) (*safe_number.SafeNum, error) {
+	discount, err := getDiscount(instruction, db)
+	if err != nil {
+		return nil, err
+	}
+	if discount == nil {
+		return nil, errors.New("ExecuteOpSwap error: get discount failed")
+	}
+	return nil, nil
+}
+
+/*
+getODFITakerFee
+Trading **** at any pair, ODFI-**** will take 0.02% of consumed ****.
+If **** is ODFI, ODFITakerFee will be free.
+Final charged fee is affected by discount value.
+*/
+func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) (*safe_number.SafeNum, error) {
+	discount, err := getDiscount(instruction, db)
+	if err != nil {
+		return nil, err
+	}
+	if discount == nil {
+		return nil, errors.New("ExecuteOpSwap error: get discount failed")
+	}
+	return nil, nil
+}
+
 func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *safe_number.SafeNum) *safe_number.SafeNum {
 	// alpha = deltaX / X
 	// beta = 1 - 1 / (1 + alpha)
@@ -50,5 +83,13 @@ func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 	if instruction.TxInAddr != instruction.TxOutAddr {
 		return errors.New("no privileges on cross-address swap")
 	}
+	consumingAmt := safe_number.SafeNumFromString(instruction.Amt)
+	if consumingAmt == nil {
+		return errors.New("ExecuteOpSwap error: amt is nil")
+	}
+	if consumingAmt.IsZero() {
+		return errors.New("ExecuteOpSwap error: amt is 0")
+	}
+
 	return nil
 }
