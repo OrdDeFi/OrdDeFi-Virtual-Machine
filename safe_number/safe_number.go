@@ -286,3 +286,9 @@ func (num SafeNum) IsEqualTo(rightNumber *SafeNum) bool {
 	result := num.decimal.Cmp(&rightDecimal) == 0
 	return result
 }
+
+func (num SafeNum) Compare(rightNumber *SafeNum) int {
+	rightDecimal := rightNumber.decimal
+	result := num.decimal.Cmp(&rightDecimal)
+	return result
+}
