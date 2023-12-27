@@ -51,5 +51,6 @@ func LPMetaFromJsonString(jsonString string) (*LPMeta, error) {
 	result.RTick = s.RTick
 	result.LAmt = safe_number.SafeNumFromString(s.LAmt)
 	result.RAmt = safe_number.SafeNumFromString(s.RAmt)
+	result.Total = safe_number.SafeNumFromString(s.Total)
 	return result, nil
 }

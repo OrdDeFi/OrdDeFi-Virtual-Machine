@@ -81,12 +81,12 @@ func TestAddLP(t *testing.T) {
 		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
 		return
 	}
-	lpMeta, err := memory_read.LiquidityProviderMetadata(lTick, rTick)
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
 	if err != nil {
 		t.Errorf("read LiquidityProviderMetadata error: %s", err.Error())
 		return
 	}
-	for k, v := range lpMeta {
-		println(k, v.String())
+	if lpMeta != nil {
+		println(lpMeta.Total.String(), lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
 	}
 }

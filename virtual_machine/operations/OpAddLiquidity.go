@@ -2,8 +2,8 @@ package operations
 
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
-	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
@@ -20,11 +20,11 @@ func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db 
 	return err
 }
 
-func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, coinMap map[string]safe_number.SafeNum) error {
+func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
-	x := coinMap[*lTick]
-	y := coinMap[*rTick]
-	println(x.String(), y.String(), lAmt.String(), rAmt.String())
+	x := lpMeta.LAmt
+	y := lpMeta.RAmt
+	println(lTick, rTick, x.String(), y.String(), lAmt.String(), rAmt.String())
 	return nil
 }
 
@@ -36,13 +36,13 @@ func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityPro
 	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
 		return errors.New("OpAddLiquidityProvider error: params extracting error")
 	}
-	coinMap, err := memory_read.LiquidityProviderMetadata(*lTick, *rTick)
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, *lTick, *rTick)
 	if err != nil {
 		return err
 	}
-	if coinMap == nil {
+	if lpMeta == nil {
 		return createLP(instruction, db)
 	} else {
-		return addToExistingLP(instruction, db, coinMap)
+		return addToExistingLP(instruction, db, lpMeta)
 	}
 }
