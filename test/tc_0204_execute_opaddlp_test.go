@@ -62,7 +62,7 @@ func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
 		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
 	}
 	println("ODFI a/t:", odfiA.String(), odfiT.String())
-	odgvA, odgvT, err := memory_read.Balance(db, "odfi", address)
+	odgvA, odgvT, err := memory_read.Balance(db, "odgv", address)
 	if err != nil {
 		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
 	}
@@ -81,6 +81,17 @@ func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
 		t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
 	}
 	println("LP Meta:", *lpMetaJSON)
+}
+
+func TestToFindLegalTestingAddress(t *testing.T) {
+	for _, txId := range TestingTxPool() {
+		lTick := "odfi"
+		rTick := "odgv"
+		inscription, err := addLiquidityProviderInstruction(txId, lTick, rTick, "50", "100")
+		if err == nil {
+			println(inscription.TxOutAddr, txId)
+		}
+	}
 }
 
 func TestAddLP(t *testing.T) {
@@ -121,10 +132,10 @@ func TestAddLP2(t *testing.T) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 
-	txId := "2f42dd5b600a1781b755425f04350d12248fd9a63da6865d5259cff4111e34d6"
+	txId := "2ad883c0532fbbb69380b46f72d53b9426f89bdcb95a29805fc9a11e0cfd6997"
 	lTick := "odfi"
 	rTick := "odgv"
-	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "50", "100")
+	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "10", "10")
 	if err != nil {
 		t.Errorf("compile instruction error: %s", err.Error())
 		return
@@ -138,5 +149,5 @@ func TestAddLP2(t *testing.T) {
 		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
 		return
 	}
-	checkUserBalance(t, db, "bc1qf00grpzeyx55v9g08gq4vylprw6cqselzn8vht")
+	checkUserBalance(t, db, "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
 }
