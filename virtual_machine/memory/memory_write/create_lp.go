@@ -38,7 +38,7 @@ func WriteCreateLPInfo(
 	lpMeta.Total = safe_number.SafeNumFromString("1000")
 	lpMetaJsonString, err := lpMeta.JsonString()
 	if err != nil {
-		return nil
+		return errors.New("WriteCreateLPInfo create LPMeta JSON string error")
 	}
 	// 3. LP token add to user's wallet
 	batchKV := LPBalanceDoubleWriteKV(lTick, rTick, address, "1000")
