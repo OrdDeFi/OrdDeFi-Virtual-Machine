@@ -7,6 +7,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
+	"fmt"
 	"strconv"
 )
 
@@ -53,11 +54,11 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	// 1. calculating amount
 	remaining := coinMeta.Max.Subtract(totalMinted)
 	if remaining == nil {
-		return errors.New("OpMint calc remaining runtime error")
+		return fmt.Errorf("OpMint calc address remaining runtime error: %s - %s", coinMeta.Max.String(), addressMinted.String())
 	}
 	addrRemaining := coinMeta.AddrLim.Subtract(addressMinted)
-	if remaining == nil {
-		return errors.New("OpMint calc address remaining runtime error")
+	if addrRemaining == nil {
+		return fmt.Errorf("OpMint calc address remaining runtime error: %s - %s", coinMeta.AddrLim.String(), addressMinted.String())
 	}
 	minRemaining := remaining.Min(addrRemaining)
 	if remaining == nil {
