@@ -11,6 +11,7 @@ type lpMetaSerialization struct {
 	RTick string `json:"rtick"`
 	LAmt  string `json:"lamt"`
 	RAmt  string `json:"ramt"`
+	Total string `json:"total"`
 }
 
 type LPMeta struct {
@@ -18,6 +19,7 @@ type LPMeta struct {
 	RTick string
 	LAmt  *safe_number.SafeNum
 	RAmt  *safe_number.SafeNum
+	Total *safe_number.SafeNum
 }
 
 func (lpMeta LPMeta) JsonString() (*string, error) {
@@ -29,6 +31,7 @@ func (lpMeta LPMeta) JsonString() (*string, error) {
 	s.RTick = lpMeta.RTick
 	s.LAmt = lpMeta.LAmt.String()
 	s.RAmt = lpMeta.RAmt.String()
+	s.Total = lpMeta.Total.String()
 	jsonData, err := json.Marshal(s)
 	if err != nil {
 		return nil, err

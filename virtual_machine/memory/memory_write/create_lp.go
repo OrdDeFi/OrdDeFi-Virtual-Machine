@@ -35,6 +35,7 @@ func WriteCreateLPInfo(
 	lpMeta.RAmt = rAmt
 	lpMeta.LTick = lTick
 	lpMeta.RTick = rTick
+	lpMeta.Total = safe_number.SafeNumFromString("1000")
 	lpMetaJsonString, err := lpMeta.JsonString()
 	if err != nil {
 		return nil
