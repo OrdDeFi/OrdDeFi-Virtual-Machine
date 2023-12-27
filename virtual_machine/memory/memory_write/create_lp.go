@@ -6,6 +6,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"encoding/json"
+	"errors"
 )
 
 func WriteCreateLPInfo(
@@ -15,9 +16,8 @@ func WriteCreateLPInfo(
 	lAmt *safe_number.SafeNum,
 	rAmt *safe_number.SafeNum,
 	address string,
-
 ) error {
-	// LP list update
+	// 1. LP list update
 	lpName := lTick + "-" + rTick
 	allLPs, err := memory_read.AllLiquidityProviders(db)
 	if err != nil {
@@ -29,7 +29,7 @@ func WriteCreateLPInfo(
 		return err
 	}
 	allLPsValue := string(allLPsJsonData)
-	// LP meta update
+	// 2. LP meta update
 	lpMeta := new(memory_const.LPMeta)
 	lpMeta.LAmt = lAmt
 	lpMeta.RAmt = rAmt
@@ -39,7 +39,35 @@ func WriteCreateLPInfo(
 	if err != nil {
 		return nil
 	}
+	// 3. LP token add to user's wallet
 	batchKV := LPBalanceDoubleWriteKV(lTick, rTick, address, "1000")
+	// 4. Remove users token (left)
+	leftAvailable, err := memory_read.AvailableBalance(db, lTick, address)
+	if err != nil {
+		return err
+	}
+	updatedLeftAvailable := leftAvailable.Subtract(lAmt)
+	if updatedLeftAvailable == nil {
+		return errors.New("create LP error: " + lTick + " not enough: " + leftAvailable.String() + "-" + lAmt.String())
+	}
+	leftCoinBatchKV := CoinBalanceDoubleWriteKV(lTick, address, updatedLeftAvailable.String(), db_utils.AvailableSubAccount)
+	for k, v := range leftCoinBatchKV {
+		batchKV[k] = v
+	}
+	// 5. Remove users token (right)
+	rightAvailable, err := memory_read.AvailableBalance(db, rTick, address)
+	if err != nil {
+		return err
+	}
+	updatedRightAvailable := rightAvailable.Subtract(rAmt)
+	if updatedRightAvailable == nil {
+		return errors.New("create LP error: " + rTick + " not enough: " + rightAvailable.String() + "-" + rAmt.String())
+	}
+	rightCoinBatchKV := CoinBalanceDoubleWriteKV(rTick, address, updatedRightAvailable.String(), db_utils.AvailableSubAccount)
+	for k, v := range rightCoinBatchKV {
+		batchKV[k] = v
+	}
+	// 6. Combine KV
 	allLPsKey := memory_const.LpListTable
 	batchKV[allLPsKey] = allLPsValue
 	lpMetaKey := memory_const.LpMetadataTable + ":" + lpName
