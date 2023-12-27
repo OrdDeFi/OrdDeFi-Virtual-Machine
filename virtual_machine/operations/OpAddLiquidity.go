@@ -22,6 +22,7 @@ func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db 
 }
 
 func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
+	address := instruction.TxOutAddr
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
 	x := lpMeta.LAmt
 	y := lpMeta.RAmt
@@ -51,8 +52,8 @@ func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstructi
 	if addingLPAmount == nil {
 		return fmt.Errorf("calulate addingLPAmount error: %s * %s", addingLPRatio.String(), lpMeta.Total.String())
 	}
-	println(lTick, rTick, x.String(), y.String(), lAmt.String(), rAmt.String(), consumingLAmt.String(), consumingRAmt.String(), addingLPAmount.String())
-	return nil
+	err := memory_write.WriteAddToExistingLPInfo(db, *lTick, *rTick, consumingLAmt, consumingRAmt, addingLPAmount, lpMeta, address)
+	return err
 }
 
 func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {

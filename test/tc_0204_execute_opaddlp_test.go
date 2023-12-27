@@ -55,6 +55,34 @@ func addLiquidityProviderInstruction(
 	return nil, fmt.Errorf("TestingTransferInSingleSliceCommands error: instruction type error: no instruction compiled")
 }
 
+func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
+	println(address, ":")
+	odfiA, odfiT, err := memory_read.Balance(db, "odfi", address)
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	println("ODFI a/t:", odfiA.String(), odfiT.String())
+	odgvA, odgvT, err := memory_read.Balance(db, "odfi", address)
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	println("ODGV a/t:", odgvA.String(), odgvT.String())
+	lpAmt, err := memory_read.LiquidityProviderBalance(db, "odfi", "odgv", address)
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	println("ODFI-ODGV user balance:", lpAmt.String())
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, "odfi", "odgv")
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	lpMetaJSON, err := lpMeta.JsonString()
+	if err != nil {
+		t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
+	}
+	println("LP Meta:", *lpMetaJSON)
+}
+
 func TestAddLP(t *testing.T) {
 	// open db
 	db, err := db_utils.OpenDB("./test_db")
@@ -81,14 +109,7 @@ func TestAddLP(t *testing.T) {
 		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
 		return
 	}
-	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
-	if err != nil {
-		t.Errorf("read LiquidityProviderMetadata error: %s", err.Error())
-		return
-	}
-	if lpMeta != nil {
-		println(lpMeta.Total.String(), lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
-	}
+	checkUserBalance(t, db, "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90")
 }
 
 func TestAddLP2(t *testing.T) {
@@ -117,12 +138,5 @@ func TestAddLP2(t *testing.T) {
 		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
 		return
 	}
-	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
-	if err != nil {
-		t.Errorf("read LiquidityProviderMetadata error: %s", err.Error())
-		return
-	}
-	if lpMeta != nil {
-		println(lpMeta.Total.String(), lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
-	}
+	checkUserBalance(t, db, "bc1qf00grpzeyx55v9g08gq4vylprw6cqselzn8vht")
 }
