@@ -18,6 +18,12 @@ func WriteAddToExistingLPInfo(
 	lpMeta *memory_const.LPMeta,
 	address string,
 ) error {
+	if consumingLAmt == nil || consumingRAmt == nil {
+		return errors.New("WriteAddToExistingLPInfo error: consumingLAmt or consumingRAmt is nil")
+	}
+	if addingLPAmount == nil {
+		return errors.New("WriteAddToExistingLPInfo error: addingLPAmount is nil")
+	}
 	lpName := lTick + "-" + rTick
 	// 1. LP token add to user's wallet
 	currentLPAmount, err := memory_read.LiquidityProviderBalance(db, lTick, rTick, address)
@@ -56,9 +62,6 @@ func WriteAddToExistingLPInfo(
 		batchKV[k] = v
 	}
 	// 4. LP meta update
-	if consumingLAmt == nil || consumingRAmt == nil {
-		return errors.New("WriteAddToExistingLPInfo error: consumingLAmt or consumingRAmt is nil")
-	}
 	lpMeta.LAmt = lpMeta.LAmt.Add(consumingLAmt)
 	lpMeta.RAmt = lpMeta.RAmt.Add(consumingRAmt)
 	lpMeta.LTick = lTick
