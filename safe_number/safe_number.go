@@ -287,6 +287,12 @@ func (num SafeNum) IsEqualTo(rightNumber *SafeNum) bool {
 	return result
 }
 
+/*
+Compare
+return -1 if x <  y
+return 0 if x == y
+return +1 if x >  y
+*/
 func (num SafeNum) Compare(rightNumber *SafeNum) int {
 	rightDecimal := rightNumber.decimal
 	result := num.decimal.Cmp(&rightDecimal)

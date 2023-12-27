@@ -7,6 +7,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
+	"fmt"
 )
 
 func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {
@@ -24,7 +25,33 @@ func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstructi
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
 	x := lpMeta.LAmt
 	y := lpMeta.RAmt
-	println(lTick, rTick, x.String(), y.String(), lAmt.String(), rAmt.String())
+	addingRatio := lAmt.DivideBy(rAmt)
+	if addingRatio == nil {
+		return fmt.Errorf("calulate addingRatio error: %s / %s", lAmt.String(), rAmt.String())
+	}
+	lpRatio := x.DivideBy(y)
+	if lpRatio == nil {
+		return fmt.Errorf("calulate lpRatio error: %s / %s", x.String(), y.String())
+	}
+	consumingLAmt := lAmt
+	consumingRAmt := rAmt
+	cmpRes := addingRatio.Compare(lpRatio)
+	if cmpRes > 0 {
+		// addingX exceed mixed amount
+		consumingLAmt = rAmt.Multiply(lpRatio)
+	} else if cmpRes < 0 {
+		// addingY exceed mixed amount
+		consumingRAmt = lAmt.DivideBy(lpRatio)
+	}
+	addingLPRatio := consumingLAmt.DivideBy(x)
+	if addingLPRatio == nil {
+		return fmt.Errorf("calulate addingLPRatio error: %s / %s", consumingLAmt.String(), x.String())
+	}
+	addingLPAmount := addingLPRatio.Multiply(lpMeta.Total)
+	if addingLPAmount == nil {
+		return fmt.Errorf("calulate addingLPAmount error: %s * %s", addingLPRatio.String(), lpMeta.Total.String())
+	}
+	println(lTick, rTick, x.String(), y.String(), lAmt.String(), rAmt.String(), consumingLAmt.String(), consumingRAmt.String(), addingLPAmount.String())
 	return nil
 }
 
