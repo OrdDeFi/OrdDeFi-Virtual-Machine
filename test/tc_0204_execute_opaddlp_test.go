@@ -90,3 +90,39 @@ func TestAddLP(t *testing.T) {
 		println(lpMeta.Total.String(), lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
 	}
 }
+
+func TestAddLP2(t *testing.T) {
+	// open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	txId := "2f42dd5b600a1781b755425f04350d12248fd9a63da6865d5259cff4111e34d6"
+	lTick := "odfi"
+	rTick := "odgv"
+	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "50", "100")
+	if err != nil {
+		t.Errorf("compile instruction error: %s", err.Error())
+		return
+	}
+	if instruction == nil {
+		t.Errorf("compile instruction error: instruction is nil")
+		return
+	}
+	err = operations.ExecuteOpAddLiquidityProvider(*instruction, db)
+	if err != nil {
+		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
+		return
+	}
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
+	if err != nil {
+		t.Errorf("read LiquidityProviderMetadata error: %s", err.Error())
+		return
+	}
+	if lpMeta != nil {
+		println(lpMeta.Total.String(), lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
+	}
+}
