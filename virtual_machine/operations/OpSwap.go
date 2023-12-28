@@ -159,6 +159,9 @@ func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 	if lTick == nil || rTick == nil || consumingAmt == nil {
 		return errors.New("ExecuteOpSwap error: params extracting error")
 	}
+	if tick != *lTick && tick != *rTick {
+		return errors.New("ExecuteOpSwap error: Neither lTick nor rTick is equal to tick")
+	}
 	if consumingAmt.IsZero() {
 		return errors.New("ExecuteOpSwap error: amt is 0")
 	}
