@@ -4,6 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"errors"
 	"fmt"
@@ -141,7 +142,7 @@ func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *saf
 	return deltaY, nil
 }
 
-func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
+func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
 	//address := instruction.TxOutAddr
 	//tick := instruction.Spend
 	//lTick, rTick, consumingAmt := instruction.ExtractParams()
@@ -172,5 +173,12 @@ func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 	if available.Compare(consumingAmt) < 0 {
 		return fmt.Errorf("consumingAmt not enough: %s < %s", available.String(), consumingAmt.String())
 	}
-	return performSwap(instruction, db)
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, *lTick, *rTick)
+	if err != nil {
+		return err
+	}
+	if lpMeta == nil {
+		return errors.New("performSwap error: get LPMeta failed")
+	}
+	return performSwap(instruction, db, lpMeta)
 }
