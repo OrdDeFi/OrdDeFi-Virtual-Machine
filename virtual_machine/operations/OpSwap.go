@@ -6,6 +6,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"errors"
+	"fmt"
 )
 
 func DiscountForODFIAmount(totalValue *safe_number.SafeNum) (*string, error) {
@@ -79,17 +80,33 @@ func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *saf
 	return nil
 }
 
+func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
+	//address := instruction.TxOutAddr
+	//tick := instruction.Spend
+	//lTick, rTick, consumingAmt := instruction.ExtractParams()
+
+	return nil
+}
+
 func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
 	if instruction.TxInAddr != instruction.TxOutAddr {
 		return errors.New("no privileges on cross-address swap")
 	}
-	consumingAmt := safe_number.SafeNumFromString(instruction.Amt)
-	if consumingAmt == nil {
-		return errors.New("ExecuteOpSwap error: amt is nil")
+	address := instruction.TxOutAddr
+	tick := instruction.Spend
+	lTick, rTick, consumingAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || consumingAmt == nil {
+		return errors.New("ExecuteOpSwap error: params extracting error")
 	}
 	if consumingAmt.IsZero() {
 		return errors.New("ExecuteOpSwap error: amt is 0")
 	}
-
-	return nil
+	available, err := memory_read.AvailableBalance(db, tick, address)
+	if err != nil {
+		return err
+	}
+	if available.Compare(consumingAmt) < 0 {
+		return fmt.Errorf("consumingAmt not enough: %s < %s", available.String(), consumingAmt.String())
+	}
+	return performSwap(instruction, db)
 }
