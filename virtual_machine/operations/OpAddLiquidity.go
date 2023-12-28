@@ -14,9 +14,6 @@ func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db 
 	// extract params
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
 	address := instruction.TxOutAddr
-	if lAmt.IsZero() || rAmt.IsZero() {
-		return errors.New("createLP error: lamt or ramt is 0")
-	}
 	err := memory_write.WriteCreateLPInfo(db, *lTick, *rTick, lAmt, rAmt, address)
 	return err
 }
@@ -63,6 +60,9 @@ func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityPro
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
 	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
 		return errors.New("OpAddLiquidityProvider error: params extracting error")
+	}
+	if lAmt.IsZero() || rAmt.IsZero() {
+		return errors.New("createLP error: lamt or ramt is 0")
 	}
 	lpMeta, err := memory_read.LiquidityProviderMetadata(db, *lTick, *rTick)
 	if err != nil {

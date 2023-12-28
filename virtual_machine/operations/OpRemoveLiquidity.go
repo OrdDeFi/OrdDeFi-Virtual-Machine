@@ -40,6 +40,9 @@ func ExecuteOpRemoveLiquidityProvider(instruction instruction_set.OpRemoveLiquid
 	if lTick == nil || rTick == nil || consumingLPAmount == nil {
 		return errors.New("ExecuteOpRemoveLiquidityProvider error: params extracting error")
 	}
+	if consumingLPAmount.IsZero() {
+		return errors.New("ExecuteOpRemoveLiquidityProvider error: consumingLPAmount is zero")
+	}
 	lpMeta, err := memory_read.LiquidityProviderMetadata(db, *lTick, *rTick)
 	if err != nil {
 		return err
