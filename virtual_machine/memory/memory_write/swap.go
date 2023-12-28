@@ -26,8 +26,8 @@ func WriteSwapInfo(
 		4.
 		user spendingTick : - consumingAmt         (double-write)
 		lp   spendingTick : + deltaX + lpTakerFee  (LPMeta)
-		odfi-spendingTick : + odfiTakerFee         (LPMeta)
-		---------------------------------------------------------
+		odfi-spendingTick : + odfiTakerFee         (if LPMeta exist for odfi-spendingTick)
+		----------------------------------------------------------------------------------
 		user buyingTick   : + deltaY               (double-write)
 		lp   buyingTick   : - deltaY               (LPMeta)
 	*/

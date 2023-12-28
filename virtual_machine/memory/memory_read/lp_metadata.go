@@ -21,7 +21,7 @@ func LiquidityProviderMetadata(db *db_utils.OrdDB, lCoin string, rCoin string) (
 	if lpName == nil {
 		return nil, errors.New("LiquidityProviderMetadata calculate lpName failed")
 	}
-	lpMetaKey := memory_const.LpMetadataTable + ":" + *lpName
+	lpMetaKey := memory_const.LPMetaDBPath(*lpName)
 	r, err := db.Read(lpMetaKey)
 	if err != nil && err.Error() != "leveldb: not found" {
 		return nil, err

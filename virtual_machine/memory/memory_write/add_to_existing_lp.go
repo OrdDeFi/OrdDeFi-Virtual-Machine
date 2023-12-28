@@ -83,7 +83,7 @@ func WriteAddToExistingLPInfo(
 	if err != nil {
 		return errors.New("WriteAddToExistingLPInfo create LPMeta JSON string error")
 	}
-	lpMetaKey := memory_const.LpMetadataTable + ":" + *lpName
+	lpMetaKey := memory_const.LPMetaDBPath(*lpName)
 	batchKV[lpMetaKey] = *lpMetaJsonString
 	// write to DB
 	err = db.StoreKeyValues(batchKV)

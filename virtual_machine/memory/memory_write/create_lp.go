@@ -74,7 +74,7 @@ func WriteCreateLPInfo(
 	// 6. Combine KV
 	allLPsKey := memory_const.LpListTable
 	batchKV[allLPsKey] = allLPsValue
-	lpMetaKey := memory_const.LpMetadataTable + ":" + *lpName
+	lpMetaKey := memory_const.LPMetaDBPath(*lpName)
 	batchKV[lpMetaKey] = *lpMetaJsonString
 	err = db.StoreKeyValues(batchKV)
 	return err

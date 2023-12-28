@@ -1,6 +1,7 @@
 package memory_const
 
 import (
+	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"encoding/json"
 	"errors"
@@ -66,4 +67,8 @@ func LPNameByTicks(tick1 string, tick2 string) *string {
 		return &lpName
 	}
 	return nil
+}
+
+func LPMetaDBPath(lpName string) string {
+	return LpMetadataTable + ":v" + db_utils.CurrentDBVersion + ":" + lpName
 }
