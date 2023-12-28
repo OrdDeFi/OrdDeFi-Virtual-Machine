@@ -51,9 +51,26 @@ func getLPTakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 		return nil, err
 	}
 	if discount == nil {
-		return nil, errors.New("ExecuteOpSwap error: get discount failed")
+		return nil, errors.New("getLPTakerFee error: get discount failed")
 	}
-	return nil, nil
+	discountNum := safe_number.SafeNumFromString(*discount)
+	if discountNum == nil {
+		return nil, errors.New("getLPTakerFee error: convert discount number failed")
+	}
+	lTick, rTick, consumingAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || consumingAmt == nil {
+		return nil, errors.New("getLPTakerFee error: params extracting error")
+	}
+	standardFeeRate := safe_number.SafeNumFromString("0.18")
+	standardFee := consumingAmt.Multiply(standardFeeRate)
+	if standardFee == nil {
+		return nil, errors.New("getLPTakerFee calculating standardFee failed")
+	}
+	actualFee := standardFee.Multiply(discountNum)
+	if actualFee == nil {
+		return nil, errors.New("getLPTakerFee calculating actualFee failed")
+	}
+	return actualFee, nil
 }
 
 /*
@@ -63,14 +80,35 @@ If **** is ODFI, ODFITakerFee will be free.
 Final charged fee is affected by discount value.
 */
 func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) (*safe_number.SafeNum, error) {
+	tick := instruction.Spend
+	if tick == "odfi" {
+		return safe_number.SafeNumFromString("0"), nil
+	}
 	discount, err := getDiscount(instruction, db)
 	if err != nil {
 		return nil, err
 	}
 	if discount == nil {
-		return nil, errors.New("ExecuteOpSwap error: get discount failed")
+		return nil, errors.New("getODFITakerFee error: get discount failed")
 	}
-	return nil, nil
+	discountNum := safe_number.SafeNumFromString(*discount)
+	if discountNum == nil {
+		return nil, errors.New("getODFITakerFee error: convert discount number failed")
+	}
+	lTick, rTick, consumingAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || consumingAmt == nil {
+		return nil, errors.New("getODFITakerFee error: params extracting error")
+	}
+	standardFeeRate := safe_number.SafeNumFromString("0.02")
+	standardFee := consumingAmt.Multiply(standardFeeRate)
+	if standardFee == nil {
+		return nil, errors.New("getODFITakerFee calculating standardFee failed")
+	}
+	actualFee := standardFee.Multiply(discountNum)
+	if actualFee == nil {
+		return nil, errors.New("getODFITakerFee calculating actualFee failed")
+	}
+	return actualFee, nil
 }
 
 func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *safe_number.SafeNum) *safe_number.SafeNum {
