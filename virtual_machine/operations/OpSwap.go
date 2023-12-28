@@ -8,26 +8,26 @@ import (
 	"errors"
 )
 
-func DiscountForODFIAmount(totalValue *safe_number.SafeNum) (*float64, error) {
+func DiscountForODFIAmount(totalValue *safe_number.SafeNum) (*string, error) {
 	if totalValue == nil {
 		return nil, errors.New("getDiscount error: calc odfi total balance failed")
 	}
 	if totalValue.Compare(safe_number.SafeNumFromString("21000")) >= 0 {
-		discount := 0.3
+		discount := "0.3"
 		return &discount, nil
 	} else if totalValue.Compare(safe_number.SafeNumFromString("2100")) >= 0 {
-		discount := 0.6
+		discount := "0.6"
 		return &discount, nil
 	} else if totalValue.Compare(safe_number.SafeNumFromString("210")) >= 0 {
-		discount := 0.9
+		discount := "0.9"
 		return &discount, nil
 	} else {
-		discount := 1.0
+		discount := "1"
 		return &discount, nil
 	}
 }
 
-func getDiscount(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) (*float64, error) {
+func getDiscount(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) (*string, error) {
 	available, transferable, err := memory_read.Balance(db, "odfi", instruction.TxOutAddr)
 	if err != nil {
 		return nil, err
