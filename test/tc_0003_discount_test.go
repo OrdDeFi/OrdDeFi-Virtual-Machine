@@ -12,7 +12,7 @@ func testingDiscountForAmount(t *testing.T, amountString string) {
 	if err != nil {
 		t.Errorf("calculating discount error: %s", err.Error())
 	}
-	fmt.Printf("discount for %s is %.2f\n", amountString, *r)
+	fmt.Printf("discount for %s is %s\n", amountString, *r)
 }
 
 func TestDiscount(t *testing.T) {
