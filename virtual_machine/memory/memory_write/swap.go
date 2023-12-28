@@ -4,19 +4,10 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
-	"strings"
 )
 
 func ODFISpendingTickLPName(spendingTick string) *string {
-	cmpRes := strings.Compare("odfi", spendingTick)
-	if cmpRes < 0 {
-		lpName := "odfi-" + spendingTick
-		return &lpName
-	} else if cmpRes > 0 {
-		lpName := spendingTick + "-odfi"
-		return &lpName
-	}
-	return nil
+	return memory_const.LPNameByTicks("odfi", spendingTick)
 }
 
 func WriteSwapInfo(

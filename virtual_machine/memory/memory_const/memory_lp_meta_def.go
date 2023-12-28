@@ -4,6 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/safe_number"
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 type lpMetaSerialization struct {
@@ -53,4 +54,16 @@ func LPMetaFromJsonString(jsonString string) (*LPMeta, error) {
 	result.RAmt = safe_number.SafeNumFromString(s.RAmt)
 	result.Total = safe_number.SafeNumFromString(s.Total)
 	return result, nil
+}
+
+func LPNameByTicks(tick1 string, tick2 string) *string {
+	cmpRes := strings.Compare(tick1, tick2)
+	if cmpRes < 0 {
+		lpName := tick1 + "-" + tick2
+		return &lpName
+	} else if cmpRes > 0 {
+		lpName := tick2 + "-" + tick1
+		return &lpName
+	}
+	return nil
 }
