@@ -111,11 +111,34 @@ func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils
 	return actualFee, nil
 }
 
-func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *safe_number.SafeNum) *safe_number.SafeNum {
+func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *safe_number.SafeNum) (*safe_number.SafeNum, error) {
+	if deltaX == nil || X == nil || Y == nil {
+		return nil, errors.New("calculateDeltaY error: deltaX, X or Y is nil")
+	}
 	// alpha = deltaX / X
+	alpha := deltaX.DivideBy(X)
+	if alpha == nil {
+		return nil, errors.New("calculateDeltaY error: calculate alpha failed")
+	}
 	// beta = 1 - 1 / (1 + alpha)
+	beta0 := safe_number.SafeNumFromString("1").Add(alpha)
+	if beta0 == nil {
+		return nil, errors.New("calculateDeltaY error: calculate beta0 failed")
+	}
+	beta1 := safe_number.SafeNumFromString("1").DivideBy(beta0)
+	if beta1 == nil {
+		return nil, errors.New("calculateDeltaY error: calculate beta1 failed")
+	}
+	beta := safe_number.SafeNumFromString("1").Subtract(beta1)
+	if beta == nil {
+		return nil, errors.New("calculateDeltaY error: calculate beta failed")
+	}
 	// deltaY = beta * Y
-	return nil
+	deltaY := beta.Multiply(Y)
+	if deltaY == nil {
+		return nil, errors.New("calculateDeltaY error: calculate deltaY failed")
+	}
+	return deltaY, nil
 }
 
 func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
