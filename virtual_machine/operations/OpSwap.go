@@ -86,6 +86,13 @@ func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils
 	if tick == "odfi" {
 		return safe_number.SafeNumFromString("0"), nil
 	}
+	odfiMeta, err := memory_read.LiquidityProviderMetadata(db, "odfi", tick) // this method automatically decide with tick is left or right
+	if err != nil {
+		return nil, err
+	}
+	if odfiMeta == nil {
+		return safe_number.SafeNumFromString("0"), nil
+	}
 	discount, err := getDiscount(instruction, db)
 	if err != nil {
 		return nil, err
