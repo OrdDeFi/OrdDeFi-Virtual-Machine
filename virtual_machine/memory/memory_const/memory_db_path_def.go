@@ -37,8 +37,11 @@ func UTXOCarryingBalancePath(txId string) string {
 }
 
 func LPAddressPrefix(lCoin string, rCoin string) string {
-	lpName := lCoin + "-" + rCoin
-	path := LPAddressBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + lpName + ":"
+	lpName := LPNameByTicks(lCoin, rCoin)
+	if lpName == nil {
+		return ""
+	}
+	path := LPAddressBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + *lpName + ":"
 	return path
 }
 
@@ -53,7 +56,10 @@ func AddressLPPrefix(address string) string {
 }
 
 func AddressLPPath(lCoin string, rCoin string, address string) string {
-	lpName := lCoin + "-" + rCoin
-	path := AddressLPPrefix(address) + lpName
+	lpName := LPNameByTicks(lCoin, rCoin)
+	if lpName == nil {
+		return ""
+	}
+	path := AddressLPPrefix(address) + *lpName
 	return path
 }

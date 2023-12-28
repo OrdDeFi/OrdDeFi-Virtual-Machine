@@ -24,7 +24,10 @@ func WriteAddToExistingLPInfo(
 	if addingLPAmount == nil {
 		return errors.New("WriteAddToExistingLPInfo error: addingLPAmount is nil")
 	}
-	lpName := lTick + "-" + rTick
+	lpName := memory_const.LPNameByTicks(lTick, rTick)
+	if lpName == nil {
+		return errors.New("WriteAddToExistingLPInfo calculate lpName failed")
+	}
 	// 1. LP token add to user's wallet
 	currentLPAmount, err := memory_read.LiquidityProviderBalance(db, lTick, rTick, address)
 	if err != nil {
@@ -80,7 +83,7 @@ func WriteAddToExistingLPInfo(
 	if err != nil {
 		return errors.New("WriteAddToExistingLPInfo create LPMeta JSON string error")
 	}
-	lpMetaKey := memory_const.LpMetadataTable + ":" + lpName
+	lpMetaKey := memory_const.LpMetadataTable + ":" + *lpName
 	batchKV[lpMetaKey] = *lpMetaJsonString
 	// write to DB
 	err = db.StoreKeyValues(batchKV)

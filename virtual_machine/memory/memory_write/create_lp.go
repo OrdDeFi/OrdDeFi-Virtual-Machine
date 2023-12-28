@@ -18,12 +18,15 @@ func WriteCreateLPInfo(
 	address string,
 ) error {
 	// 1. LP list update
-	lpName := lTick + "-" + rTick
+	lpName := memory_const.LPNameByTicks(lTick, rTick)
+	if lpName == nil {
+		return errors.New("WriteCreateLPInfo calculate lpName failed")
+	}
 	allLPs, err := memory_read.AllLiquidityProviders(db)
 	if err != nil {
 		return err
 	}
-	allLPs = append(allLPs, lpName)
+	allLPs = append(allLPs, *lpName)
 	allLPsJsonData, err := json.Marshal(allLPs)
 	if err != nil {
 		return err
@@ -71,7 +74,7 @@ func WriteCreateLPInfo(
 	// 6. Combine KV
 	allLPsKey := memory_const.LpListTable
 	batchKV[allLPsKey] = allLPsValue
-	lpMetaKey := memory_const.LpMetadataTable + ":" + lpName
+	lpMetaKey := memory_const.LpMetadataTable + ":" + *lpName
 	batchKV[lpMetaKey] = *lpMetaJsonString
 	err = db.StoreKeyValues(batchKV)
 	return err
