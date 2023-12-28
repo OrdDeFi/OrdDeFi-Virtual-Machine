@@ -6,6 +6,7 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_write"
 	"errors"
 	"fmt"
 )
@@ -143,11 +144,67 @@ func calculateDeltaY(deltaX *safe_number.SafeNum, X *safe_number.SafeNum, Y *saf
 }
 
 func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
-	//address := instruction.TxOutAddr
-	//tick := instruction.Spend
-	//lTick, rTick, consumingAmt := instruction.ExtractParams()
-
-	return nil
+	address := instruction.TxOutAddr
+	// 1. preparing X, Y, spendingTick and buyingTick
+	spendingTick := instruction.Spend
+	buyingTick := ""
+	lTick, rTick, consumingAmt := instruction.ExtractParams()
+	var X *safe_number.SafeNum
+	var Y *safe_number.SafeNum
+	if spendingTick == *lTick {
+		X = lpMeta.LAmt
+		Y = lpMeta.RAmt
+		buyingTick = *rTick
+	} else if spendingTick == *rTick {
+		X = lpMeta.RAmt
+		Y = lpMeta.LAmt
+		buyingTick = *lTick
+	} else {
+		return errors.New("performSwap error: Neither lTick nor rTick is equal to tick")
+	}
+	// 2. calculate odfi taker fee, lp taker fee and deltaX
+	odfiTakerFee, err := getODFITakerFee(instruction, db)
+	if err != nil {
+		return err
+	}
+	lpTakerFee, err := getLPTakerFee(instruction, db)
+	if err != nil {
+		return err
+	}
+	deltaX0 := consumingAmt.Subtract(odfiTakerFee)
+	if deltaX0 == nil {
+		return errors.New("performSwap calculate deltaX0 failed")
+	}
+	deltaX := deltaX0.Subtract(lpTakerFee)
+	if deltaX == nil {
+		return errors.New("performSwap calculate deltaX failed")
+	}
+	// 3. calculate deltaY
+	deltaY, err := calculateDeltaY(deltaX, X, Y)
+	if err != nil {
+		return err
+	}
+	/*
+		4.
+		user spendingTick : - consumingAmt         (double-write)
+		lp   spendingTick : + deltaX + lpTakerFee  (LPMeta)
+		odfi-spendingTick : + odfiTakerFee         (LPMeta)
+		---------------------------------------------------------
+		user buyingTick   : + deltaY               (double-write)
+		lp   buyingTick   : - deltaY               (LPMeta)
+	*/
+	err = memory_write.WriteSwapInfo(
+		db,
+		spendingTick,
+		buyingTick,
+		consumingAmt,
+		lpTakerFee,
+		odfiTakerFee,
+		deltaX,
+		deltaY,
+		lpMeta,
+		address)
+	return err
 }
 
 func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
