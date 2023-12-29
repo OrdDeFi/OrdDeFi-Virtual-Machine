@@ -179,19 +179,21 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 		return err
 	}
 	// 2.1 if odfi-spending LP is equal to current lp, add odfiTakerFee to lpTakerFee, and set odfiTakerFee to zero.
-	odfiLPName := memory_const.LPNameByTicks("odfi", spendingTick)
-	lpName := memory_const.LPNameByTicks(buyingTick, spendingTick)
-	if odfiLPName == nil || lpName == nil {
-		return errors.New("performSwap tick error: calculate odfiLPName failed or calculate lpName failed")
-	}
-	if *odfiLPName == *lpName {
-		lpTakerFee = lpTakerFee.Add(odfiTakerFee)
-		if lpTakerFee == nil {
-			return errors.New("performSwap calculate lpTakerFee failed")
+	if spendingTick != "odfi" { // odfiTakerFee is fee when spending odfi, jump over this logic if it's odfi
+		odfiLPName := memory_const.LPNameByTicks("odfi", spendingTick)
+		lpName := memory_const.LPNameByTicks(buyingTick, spendingTick)
+		if odfiLPName == nil || lpName == nil {
+			return errors.New("performSwap tick error: calculate odfiLPName failed or calculate lpName failed")
 		}
-		odfiTakerFee = safe_number.SafeNumFromString("0")
-		if odfiTakerFee == nil {
-			return errors.New("performSwap calculate odfiTakerFee failed")
+		if *odfiLPName == *lpName {
+			lpTakerFee = lpTakerFee.Add(odfiTakerFee)
+			if lpTakerFee == nil {
+				return errors.New("performSwap calculate lpTakerFee failed")
+			}
+			odfiTakerFee = safe_number.SafeNumFromString("0")
+			if odfiTakerFee == nil {
+				return errors.New("performSwap calculate odfiTakerFee failed")
+			}
 		}
 	}
 	deltaX0 := consumingAmt.Subtract(odfiTakerFee)
