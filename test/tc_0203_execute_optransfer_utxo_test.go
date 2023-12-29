@@ -11,7 +11,7 @@ import (
 )
 
 func testMint(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
-	TestingMintForParam(t, db, tick, txId)
+	TestingMintForParam(t, db, tick, txId, "1000")
 }
 
 func testCreateUTXOPacker(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {

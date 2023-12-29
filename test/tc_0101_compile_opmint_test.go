@@ -43,7 +43,7 @@ func TestCompileMintInSingleCommand(t *testing.T) {
 
 // Test a single command using a single slice
 func TestCompileMintInSingleSliceCommands(t *testing.T) {
-	_, err := TestingMintInSingleSliceCommands("odfi", "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc")
+	_, err := TestingMintInSingleSliceCommands("odfi", "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc", "1000")
 	if err != nil {
 		t.Errorf("%s", err.Error())
 	}
@@ -82,9 +82,9 @@ func TestCompileMintInBatchCommands(t *testing.T) {
 	}
 }
 
-func TestingMintInSingleSliceCommands(tick string, txId string) (*instruction_set.OpMintInstruction, error) {
+func TestingMintInSingleSliceCommands(tick string, txId string, amt string) (*instruction_set.OpMintInstruction, error) {
 	commands := `[
-		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"1000"}
+		{"p":"orddefi","op":"mint","tick":"` + tick + `","amt":"` + amt + `"}
 	]`
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {

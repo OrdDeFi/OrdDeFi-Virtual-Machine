@@ -10,9 +10,9 @@ import (
 	"testing"
 )
 
-func TestingMintForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string) {
+func TestingMintForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId string, amt string) {
 	// 1. compile instruction
-	instruction, err := TestingMintInSingleSliceCommands(tick, txId)
+	instruction, err := TestingMintInSingleSliceCommands(tick, txId, amt)
 	if err != nil {
 		t.Errorf("TestExecuteMint error: %s", err.Error())
 	}
@@ -43,7 +43,7 @@ func TestExecuteMintODFI(t *testing.T) {
 	coinName := "odfi"
 
 	for _, txId := range TestingTxPool() {
-		TestingMintForParam(t, db, coinName, txId)
+		TestingMintForParam(t, db, coinName, txId, "1000")
 	}
 	for _, address := range validTestingAddressPool() {
 		balance, _ := memory_read.AvailableBalance(db, coinName, address)
@@ -63,7 +63,7 @@ func TestExecuteMintODGV(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	for _, txId := range TestingTxPool() {
-		TestingMintForParam(t, db, "odgv", txId)
+		TestingMintForParam(t, db, "odgv", txId, "1000")
 	}
 }
 

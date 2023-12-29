@@ -125,7 +125,7 @@ func testDirectNormalTransfer(t *testing.T, db *db_utils.OrdDB, tick string) {
 	receiverTickInitBalance, _ := memory_read.AvailableBalance(db, tick, to)
 	senderTickInitBalance, _ := memory_read.AvailableBalance(db, tick, txInAddr)
 	if senderTickInitBalance.IsZero() {
-		TestingMintForParam(t, db, tick, txId)
+		TestingMintForParam(t, db, tick, txId, "1000")
 		senderTickInitBalance, _ = memory_read.AvailableBalance(db, tick, txInAddr)
 
 	}
