@@ -209,6 +209,32 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 	if err != nil {
 		return err
 	}
+	// 3.1 calculate slippage
+	if instruction.Threshold != "" {
+		slippageThreshold := safe_number.SafeNumFromString(instruction.Threshold)
+		if slippageThreshold == nil {
+			return errors.New("performSwap failed: parse slippage threshold failed:" + instruction.Threshold)
+		}
+		deltaPrice := deltaY.DivideBy(deltaX)
+		if deltaPrice == nil {
+			return errors.New("performSwap aborted: calculate deltaPrice failed")
+		}
+		originalPrice := Y.DivideBy(X)
+		if originalPrice == nil {
+			return errors.New("performSwap aborted: calculate originalPrice failed")
+		}
+		slippage := deltaPrice.DivideBy(originalPrice)
+		if slippage == nil {
+			return errors.New("performSwap aborted: calculate slippage failed")
+		}
+		slippage = safe_number.SafeNumFromString("1").Subtract(slippage)
+		if slippage == nil {
+			return errors.New("performSwap aborted: calculate slippage failed")
+		}
+		if slippage.Compare(slippageThreshold) > 0 {
+			return fmt.Errorf("performSwap aborted: slippage larger than threshold: %s>%s", slippage.String(), instruction.Threshold)
+		}
+	}
 	/*
 		4.
 		user spendingTick : - consumingAmt         (double-write)
