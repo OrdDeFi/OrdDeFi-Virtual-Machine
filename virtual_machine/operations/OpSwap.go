@@ -243,6 +243,9 @@ func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 	if tick != *lTick && tick != *rTick {
 		return errors.New("ExecuteOpSwap error: Neither lTick nor rTick is equal to tick")
 	}
+	if *lTick == *rTick {
+		return errors.New("ExecuteOpSwap error: lTick is equal to tick")
+	}
 	if consumingAmt.IsZero() {
 		return errors.New("ExecuteOpSwap error: amt is 0")
 	}
