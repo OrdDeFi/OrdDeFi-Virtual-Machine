@@ -34,6 +34,9 @@ func ExecuteOpMint(instruction instruction_set.OpMintInstruction, db *db_utils.O
 	if commandAmount == nil {
 		return errors.New("Amount parse failed: " + instruction.Amt)
 	}
+	if commandAmount.Compare(coinMeta.Lim) > 0 {
+		return errors.New("Mint amount exceeded limit: " + instruction.Amt + ">" + coinMeta.Lim.String())
+	}
 	// query total minted value
 	totalMinted, err := memory_read.TotalMintedBalance(db, coinName)
 	if err != nil {
