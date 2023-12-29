@@ -66,14 +66,23 @@ func checkLPMeta(t *testing.T, db *db_utils.OrdDB, lTick string, rTick string) {
 }
 
 func checkStatusForSwap(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTick string, spendingTick string) {
-	odfiLPName := memory_const.LPNameByTicks("odfi", spendingTick)
+	var odfiLPName *string
+	odfiLPName = nil
+	if spendingTick != "odfi" {
+		odfiLPName = memory_const.LPNameByTicks("odfi", spendingTick)
+		if odfiLPName == nil {
+			t.Errorf("checkStatusForSwap tick error: calculate odfiLPName failed")
+			return
+		}
+	}
+
 	lpName := memory_const.LPNameByTicks(lTick, rTick)
-	if odfiLPName == nil || lpName == nil {
-		t.Errorf("checkStatusForSwap tick error: calculate odfiLPName failed or calculate lpName failed")
+	if lpName == nil {
+		t.Errorf("checkStatusForSwap tick error: calculate lpName failed")
 		return
 	}
 	checkLPMeta(t, db, lTick, rTick)
-	if *odfiLPName != *lpName {
+	if odfiLPName != nil && *odfiLPName != *lpName {
 		checkLPMeta(t, db, "odfi", spendingTick)
 	}
 	lTickAvailableAmt, err := memory_read.AvailableBalance(db, lTick, address)
