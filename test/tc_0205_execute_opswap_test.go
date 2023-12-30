@@ -62,7 +62,9 @@ func checkLPMeta(t *testing.T, db *db_utils.OrdDB, lTick string, rTick string) {
 		t.Errorf("checkLPMeta error: %s", err.Error())
 		return
 	}
-	println("LPMeta:", lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
+	if lpMeta != nil {
+		println("LPMeta:", lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
+	}
 }
 
 func checkStatusForSwap(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTick string, spendingTick string) {
@@ -99,20 +101,7 @@ func checkStatusForSwap(t *testing.T, db *db_utils.OrdDB, address string, lTick 
 	println("User available", rTick, rTickAvailableAmt.String())
 }
 
-func TestSwap(t *testing.T) {
-	// open db
-	db, err := db_utils.OpenDB("./test_db")
-	if err != nil {
-		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
-	}
-	defer db_utils.CloseDB(db)
-
-	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
-	address := "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90"
-	lTick := "odfi"
-	rTick := "odgv"
-	spendingTick := "odgv"
-	amt := "10"
+func testSwapForParams(t *testing.T, db *db_utils.OrdDB, txId string, address string, lTick string, rTick string, spendingTick string, amt string) {
 	swap, err := swapInstruction(txId, lTick, rTick, spendingTick, amt)
 	if err != nil {
 		t.Errorf("generate swap instruction failed, error: %s", err.Error())
@@ -129,4 +118,44 @@ func TestSwap(t *testing.T) {
 
 	println("status after swap:")
 	checkStatusForSwap(t, db, address, lTick, rTick, spendingTick)
+}
+
+func TestSwapForODFILP(t *testing.T) {
+	// open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+
+	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
+	address := "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90"
+	println("Test 1")
+	testSwapForParams(t, db, txId, address, "odfi", "odgv", "odgv", "10")
+	println("Test 2")
+	testSwapForParams(t, db, txId, address, "odfi", "odgv", "odfi", "10")
+	println("Test 3")
+	testSwapForParams(t, db, txId, address, "odgv", "odfi", "odgv", "10")
+	println("Test 4")
+	testSwapForParams(t, db, txId, address, "odgv", "odfi", "odfi", "10")
+}
+
+func TestSwapForNoneODFILP(t *testing.T) {
+	// open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+
+	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
+	address := "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90"
+	println("Test 5")
+	testSwapForParams(t, db, txId, address, "half", "odgv", "odgv", "10")
+	println("Test 6")
+	testSwapForParams(t, db, txId, address, "half", "odgv", "half", "10")
+	println("Test 7")
+	testSwapForParams(t, db, txId, address, "odgv", "half", "odgv", "10")
+	println("Test 8")
+	testSwapForParams(t, db, txId, address, "odgv", "half", "half", "10")
 }

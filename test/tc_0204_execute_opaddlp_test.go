@@ -55,6 +55,23 @@ func addLiquidityProviderInstruction(
 	return nil, fmt.Errorf("TestingTransferInSingleSliceCommands error: instruction type error: no instruction compiled")
 }
 
+func checkLP(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTick string) {
+	lpAmt, err := memory_read.LiquidityProviderBalance(db, lTick, rTick, address)
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	fmt.Printf("%s-%s user balance: %s\n", lTick, rTick, lpAmt.String())
+	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
+	if err != nil {
+		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+	}
+	lpMetaJSON, err := lpMeta.JsonString()
+	if err != nil {
+		t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
+	}
+	println("LP Meta:", *lpMetaJSON)
+}
+
 func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
 	println(address, ":")
 	odfiA, odfiT, err := memory_read.Balance(db, "odfi", address)
@@ -67,20 +84,13 @@ func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
 		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
 	}
 	println("ODGV a/t:", odgvA.String(), odgvT.String())
-	lpAmt, err := memory_read.LiquidityProviderBalance(db, "odfi", "odgv", address)
+	halfA, halfT, err := memory_read.Balance(db, "half", address)
 	if err != nil {
 		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
 	}
-	println("ODFI-ODGV user balance:", lpAmt.String())
-	lpMeta, err := memory_read.LiquidityProviderMetadata(db, "odfi", "odgv")
-	if err != nil {
-		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
-	}
-	lpMetaJSON, err := lpMeta.JsonString()
-	if err != nil {
-		t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
-	}
-	println("LP Meta:", *lpMetaJSON)
+	println("HALF a/t:", halfA.String(), halfT.String())
+	checkLP(t, db, address, "odfi", "odgv")
+	checkLP(t, db, address, "odgv", "half")
 }
 
 func TestToFindLegalTestingAddress(t *testing.T) {
@@ -150,4 +160,33 @@ func TestAddLP2(t *testing.T) {
 		return
 	}
 	checkUserBalance(t, db, "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3")
+}
+
+func TestAddLP3(t *testing.T) {
+	// open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
+	lTick := "half"
+	rTick := "odgv"
+	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "50", "100")
+	if err != nil {
+		t.Errorf("compile instruction error: %s", err.Error())
+		return
+	}
+	if instruction == nil {
+		t.Errorf("compile instruction error: instruction is nil")
+		return
+	}
+	err = operations.ExecuteOpAddLiquidityProvider(*instruction, db)
+	if err != nil {
+		t.Errorf("execute OpAddLiquidityProvider error: %s", err.Error())
+		return
+	}
+	checkUserBalance(t, db, "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90")
 }

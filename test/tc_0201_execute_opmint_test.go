@@ -67,6 +67,20 @@ func TestExecuteMintODGV(t *testing.T) {
 	}
 }
 
+func TestExecuteMintHALF(t *testing.T) {
+	// open db
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	for _, txId := range TestingTxPool() {
+		TestingMintForParam(t, db, "half", txId, "1000")
+	}
+}
+
 func TestingReadCoin(t *testing.T, coinName string) {
 	// 1. open db
 	db, err := db_utils.OpenDB("./test_db")

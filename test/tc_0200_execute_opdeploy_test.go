@@ -1,7 +1,10 @@
 package test
 
 import (
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"OrdDeFi-Virtual-Machine/db_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine"
+	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_read"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"fmt"
@@ -85,27 +88,14 @@ func TestExecuteDeployInvalidTick2(t *testing.T) {
 }
 
 func TestExecuteDeployInvalidTick3(t *testing.T) {
-	// 1. compile instruction
 	instruction, err := TestingDeployInSingleSliceCommands("@points")
-	if err != nil {
-		t.Errorf("TestExecuteDeployInvalidTick3 error: %s", err.Error())
-	}
-	if instruction == nil {
-		t.Errorf("TestExecuteDeployInvalidTick3 error: deploy instruction is nil")
-	}
-
-	// 2. open db
-	db, err := db_utils.OpenDB("./test_db")
-	if err != nil {
-		t.Errorf("TestExecuteDeployInvalidTick3 OpenDB error: %s", err.Error())
-	}
-	defer db_utils.CloseDB(db)
-	fmt.Println("DB opened successfully.")
-
-	// 3. execute deploy op
-	err = operations.ExecuteOpDeploy(*instruction, db)
 	if err == nil {
-		t.Errorf("TestExecuteDeployInvalidTick3 error: execute deploy error: forbidden tick")
+		t.Errorf("TestExecuteDeployInvalidTick3 error: deploy instruction should be nil")
+		return
+	}
+	if instruction != nil {
+		t.Errorf("TestExecuteDeployInvalidTick3 error: deploy instruction should be nil; tick: %s", instruction.Tick)
+		return
 	}
 }
 
@@ -225,5 +215,45 @@ func TestExecuteDeployInBatchCommands(t *testing.T) {
 	}
 	if deployedIconString != (*instruction).Icon {
 		t.Errorf("TestExecuteDeployInBatchCommands memory_read error: addr lim not matching")
+	}
+}
+
+func TestDeployHalf(t *testing.T) {
+	db, err := db_utils.OpenDB("./test_db")
+	if err != nil {
+		t.Errorf("TestExecuteDeployInBatchCommands OpenDB error: %s", err.Error())
+	}
+	defer db_utils.CloseDB(db)
+	fmt.Println("DB opened successfully.")
+
+	commands := `{"p":"orddefi","op":"deploy","tick":"half","max":"210000000","lim":"1000","alim":"1000","icon":""}`
+	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
+	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
+	if rawTx == nil {
+		t.Errorf("TestDeployHalf GetRawTransaction error")
+		return
+	}
+	tx := bitcoin_cli_channel.DecodeRawTransaction(*rawTx)
+	if tx == nil {
+		t.Errorf("TestDeployHalf DecodeRawTransaction error")
+		return
+	}
+	instructions, err := virtual_machine.CompileInstructions("text/plain", []byte(commands), tx, txId)
+	if err != nil {
+		t.Errorf("TestDeployHalf CompileInstructions error: %s", err.Error())
+		return
+	}
+	if len(instructions) != 1 {
+		t.Errorf("TestDeployHalf CompileInstructions error: len(instructions) should be 1")
+		return
+	}
+	switch value := instructions[0].(type) {
+	case instruction_set.OpDeployInstruction:
+		err = operations.ExecuteOpDeploy(value, db)
+		if err != nil {
+			t.Errorf("TestDeployHalf error: ExecuteOpDeploy error: %s", err.Error())
+		}
+	default:
+		t.Errorf("TestDeployHalf error: instruction type error, expected OpDeployInstruction")
 	}
 }
