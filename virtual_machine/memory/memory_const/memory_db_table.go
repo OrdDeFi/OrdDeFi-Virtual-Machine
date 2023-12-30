@@ -59,3 +59,6 @@ Path: LpBalanceTable:lp_name:address
 Value: balance string
 */
 const AddressLPBalanceTable = "addrlpbalance"
+
+const LogMainTable = "log"
+const LogQueryTxTable = "txlog"

@@ -3,13 +3,11 @@ package virtual_machine
 import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
+	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"os"
 	"strconv"
 )
-
-const logTable = "log"
-const txLogTable = "txlog"
 
 func recordLog(logDB *db_utils.OrdDB, err error, instruction interface{}, blockNumber int, txIndex int, txId string) {
 	rawInstruction := ""
@@ -33,8 +31,8 @@ func recordLog(logDB *db_utils.OrdDB, err error, instruction interface{}, blockN
 	}
 	var batchKV map[string]string
 	batchKV = make(map[string]string)
-	key := logTable + ":" + strconv.Itoa(blockNumber) + ":" + strconv.Itoa(txIndex) + ":" + txId
-	key2 := txLogTable + ":" + txId
+	key := memory_const.LogMainTable + ":" + strconv.Itoa(blockNumber) + ":" + strconv.Itoa(txIndex) + ":" + txId
+	key2 := memory_const.LogQueryTxTable + ":" + txId
 	value := result + ";;" + rawInstruction
 	batchKV[key] = value
 	batchKV[key2] = value
