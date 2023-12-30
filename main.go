@@ -2,7 +2,7 @@ package main
 
 import (
 	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
-	"OrdDeFi-Virtual-Machine/inscription_parser"
+	"OrdDeFi-Virtual-Machine/subcommands"
 	"OrdDeFi-Virtual-Machine/updater"
 	"errors"
 	"flag"
@@ -20,33 +20,20 @@ func updateIndex(dataDir string, logDir string) error {
 	return err
 }
 
-func parseRawTransaction(parseRawTransactionString string) {
-	contentType, content, err := inscription_parser.ParseRawTransactionToInscription(parseRawTransactionString)
-	if err != nil {
-		println("parserawtransaction error:", err)
-	} else {
-		println(*contentType, len(content))
-		println(string(content))
-	}
-}
-
-func parseTransaction(txId string) error {
-	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
-	if rawTx == nil {
-		err := errors.New("GetRawTransaction Failed")
-		return err
-	}
-	parseRawTransaction(*rawTx)
-	return nil
-}
-
 func main() {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 
-	var parseTransactionString string
-	flag.StringVar(&parseTransactionString, "parsetransaction", "", "OrdDeFi-Virtual-Machine -parsetransaction [txid]")
-	var parseRawTransactionString string
-	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDeFi-Virtual-Machine -parserawtransaction [raw transaction string]")
+	// subcommands
+	var parseTransactionParam string
+	flag.StringVar(&parseTransactionParam, "parsetransaction", "", "OrdDeFi-Virtual-Machine -parsetransaction [txid]")
+	var parseRawTransactionParam string
+	flag.StringVar(&parseRawTransactionParam, "parserawtransaction", "", "OrdDeFi-Virtual-Machine -parserawtransaction [raw transaction string]")
+	var executeResultParam string
+	flag.StringVar(&executeResultParam, "executeresult", "", "OrdDeFi-Virtual-Machine -executeresult [txid]")
+	var checkUTXOTransferParam string
+	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
+
+	// updater params
 	var parseDataDir string
 	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
 	var parseLogDir string
@@ -56,13 +43,14 @@ func main() {
 		println("-data-dir and -log-dir should be different")
 		os.Exit(2)
 	}
-	if parseTransactionString != "" {
-		err := parseTransaction(parseTransactionString)
-		if err != nil {
-			println("parseTransaction error:", err)
-		}
-	} else if parseRawTransactionString != "" {
-		parseRawTransaction(parseRawTransactionString)
+	if parseTransactionParam != "" {
+		subcommands.ParseTransaction(parseTransactionParam)
+	} else if parseRawTransactionParam != "" {
+		subcommands.ParseRawTransaction(parseRawTransactionParam)
+	} else if executeResultParam != "" {
+		subcommands.CheckExecuteResult(executeResultParam)
+	} else if checkUTXOTransferParam != "" {
+		subcommands.CheckUTXOTransfer(checkUTXOTransferParam)
 	} else {
 		err := updateIndex(parseDataDir, parseLogDir)
 		if err != nil {
