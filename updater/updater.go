@@ -9,7 +9,7 @@ import (
 	"errors"
 )
 
-func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
+func UpdateBlockNumber(blockNumber int, dataDir string, logDir string, verbose bool) error {
 	var err error
 	// get block hash and all txIds in block
 	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
@@ -72,6 +72,9 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 				break
 			}
 			if len(instructions) != 0 {
+				if verbose {
+					println("executing op:", blockNumber, txIndex, txId)
+				}
 				virtual_machine.ExecuteInstructions(instructions, db, logDB, blockNumber, txIndex, txId)
 			}
 		}

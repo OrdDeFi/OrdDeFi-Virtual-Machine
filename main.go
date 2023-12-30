@@ -7,16 +7,17 @@ import (
 	"errors"
 	"flag"
 	"os"
+	"strings"
 )
 
-func updateIndex(dataDir string, logDir string) error {
+func updateIndex(dataDir string, logDir string, verbose bool) error {
 	println("OrdDeFi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
 		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
 		return err
 	}
-	err := updater.UpdateBlockNumber(blockNumber, dataDir, logDir)
+	err := updater.UpdateBlockNumber(blockNumber, dataDir, logDir, verbose)
 	return err
 }
 
@@ -32,6 +33,10 @@ func main() {
 		println("-data-dir and -log-dir should be different")
 		os.Exit(2)
 	}
+
+	// verbose
+	var verboseParam string
+	flag.StringVar(&verboseParam, "verbose", "", "OrdDeFi-Virtual-Machine -verbose true")
 
 	// subcommands
 	var parseTransactionParam string
@@ -53,7 +58,8 @@ func main() {
 	} else if checkUTXOTransferParam != "" {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else {
-		err := updateIndex(dataDirParam, logDirParam)
+		verboseBool := strings.ToLower(verboseParam) == "true"
+		err := updateIndex(dataDirParam, logDirParam, verboseBool)
 		if err != nil {
 			os.Exit(1)
 		}
