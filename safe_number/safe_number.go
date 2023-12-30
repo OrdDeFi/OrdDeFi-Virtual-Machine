@@ -126,6 +126,11 @@ func (num SafeNum) String() string {
 	}
 }
 
+func (num SafeNum) IntString() string {
+	intString := num.decimal.String()
+	return intString
+}
+
 func (num SafeNum) Add(rightNumber *SafeNum) *SafeNum {
 	if rightNumber == nil {
 		return nil
