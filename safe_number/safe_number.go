@@ -303,3 +303,7 @@ func (num SafeNum) Compare(rightNumber *SafeNum) int {
 	result := num.decimal.Cmp(&rightDecimal)
 	return result
 }
+
+func (num SafeNum) IsGreaterThan(rightNumber *SafeNum) bool {
+	return num.Compare(rightNumber) == 1
+}

@@ -41,6 +41,7 @@ func testingCompileAddLP(t *testing.T, commands string) (*string, *string, *safe
 }
 
 func TestCompileInvalidAddLP(t *testing.T) {
+	// same tick
 	commands := `[{"p":"orddefi","op":"addlp","ltick":"ODFI","lamt":"1000","rtick":"ODFI","ramt":"1001"}]`
 	ltick, rtick, lamt, ramt := testingCompileAddLP(t, commands)
 	if ltick != nil {
