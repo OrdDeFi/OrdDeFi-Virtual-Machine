@@ -18,6 +18,7 @@ func TestingMintForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId str
 	}
 	if instruction == nil {
 		t.Errorf("TestExecuteMint error: deploy instruction is nil")
+		return
 	}
 
 	// 2. execute deploy op
