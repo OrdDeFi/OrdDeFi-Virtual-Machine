@@ -11,6 +11,7 @@ import (
 
 func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 	var err error
+	// get block hash and all txIds in block
 	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
 	if blockHash == nil {
 		err = errors.New("UpdateBlockNumber GetBlockHash failed")
@@ -21,6 +22,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 		err = errors.New("UpdateBlockNumber GetBlock failed")
 		return err
 	}
+	// open data DB and log DB
 	if dataDir == "" {
 		dataDir = "./OrdDeFi_storage"
 	}
@@ -35,6 +37,12 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 		return err
 	}
 	defer db_utils.CloseDB(db)
+	logDB, err := db_utils.OpenDB(logDir)
+	if err != nil {
+		return err
+	}
+	defer db_utils.CloseDB(logDB)
+	// enum txId, execute operations if exist
 	for _, txId := range block.Tx {
 		rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 		if rawTx == nil {
@@ -64,7 +72,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 				break
 			}
 			if len(instructions) != 0 {
-				virtual_machine.ExecuteInstructions(instructions, db)
+				virtual_machine.ExecuteInstructions(instructions, db, logDB)
 			}
 		}
 	}
