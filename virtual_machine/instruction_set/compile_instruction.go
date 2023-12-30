@@ -83,8 +83,7 @@ func compileOpTransferInstruction(instruction AbstractInstruction) *OpTransferIn
 
 /*
 OpAddLiquidityProviderInstruction Add liquidity provider. Only self to self tx allow to execute OpAddLiquidityProvider
-1. {"p":"orddefi","op":"addlp","ltick":"odfi","rtick":"odgv","lamt":"1000","ramt":"1000"} Add LP for odfi-odgv 50:50, allow swap.
-2. {"p":"orddefi","op":"addlp","ltick":"odfi","rtick":"odgv","lamt":"1000","ramt":"1000","as":0} Add LP for odfi-odgv 50:50, disable swap.
+{"p":"orddefi","op":"addlp","ltick":"odfi","rtick":"odgv","lamt":"1000","ramt":"1000"} Add LP for odfi-odgv 50:50.
 */
 type OpAddLiquidityProviderInstruction struct {
 	TxInAddr  string
@@ -93,7 +92,6 @@ type OpAddLiquidityProviderInstruction struct {
 	Rtick     string // @required. Right coin at pair
 	Lamt      string // @required. Left coin amount to adding into liquidity provider
 	Ramt      string // @required. Right coin amount to adding into liquidity provider
-	AllowSwap string // @optional, default: 1. allow swap 1(true) / 0(false)
 }
 
 /*
@@ -131,7 +129,6 @@ func compileOpAddLiquidityProviderInstruction(instruction AbstractInstruction) *
 	op.Rtick = instruction.Rtick
 	op.Lamt = instruction.Lamt
 	op.Ramt = instruction.Ramt
-	op.AllowSwap = instruction.AllowSwap
 	return &op
 }
 
