@@ -23,6 +23,16 @@ func updateIndex(dataDir string, logDir string) error {
 func main() {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 
+	// DB path
+	var dataDirParam string
+	flag.StringVar(&dataDirParam, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
+	var logDirParam string
+	flag.StringVar(&logDirParam, "log-dir", "", "OrdDeFi-Virtual-Machine -log-dir /path/of/log")
+	if dataDirParam == logDirParam && dataDirParam != "" {
+		println("-data-dir and -log-dir should be different")
+		os.Exit(2)
+	}
+
 	// subcommands
 	var parseTransactionParam string
 	flag.StringVar(&parseTransactionParam, "parsetransaction", "", "OrdDeFi-Virtual-Machine -parsetransaction [txid]")
@@ -32,27 +42,18 @@ func main() {
 	flag.StringVar(&executeResultParam, "executeresult", "", "OrdDeFi-Virtual-Machine -executeresult [txid]")
 	var checkUTXOTransferParam string
 	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
-
-	// updater params
-	var parseDataDir string
-	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
-	var parseLogDir string
-	flag.StringVar(&parseLogDir, "log-dir", "", "OrdDeFi-Virtual-Machine -log-dir /path/of/log")
 	flag.Parse()
-	if parseDataDir == parseLogDir && parseDataDir != "" {
-		println("-data-dir and -log-dir should be different")
-		os.Exit(2)
-	}
+
 	if parseTransactionParam != "" {
 		subcommands.ParseTransaction(parseTransactionParam)
 	} else if parseRawTransactionParam != "" {
 		subcommands.ParseRawTransaction(parseRawTransactionParam)
 	} else if executeResultParam != "" {
-		subcommands.CheckExecuteResult(executeResultParam)
+		subcommands.CheckExecuteResult(executeResultParam, logDirParam)
 	} else if checkUTXOTransferParam != "" {
-		subcommands.CheckUTXOTransfer(checkUTXOTransferParam)
+		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else {
-		err := updateIndex(parseDataDir, parseLogDir)
+		err := updateIndex(dataDirParam, logDirParam)
 		if err != nil {
 			os.Exit(1)
 		}

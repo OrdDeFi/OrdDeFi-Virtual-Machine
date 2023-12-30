@@ -1,5 +1,5 @@
 package subcommands
 
-func CheckUTXOTransfer(utxo string) {
+func CheckUTXOTransfer(utxo string, dataDir string) {
 
 }
