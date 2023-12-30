@@ -9,7 +9,7 @@ import (
 	"errors"
 )
 
-func UpdateBlockNumber(blockNumber int, dataDir string) error {
+func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 	var err error
 	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
 	if blockHash == nil {
@@ -23,6 +23,12 @@ func UpdateBlockNumber(blockNumber int, dataDir string) error {
 	}
 	if dataDir == "" {
 		dataDir = "./OrdDeFi_storage"
+	}
+	if logDir == "" {
+		logDir = "./OrdDeFi_log"
+	}
+	if dataDir == logDir {
+		return errors.New("-data-dir and -log-dir should be different")
 	}
 	db, err := db_utils.OpenDB(dataDir)
 	if err != nil {

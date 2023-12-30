@@ -9,14 +9,14 @@ import (
 	"os"
 )
 
-func updateIndex(dataDir string) error {
+func updateIndex(dataDir string, logDir string) error {
 	println("OrdDeFi indexer start to work.")
 	blockNumber := bitcoin_cli_channel.GetBlockCount()
 	if blockNumber == 0 {
 		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
 		return err
 	}
-	err := updater.UpdateBlockNumber(blockNumber, dataDir)
+	err := updater.UpdateBlockNumber(blockNumber, dataDir, logDir)
 	return err
 }
 
@@ -49,7 +49,13 @@ func main() {
 	flag.StringVar(&parseRawTransactionString, "parserawtransaction", "", "OrdDeFi-Virtual-Machine -parserawtransaction [raw transaction string]")
 	var parseDataDir string
 	flag.StringVar(&parseDataDir, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
+	var parseLogDir string
+	flag.StringVar(&parseLogDir, "log-dir", "", "OrdDeFi-Virtual-Machine -log-dir /path/of/log")
 	flag.Parse()
+	if parseDataDir == parseLogDir && parseDataDir != "" {
+		println("-data-dir and -log-dir should be different")
+		os.Exit(2)
+	}
 	if parseTransactionString != "" {
 		err := parseTransaction(parseTransactionString)
 		if err != nil {
@@ -58,7 +64,7 @@ func main() {
 	} else if parseRawTransactionString != "" {
 		parseRawTransaction(parseRawTransactionString)
 	} else {
-		err := updateIndex(parseDataDir)
+		err := updateIndex(parseDataDir, parseLogDir)
 		if err != nil {
 			os.Exit(1)
 		}
