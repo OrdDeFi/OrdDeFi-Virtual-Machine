@@ -63,7 +63,7 @@ func getLPTakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 	if lTick == nil || rTick == nil || consumingAmt == nil {
 		return nil, errors.New("getLPTakerFee error: params extracting error")
 	}
-	standardFeeRate := safe_number.SafeNumFromString("0.18")
+	standardFeeRate := safe_number.SafeNumFromString("0.0018")
 	standardFee := consumingAmt.Multiply(standardFeeRate)
 	if standardFee == nil {
 		return nil, errors.New("getLPTakerFee calculating standardFee failed")
@@ -108,7 +108,7 @@ func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils
 	if lTick == nil || rTick == nil || consumingAmt == nil {
 		return nil, errors.New("getODFITakerFee error: params extracting error")
 	}
-	standardFeeRate := safe_number.SafeNumFromString("0.02")
+	standardFeeRate := safe_number.SafeNumFromString("0.0002")
 	standardFee := consumingAmt.Multiply(standardFeeRate)
 	if standardFee == nil {
 		return nil, errors.New("getODFITakerFee calculating standardFee failed")
