@@ -63,7 +63,7 @@ func checkLPMeta(t *testing.T, db *db_utils.OrdDB, lTick string, rTick string) {
 		return
 	}
 	if lpMeta != nil {
-		println("LPMeta:", lpMeta.LTick, lpMeta.LAmt.IntString(), lpMeta.RTick, lpMeta.RAmt.IntString())
+		println("LPMeta:", lpMeta.LTick, lpMeta.LAmt.String(), lpMeta.RTick, lpMeta.RAmt.String())
 	}
 }
 
@@ -97,8 +97,7 @@ func checkStatusForSwap(t *testing.T, db *db_utils.OrdDB, address string, lTick 
 		t.Errorf("checkStatusForSwap tick error: read AvailableBalance failed %s", err.Error())
 		return
 	}
-	println("User available", lTick, lTickAvailableAmt.IntString())
-	println("User available", rTick, rTickAvailableAmt.IntString())
+	println("User available", lTick, lTickAvailableAmt.String(), rTick, rTickAvailableAmt.String())
 }
 
 func testSwapForParams(t *testing.T, db *db_utils.OrdDB, txId string, address string, lTick string, rTick string, spendingTick string, amt string) {
