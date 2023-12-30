@@ -4,13 +4,48 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
+	"os"
+	"strconv"
 )
 
-func recordLog(logDB *db_utils.OrdDB, err error) {
+const logTable = "log"
+const txLogTable = "txlog"
 
+func recordLog(logDB *db_utils.OrdDB, err error, instruction interface{}, blockNumber int, txIndex int, txId string) {
+	rawInstruction := ""
+	switch value := instruction.(type) {
+	case instruction_set.OpDeployInstruction:
+		rawInstruction = value.RawInstruction
+	case instruction_set.OpMintInstruction:
+		rawInstruction = value.RawInstruction
+	case instruction_set.OpTransferInstruction:
+		rawInstruction = value.RawInstruction
+	case instruction_set.OpAddLiquidityProviderInstruction:
+		rawInstruction = value.RawInstruction
+	case instruction_set.OpRemoveLiquidityProviderInstruction:
+		rawInstruction = value.RawInstruction
+	case instruction_set.OpSwapInstruction:
+		rawInstruction = value.RawInstruction
+	}
+	result := "succeed"
+	if err != nil {
+		result = "error: " + err.Error()
+	}
+	var batchKV map[string]string
+	batchKV = make(map[string]string)
+	key := logTable + ":" + strconv.Itoa(blockNumber) + ":" + strconv.Itoa(txIndex) + ":" + txId
+	key2 := txLogTable + ":" + txId
+	value := result + ";;" + rawInstruction
+	batchKV[key] = value
+	batchKV[key2] = value
+	storeLogErr := logDB.StoreKeyValues(batchKV)
+	if storeLogErr != nil {
+		println("recordLog got error:", storeLogErr.Error())
+		os.Exit(3)
+	}
 }
 
-func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB) {
+func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string) {
 	var err error
 	switch value := instruction.(type) {
 	case instruction_set.OpDeployInstruction:
@@ -26,11 +61,11 @@ func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_u
 	case instruction_set.OpSwapInstruction:
 		err = operations.ExecuteOpSwap(value, db)
 	}
-	recordLog(logDB, err)
+	recordLog(logDB, err, instruction, blockNumber, txIndex, txId)
 }
 
-func ExecuteInstructions(instructions []interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB) {
+func ExecuteInstructions(instructions []interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string) {
 	for _, eachInstruction := range instructions {
-		executeInstruction(eachInstruction, db, logDB)
+		executeInstruction(eachInstruction, db, logDB, blockNumber, txIndex, txId)
 	}
 }

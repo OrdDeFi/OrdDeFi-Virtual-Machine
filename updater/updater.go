@@ -43,7 +43,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 	}
 	defer db_utils.CloseDB(logDB)
 	// enum txId, execute operations if exist
-	for _, txId := range block.Tx {
+	for txIndex, txId := range block.Tx {
 		rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 		if rawTx == nil {
 			err = errors.New("GetRawTransaction Failed")
@@ -72,7 +72,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string) error {
 				break
 			}
 			if len(instructions) != 0 {
-				virtual_machine.ExecuteInstructions(instructions, db, logDB)
+				virtual_machine.ExecuteInstructions(instructions, db, logDB, blockNumber, txIndex, txId)
 			}
 		}
 	}
