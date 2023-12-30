@@ -15,12 +15,13 @@ const OpNameSwap = "swap"
 
 // OpDeployInstruction {"p":"orddefi","op":"deploy","tick":"odfi","max":"21000000","lim":"1000","alim":"1000","icon":""}
 type OpDeployInstruction struct {
-	Tick    string // @required. Coin name to deploy
-	Max     string // @required. Max amount in circulation
-	Lim     string // @required. Max amount to be minted in a single tx
-	AddrLim string // @optional, default: infinite. Max amount to be minted in a single address
-	Desc    string // @optional. Description for coin
-	Icon    string // @optional. Icon for coin, in Base64 encoding
+	Tick           string // @required. Coin name to deploy
+	Max            string // @required. Max amount in circulation
+	Lim            string // @required. Max amount to be minted in a single tx
+	AddrLim        string // @optional, default: infinite. Max amount to be minted in a single address
+	Desc           string // @optional. Description for coin
+	Icon           string // @optional. Icon for coin, in Base64 encoding
+	RawInstruction string // Raw JSON string of instruction
 }
 
 func compileOpDeployInstruction(instruction AbstractInstruction) *OpDeployInstruction {
@@ -31,7 +32,12 @@ func compileOpDeployInstruction(instruction AbstractInstruction) *OpDeployInstru
 	op.AddrLim = instruction.AddrLim
 	op.Desc = instruction.Desc
 	op.Icon = instruction.Icon
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 // OpMintInstruction {"p":"orddefi","op":"mint","tick":"odfi","amt":"1000"}
@@ -40,6 +46,7 @@ type OpMintInstruction struct {
 	PreviousOutputIndex int
 	Tick                string // @required. Coin name to mint
 	Amt                 string // @required. Amount to mint
+	RawInstruction      string // Raw JSON string of instruction
 }
 
 func (opMint OpMintInstruction) IsValidOpMintInstruction() bool {
@@ -53,7 +60,12 @@ func compileOpMintInstruction(instruction AbstractInstruction) *OpMintInstructio
 	op.PreviousOutputIndex = instruction.PreviousOutputIndex
 	op.Tick = instruction.Tick
 	op.Amt = instruction.Amt
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 /*
@@ -62,12 +74,13 @@ OpTransferInstruction
 2. {"p":"orddefi","op":"transfer","tick":"odfi","amt":"1000", "to": "bc1p****"} from self address, apply immediately
 */
 type OpTransferInstruction struct {
-	TxInAddr  string
-	TxOutAddr string
-	TxId      string // When to is nil, TxOut:0 will become an UTXO holding transferable coins, coins moved at UTXO becomes TxIn.
-	Tick      string // @required. Coin name to transfer
-	Amt       string // @required. Amount to transfer
-	To        string // @optional. When to address passed, only self to self tx allowed to execute OpTransfer.
+	TxInAddr       string
+	TxOutAddr      string
+	TxId           string // When to is nil, TxOut:0 will become an UTXO holding transferable coins, coins moved at UTXO becomes TxIn.
+	Tick           string // @required. Coin name to transfer
+	Amt            string // @required. Amount to transfer
+	To             string // @optional. When to address passed, only self to self tx allowed to execute OpTransfer.
+	RawInstruction string // Raw JSON string of instruction
 }
 
 func compileOpTransferInstruction(instruction AbstractInstruction) *OpTransferInstruction {
@@ -78,7 +91,12 @@ func compileOpTransferInstruction(instruction AbstractInstruction) *OpTransferIn
 	op.Tick = instruction.Tick
 	op.Amt = instruction.Amt
 	op.To = instruction.To
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 /*
@@ -86,12 +104,13 @@ OpAddLiquidityProviderInstruction Add liquidity provider. Only self to self tx a
 {"p":"orddefi","op":"addlp","ltick":"odfi","rtick":"odgv","lamt":"1000","ramt":"1000"} Add LP for odfi-odgv 50:50.
 */
 type OpAddLiquidityProviderInstruction struct {
-	TxInAddr  string
-	TxOutAddr string
-	Ltick     string // @required. Left coin at pair
-	Rtick     string // @required. Right coin at pair
-	Lamt      string // @required. Left coin amount to adding into liquidity provider
-	Ramt      string // @required. Right coin amount to adding into liquidity provider
+	TxInAddr       string
+	TxOutAddr      string
+	Ltick          string // @required. Left coin at pair
+	Rtick          string // @required. Right coin at pair
+	Lamt           string // @required. Left coin amount to adding into liquidity provider
+	Ramt           string // @required. Right coin amount to adding into liquidity provider
+	RawInstruction string // Raw JSON string of instruction
 }
 
 /*
@@ -129,7 +148,12 @@ func compileOpAddLiquidityProviderInstruction(instruction AbstractInstruction) *
 	op.Rtick = instruction.Rtick
 	op.Lamt = instruction.Lamt
 	op.Ramt = instruction.Ramt
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 /*
@@ -137,11 +161,12 @@ OpRemoveLiquidityProviderInstruction Remove liquidity provider. Only self to sel
 {"p":"orddefi","op":"rmlp","ltick":"odfi","rtick":"odgv","amt":"10"} Remove odfi-odgv LP by 10, and get odfi and odgv coins.
 */
 type OpRemoveLiquidityProviderInstruction struct {
-	TxInAddr  string
-	TxOutAddr string
-	Ltick     string // @required. Left coin at pair
-	Rtick     string // @required. Right coin at pair
-	Amt       string // @required. Amount to remove LP
+	TxInAddr       string
+	TxOutAddr      string
+	Ltick          string // @required. Left coin at pair
+	Rtick          string // @required. Right coin at pair
+	Amt            string // @required. Amount to remove LP
+	RawInstruction string // Raw JSON string of instruction
 }
 
 /*
@@ -177,7 +202,12 @@ func compileOpRemoveLiquidityProviderInstruction(instruction AbstractInstruction
 	op.Ltick = instruction.Ltick
 	op.Rtick = instruction.Rtick
 	op.Amt = instruction.Amt
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 /*
@@ -186,13 +216,14 @@ OpSwapInstruction Swap at liquidity provider. Only self to self tx allow to exec
 2. {"p":"orddefi","op":"swap","ltick":"odfi","rtick":"odgv","spend":"odgv","amt":"10","trhd":"0.8%"} Buying odfi with odgv by 10 odgv.
 */
 type OpSwapInstruction struct {
-	TxInAddr  string
-	TxOutAddr string
-	Ltick     string // @required. Left coin at pair
-	Rtick     string // @required. Right coin at pair
-	Spend     string // @required. Spend which coin at swapping. e.g. "odgv"
-	Amt       string // @required. Amount to spend for the spending coin
-	Threshold string // @optional, default: 0.005. Allowed threshold at swapping. If slippage > threshold, swap will be aborted
+	TxInAddr       string
+	TxOutAddr      string
+	Ltick          string // @required. Left coin at pair
+	Rtick          string // @required. Right coin at pair
+	Spend          string // @required. Spend which coin at swapping. e.g. "odgv"
+	Amt            string // @required. Amount to spend for the spending coin
+	Threshold      string // @optional, default: 0.005. Allowed threshold at swapping. If slippage > threshold, swap will be aborted
+	RawInstruction string // Raw JSON string of instruction
 }
 
 /*
@@ -233,7 +264,12 @@ func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstructio
 	op.Spend = instruction.Spend
 	op.Amt = instruction.Amt
 	op.Threshold = instruction.Threshold
-	return &op
+	rawJsonString := instruction.JsonString()
+	if rawJsonString != nil {
+		op.RawInstruction = *rawJsonString
+		return &op
+	}
+	return nil
 }
 
 func CheckTickLegal(tick string) bool {

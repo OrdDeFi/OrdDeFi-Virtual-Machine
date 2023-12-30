@@ -1,5 +1,7 @@
 package instruction_set
 
+import "encoding/json"
+
 type AbstractInstruction struct {
 	// TxId
 	TxId string
@@ -43,4 +45,13 @@ type AbstractInstruction struct {
 	// Keys for swap
 	Spend     string `json:"spend"`     // @required. Spend which coin at swapping
 	Threshold string `json:"threshold"` // @optional, default: 1.0 (all slippage is allowed). Allowed threshold at swapping. If slippage > threshold, swap will be aborted. Format in 0.005, meaning 0.5%
+}
+
+func (absInstruction AbstractInstruction) JsonString() *string {
+	jsonBody, err := json.Marshal(absInstruction)
+	if err != nil {
+		return nil
+	}
+	jsonString := string(jsonBody)
+	return &jsonString
 }
