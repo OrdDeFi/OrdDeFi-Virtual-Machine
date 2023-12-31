@@ -75,7 +75,7 @@ func UpdateBlockNumber(blockNumber int, dataDir string, logDir string, verbose b
 				if verbose {
 					println("executing op:", blockNumber, txIndex, txId)
 				}
-				virtual_machine.ExecuteInstructions(instructions, db, logDB, blockNumber, txIndex, txId)
+				virtual_machine.ExecuteInstructions(instructions, db, logDB, blockNumber, txIndex, txId, verbose)
 			}
 		}
 	}

@@ -43,7 +43,7 @@ func recordLog(logDB *db_utils.OrdDB, err error, instruction interface{}, blockN
 	}
 }
 
-func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string) {
+func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string, verbose bool) {
 	var err error
 	switch value := instruction.(type) {
 	case instruction_set.OpDeployInstruction:
@@ -59,11 +59,18 @@ func executeInstruction(instruction interface{}, db *db_utils.OrdDB, logDB *db_u
 	case instruction_set.OpSwapInstruction:
 		err = operations.ExecuteOpSwap(value, db)
 	}
+	if verbose {
+		if err != nil {
+			println(blockNumber, txIndex, txId, "error:", err.Error())
+		} else {
+			println(blockNumber, txIndex, txId, "succeed.")
+		}
+	}
 	recordLog(logDB, err, instruction, blockNumber, txIndex, txId)
 }
 
-func ExecuteInstructions(instructions []interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string) {
+func ExecuteInstructions(instructions []interface{}, db *db_utils.OrdDB, logDB *db_utils.OrdDB, blockNumber int, txIndex int, txId string, verbose bool) {
 	for _, eachInstruction := range instructions {
-		executeInstruction(eachInstruction, db, logDB, blockNumber, txIndex, txId)
+		executeInstruction(eachInstruction, db, logDB, blockNumber, txIndex, txId, verbose)
 	}
 }
