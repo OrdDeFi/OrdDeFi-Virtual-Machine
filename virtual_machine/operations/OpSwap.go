@@ -39,6 +39,9 @@ func getDiscount(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 		return nil, errors.New("getDiscount error: read odfi balance failed")
 	}
 	totalValue := available.Add(transferable)
+	if totalValue == nil {
+		return nil, errors.New("getDiscount failed: totalValue is nil")
+	}
 	return DiscountForODFIAmount(totalValue)
 }
 
@@ -64,6 +67,9 @@ func getLPTakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils.O
 		return nil, errors.New("getLPTakerFee error: params extracting error")
 	}
 	standardFeeRate := safe_number.SafeNumFromString("0.0018")
+	if standardFeeRate == nil {
+		return nil, errors.New("getLPTakerFee error: standardFeeRate is nil")
+	}
 	standardFee := consumingAmt.Multiply(standardFeeRate)
 	if standardFee == nil {
 		return nil, errors.New("getLPTakerFee calculating standardFee failed")
@@ -109,6 +115,9 @@ func getODFITakerFee(instruction instruction_set.OpSwapInstruction, db *db_utils
 		return nil, errors.New("getODFITakerFee error: params extracting error")
 	}
 	standardFeeRate := safe_number.SafeNumFromString("0.0002")
+	if standardFeeRate == nil {
+		return nil, errors.New("getODFITakerFee error: standardFeeRate is nil")
+	}
 	standardFee := consumingAmt.Multiply(standardFeeRate)
 	if standardFee == nil {
 		return nil, errors.New("getODFITakerFee calculating standardFee failed")
@@ -156,6 +165,9 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 	spendingTick := instruction.Spend
 	buyingTick := ""
 	lTick, rTick, consumingAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || consumingAmt == nil {
+		return errors.New("performSwap error: params extracting error")
+	}
 	var X *safe_number.SafeNum
 	var Y *safe_number.SafeNum
 	if spendingTick == *lTick {
@@ -174,9 +186,15 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 	if err != nil {
 		return err
 	}
+	if odfiTakerFee == nil {
+		return errors.New("performSwap error: odfiTakerFee is nil")
+	}
 	lpTakerFee, err := getLPTakerFee(instruction, db)
 	if err != nil {
 		return err
+	}
+	if lpTakerFee == nil {
+		return errors.New("performSwap error: lpTakerFee is nil")
 	}
 	// 2.1 if odfi-spending LP is equal to current lp, add odfiTakerFee to lpTakerFee, and set odfiTakerFee to zero.
 	if spendingTick != "odfi" { // odfiTakerFee is fee when spending odfi, jump over this logic if it's odfi
@@ -208,6 +226,9 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 	deltaY, err := calculateDeltaY(deltaX, X, Y)
 	if err != nil {
 		return err
+	}
+	if deltaY == nil {
+		return errors.New("performSwap calculate deltaY failed")
 	}
 	// 3.1 calculate slippage
 	if instruction.Threshold != "" {

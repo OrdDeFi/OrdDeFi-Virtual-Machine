@@ -13,9 +13,21 @@ import (
 func removeLP(instruction instruction_set.OpRemoveLiquidityProviderInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
 	address := instruction.TxOutAddr
 	lTick, rTick, consumingLPAmount := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || consumingLPAmount == nil {
+		return errors.New("removeLP error: params extracting error")
+	}
 	x := lpMeta.LAmt
+	if x == nil {
+		return errors.New("removeLP error: lpMeta.LAmt is nil")
+	}
 	y := lpMeta.RAmt
+	if y == nil {
+		return errors.New("removeLP error: lpMeta.RAmt is nil")
+	}
 	total := lpMeta.Total
+	if total == nil {
+		return errors.New("removeLP error: lpMeta.Total is nil")
+	}
 	lpRatio := consumingLPAmount.DivideBy(total)
 	if lpRatio == nil {
 		return fmt.Errorf("calulate lpRatio error: %s / %s", consumingLPAmount.String(), total.String())

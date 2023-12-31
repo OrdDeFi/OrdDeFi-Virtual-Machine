@@ -13,6 +13,9 @@ import (
 func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {
 	// extract params
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
+		return errors.New("OpAddLiquidityProvider error: params extracting error")
+	}
 	address := instruction.TxOutAddr
 	err := memory_write.WriteCreateLPInfo(db, *lTick, *rTick, lAmt, rAmt, address)
 	return err
@@ -21,8 +24,20 @@ func createLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db 
 func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB, lpMeta *memory_const.LPMeta) error {
 	address := instruction.TxOutAddr
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
+	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
+		return errors.New("OpAddLiquidityProvider error: params extracting error")
+	}
+	if lpMeta == nil {
+		return errors.New("addToExistingLP failed: lpMeta is nil")
+	}
 	x := lpMeta.LAmt
+	if x == nil {
+		return errors.New("addToExistingLP failed: lpMeta.LAmt is nil")
+	}
 	y := lpMeta.RAmt
+	if y == nil {
+		return errors.New("addToExistingLP failed: lpMeta.RAmt is nil")
+	}
 	addingRatio := lAmt.DivideBy(rAmt)
 	if addingRatio == nil {
 		return fmt.Errorf("calulate addingRatio error: %s / %s", lAmt.String(), rAmt.String())

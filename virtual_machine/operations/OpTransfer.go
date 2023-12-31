@@ -38,6 +38,9 @@ func performTransferBatchWriteKV(
 	if err != nil {
 		return nil, err
 	}
+	if fromBalance == nil {
+		return nil, errors.New("performTransferBatchWriteKV failed: fromBalance is nil")
+	}
 	// read to balance
 	if toSubAccount == db_utils.AvailableSubAccount {
 		toBalance, err = memory_read.AvailableBalance(db, coinName, toAccount)
@@ -48,6 +51,9 @@ func performTransferBatchWriteKV(
 	}
 	if err != nil {
 		return nil, err
+	}
+	if toBalance == nil {
+		return nil, errors.New("performTransferBatchWriteKV failed: toBalance is nil")
 	}
 	fromBalanceUpdated := fromBalance.Subtract(amount)
 	if fromBalanceUpdated == nil {
@@ -63,7 +69,15 @@ func performTransferBatchWriteKV(
 	if toBalanceUpdated.IsNegative() {
 		return nil, fmt.Errorf("performTransferBatchWriteKV from address balance error: negative %s", toBalanceUpdated.String())
 	}
-	if fromBalanceUpdated.Add(toBalanceUpdated).IsEqualTo(fromBalance.Add(toBalance)) == false {
+	updatedSum := fromBalanceUpdated.Add(toBalanceUpdated)
+	if updatedSum == nil {
+		return nil, errors.New("performTransferBatchWriteKV failed: updatedSum is nil")
+	}
+	beforeUpdatedSum := fromBalance.Add(toBalance)
+	if beforeUpdatedSum == nil {
+		return nil, errors.New("performTransferBatchWriteKV failed: beforeUpdatedSum is nil")
+	}
+	if updatedSum.IsEqualTo(beforeUpdatedSum) == false {
 		return nil, fmt.Errorf("performTransferBatchWriteKV before calculation and after are not equal")
 	}
 	updateFromKV := memory_write.CoinBalanceDoubleWriteKV(coinName, fromAccount, fromBalanceUpdated.String(), fromSubAccount)
