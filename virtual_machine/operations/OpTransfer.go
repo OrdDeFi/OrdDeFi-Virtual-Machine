@@ -170,7 +170,7 @@ func containsTransferUTXOInTxIn(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error
 	if tx == nil {
 		return false, errors.New("tx is nil")
 	}
-	// If one TxIn contains coins, returns true. Otherwise false.
+	// If one TxIn contains coins, returns true. Otherwise returns false.
 	contains := false
 	for _, input := range tx.TxIn {
 		// previousOutputIndex != 0 cannot be a UTXO which contains coins.
