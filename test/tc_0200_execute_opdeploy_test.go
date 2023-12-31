@@ -226,7 +226,7 @@ func TestDeployHalf(t *testing.T) {
 	defer db_utils.CloseDB(db)
 	fmt.Println("DB opened successfully.")
 
-	commands := `{"p":"orddefi","op":"deploy","tick":"half","max":"210000000","lim":"1000","alim":"1000","icon":""}`
+	commands := `{"p":"orddefi","op":"deploy","tick":"half","max":"210000000","lim":"1000","icon":""}`
 	txId := "a8d1df8510d5ac3ad1199ebd987464226e1900260ab5cb10a3d19f7dabd460bc"
 	rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
 	if rawTx == nil {
@@ -256,4 +256,9 @@ func TestDeployHalf(t *testing.T) {
 	default:
 		t.Errorf("TestDeployHalf error: instruction type error, expected OpDeployInstruction")
 	}
+	coinMeta, err := memory_read.CoinMeta(db, "half")
+	if err != nil {
+		t.Errorf("TestDeployHalf error: read CoinMeta error: %s", err.Error())
+	}
+	println("coinMeta: lim", coinMeta.Lim.String(), "alim", coinMeta.AddrLim.String(), "max", coinMeta.Max.String())
 }
