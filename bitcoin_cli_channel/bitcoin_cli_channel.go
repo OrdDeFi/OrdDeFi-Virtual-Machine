@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/btcsuite/btcd/wire"
 	"os/exec"
@@ -103,4 +104,33 @@ func DecodeRawTransaction(rawTransactionString string) *wire.MsgTx {
 		return nil
 	}
 	return &tx
+}
+
+func GetVersion() *string {
+	cmd := exec.Command("bitcoin-cli", "--version")
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Println("GetRawTransaction Error:", err)
+		return nil
+	}
+	outputStr := string(output)
+	outputStr = strings.Trim(outputStr, "\t\n")
+	lines := strings.Split(outputStr, "\n")
+	outputStr = lines[0]
+	components := strings.Split(outputStr, "version ")
+	if len(components) != 2 {
+		return nil
+	}
+	versionStr := components[1]
+	return &versionStr
+}
+
+func VersionGreaterThanMinRequirement() (*bool, error) {
+	version := GetVersion()
+	if version == nil {
+		return nil, errors.New("GetVersion error")
+	}
+	cmpRes := strings.Compare(*version, "v24.0.1")
+	result := cmpRes >= 0
+	return &result, nil
 }

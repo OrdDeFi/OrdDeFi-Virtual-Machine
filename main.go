@@ -84,6 +84,7 @@ func main() {
 		verboseBool := strings.ToLower(verboseParam) == "true"
 		err := updater.UpdateIndex(dataDirParam, logDirParam, verboseBool)
 		if err != nil {
+			println(err.Error())
 			os.Exit(1)
 		}
 	}
