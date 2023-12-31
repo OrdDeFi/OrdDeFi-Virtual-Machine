@@ -1,25 +1,12 @@
 package main
 
 import (
-	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"OrdDeFi-Virtual-Machine/subcommands"
 	"OrdDeFi-Virtual-Machine/updater"
-	"errors"
 	"flag"
 	"os"
 	"strings"
 )
-
-func updateIndex(dataDir string, logDir string, verbose bool) error {
-	println("OrdDeFi indexer start to work.")
-	blockNumber := bitcoin_cli_channel.GetBlockCount()
-	if blockNumber == 0 {
-		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
-		return err
-	}
-	err := updater.UpdateBlockNumber(blockNumber, dataDir, logDir, verbose)
-	return err
-}
 
 func main() {
 	// DB path
@@ -94,9 +81,8 @@ func main() {
 	} else if getAllLPsParam != "" {
 		subcommands.GetAllLPs(dataDirParam)
 	} else {
-		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 		verboseBool := strings.ToLower(verboseParam) == "true"
-		err := updateIndex(dataDirParam, logDirParam, verboseBool)
+		err := updater.UpdateIndex(dataDirParam, logDirParam, verboseBool)
 		if err != nil {
 			os.Exit(1)
 		}
