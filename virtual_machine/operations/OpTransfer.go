@@ -225,6 +225,7 @@ func calculatingAddress(outputMap []outputLocationMap, satIndex int64, selfTrans
 			return address
 		}
 	}
+	// If a transfer UTXO was burnt as fee, regard the burning tx as a self-transfer tx.
 	return selfTransferAddress
 }
 
