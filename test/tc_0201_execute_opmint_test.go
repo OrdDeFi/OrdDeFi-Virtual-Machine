@@ -35,7 +35,7 @@ func TestingMintForParam(t *testing.T, db *db_utils.OrdDB, tick string, txId str
 
 func TestExecuteMintODFI(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -56,7 +56,7 @@ func TestExecuteMintODFI(t *testing.T) {
 
 func TestExecuteMintODGV(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -70,7 +70,7 @@ func TestExecuteMintODGV(t *testing.T) {
 
 func TestExecuteMintHALF(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -84,7 +84,7 @@ func TestExecuteMintHALF(t *testing.T) {
 
 func TestingReadCoin(t *testing.T, coinName string) {
 	// 1. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMintVer2 OpenDB error: %s", err.Error())
 	}
@@ -121,7 +121,7 @@ func TestReadODGVBalance(t *testing.T) {
 
 func testReadAddress(t *testing.T, address string) {
 	// 1. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMintVer2 OpenDB error: %s", err.Error())
 	}
@@ -148,7 +148,7 @@ func TestReadAddress2(t *testing.T) {
 
 func TestRemainingToMint(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMintVer2 OpenDB error: %s", err.Error())
 	}

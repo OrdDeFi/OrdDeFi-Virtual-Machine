@@ -58,7 +58,7 @@ func testReadBalanceAfterUTXOTransfer(t *testing.T, db *db_utils.OrdDB, tick str
 
 func TestUTXOTransfer(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}

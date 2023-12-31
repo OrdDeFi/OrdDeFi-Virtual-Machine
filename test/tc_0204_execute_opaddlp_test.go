@@ -66,7 +66,12 @@ func checkLP(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTi
 	fmt.Printf("%s-%s user balance: %s\n", lTick, rTick, lpAmt.String())
 	lpMeta, err := memory_read.LiquidityProviderMetadata(db, lTick, rTick)
 	if err != nil {
-		t.Errorf("checkUserBalance OpenDB error: %s", err.Error())
+		t.Errorf("checkLP OpenDB error: %s", err.Error())
+		return
+	}
+	if lpMeta == nil {
+		t.Errorf("checkLP lpMeta not found: %s", lTick+"-"+rTick)
+		return
 	}
 	lpMetaJSON, err := lpMeta.JsonString()
 	if err != nil {
@@ -109,7 +114,7 @@ func TestToFindLegalTestingAddress(t *testing.T) {
 
 func TestAddLP(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -186,7 +191,7 @@ func TestAddLP(t *testing.T) {
 
 func TestAddLP2(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -215,7 +220,7 @@ func TestAddLP2(t *testing.T) {
 
 func TestAddLP3(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}

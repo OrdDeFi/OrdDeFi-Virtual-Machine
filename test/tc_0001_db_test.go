@@ -23,7 +23,7 @@ func TestLPPath(t *testing.T) {
 }
 
 func TestDB(t *testing.T) {
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestDB OpenDB error: %s", err.Error())
 	}
@@ -46,7 +46,7 @@ func TestDB(t *testing.T) {
 }
 
 func TestDBRead(t *testing.T) {
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestDBRead OpenDB error: %s", err.Error())
 	}
@@ -66,7 +66,7 @@ func TestDBRead(t *testing.T) {
 }
 
 func TestDBReadPrefix(t *testing.T) {
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestDBReadPrefix OpenDB error: %s", err.Error())
 	}
@@ -93,7 +93,7 @@ func TestDBReadPrefix(t *testing.T) {
 }
 
 func TestDBBatchStore(t *testing.T) {
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestDBBatchStore OpenDB error: %s", err.Error())
 	}

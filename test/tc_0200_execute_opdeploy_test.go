@@ -48,7 +48,7 @@ func TestExecuteDeployInvalidTick1(t *testing.T) {
 	}
 
 	// 2. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteDeployInvalidTick1 OpenDB error: %s", err.Error())
 	}
@@ -73,7 +73,7 @@ func TestExecuteDeployInvalidTick2(t *testing.T) {
 	}
 
 	// 2. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteDeployInvalidTick2 OpenDB error: %s", err.Error())
 	}
@@ -111,7 +111,7 @@ func TestExecuteDeployExistingTick(t *testing.T) {
 	}
 
 	// 2. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteDeployExistingTick OpenDB error: %s", err.Error())
 	}
@@ -148,7 +148,7 @@ func TestExecuteDeployInBatchCommands(t *testing.T) {
 	}
 
 	// 2. open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteDeployInBatchCommands OpenDB error: %s", err.Error())
 	}
@@ -219,7 +219,7 @@ func TestExecuteDeployInBatchCommands(t *testing.T) {
 }
 
 func TestDeployHalf(t *testing.T) {
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteDeployInBatchCommands OpenDB error: %s", err.Error())
 	}

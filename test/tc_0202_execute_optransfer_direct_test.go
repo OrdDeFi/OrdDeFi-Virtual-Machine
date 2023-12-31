@@ -144,7 +144,7 @@ func testDirectNormalTransfer(t *testing.T, db *db_utils.OrdDB, tick string) {
 
 func TestDirectTransfer(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}

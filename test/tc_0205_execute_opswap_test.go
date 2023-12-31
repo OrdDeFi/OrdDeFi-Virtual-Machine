@@ -121,7 +121,7 @@ func testSwapForParams(t *testing.T, db *db_utils.OrdDB, txId string, address st
 
 func TestSwapForODFILP(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
@@ -141,7 +141,7 @@ func TestSwapForODFILP(t *testing.T) {
 
 func TestSwapForNoneODFILP(t *testing.T) {
 	// open db
-	db, err := db_utils.OpenDB("./test_db")
+	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
 		t.Errorf("TestExecuteMint OpenDB error: %s", err.Error())
 	}
