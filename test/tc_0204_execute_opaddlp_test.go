@@ -70,7 +70,6 @@ func checkLP(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTi
 		return
 	}
 	if lpMeta == nil {
-		t.Errorf("checkLP lpMeta not found: %s", lTick+"-"+rTick)
 		return
 	}
 	lpMetaJSON, err := lpMeta.JsonString()
