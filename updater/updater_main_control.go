@@ -7,6 +7,7 @@ import (
 )
 
 const controlDBPath = "./OrdDeFi_control"
+const genesisBlockNumber = 829832
 
 func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
@@ -28,11 +29,23 @@ func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 	}
 	defer db_utils.CloseDB(controlDB)
 
-	blockNumber := bitcoin_cli_channel.GetBlockCount()
-	if blockNumber == 0 {
+	// check current block number
+	currentBlockNumber := bitcoin_cli_channel.GetBlockCount()
+	if currentBlockNumber == 0 {
 		err := errors.New("updateIndex error: bitcoin-cli getblockcount failed")
 		return err
 	}
-	err = UpdateBlockNumber(blockNumber, dataDir, logDir, verbose)
-	return err
+	for indexingBlockNumber := genesisBlockNumber; indexingBlockNumber <= currentBlockNumber; indexingBlockNumber++ {
+		// get block hash and all txIds in block
+		println("indexing block", indexingBlockNumber)
+		blockHash := bitcoin_cli_channel.GetBlockHash(indexingBlockNumber)
+		if blockHash == nil {
+			return errors.New("UpdateBlockNumber GetBlockHash failed")
+		}
+		err = UpdateBlockNumber(indexingBlockNumber, blockHash, dataDir, logDir, verbose)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -9,13 +9,10 @@ import (
 	"errors"
 )
 
-func UpdateBlockNumber(blockNumber int, dataDir string, logDir string, verbose bool) error {
+func UpdateBlockNumber(blockNumber int, blockHash *string, dataDir string, logDir string, verbose bool) error {
 	var err error
-	// get block hash and all txIds in block
-	blockHash := bitcoin_cli_channel.GetBlockHash(blockNumber)
 	if blockHash == nil {
-		err = errors.New("UpdateBlockNumber GetBlockHash failed")
-		return err
+		return errors.New("UpdateBlockNumber failed: blockHash is nil")
 	}
 	block := bitcoin_cli_channel.GetBlock(*blockHash)
 	if block == nil {
