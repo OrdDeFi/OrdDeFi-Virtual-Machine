@@ -73,6 +73,16 @@ func main() {
 		subcommands.CheckExecuteResult(executeResultParam, logDirParam)
 	} else if checkUTXOTransferParam != "" {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
+	} else if getAddressBalanceParam != "" {
+		subcommands.GetAddressBalanceParam(getAddressBalanceParam, dataDirParam)
+	} else if getCoinHoldersParam != "" {
+		subcommands.GetCoinHoldersParam(getCoinHoldersParam, dataDirParam)
+	} else if getLPMetaParam != "" {
+		subcommands.GetLPMetaParam(getLPMetaParam, dataDirParam)
+	} else if getAllCoinsParam != "" {
+		subcommands.GetAllCoins(dataDirParam)
+	} else if getAllLPsParam != "" {
+		subcommands.GetAllLPs(dataDirParam)
 	} else {
 		verboseBool := strings.ToLower(verboseParam) == "true"
 		err := updateIndex(dataDirParam, logDirParam, verboseBool)
