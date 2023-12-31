@@ -53,6 +53,16 @@ func main() {
 	flag.StringVar(&executeResultParam, "executeresult", "", "OrdDeFi-Virtual-Machine -executeresult [txid]")
 	var checkUTXOTransferParam string
 	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
+	var getAddressBalanceParam string
+	flag.StringVar(&getAddressBalanceParam, "getaddressbalance", "", "OrdDeFi-Virtual-Machine -getaddressbalance [address]")
+	var getCoinHoldersParam string
+	flag.StringVar(&getCoinHoldersParam, "getcoinholders", "", "OrdDeFi-Virtual-Machine -getcoinholders [coin]")
+	var getLPMetaParam string
+	flag.StringVar(&getLPMetaParam, "getlpmeta", "", "OrdDeFi-Virtual-Machine -getlpmeta [coinA-coinB]")
+	var getAllCoinsParam string
+	flag.StringVar(&getAllCoinsParam, "getallcoins", "", "OrdDeFi-Virtual-Machine -getallcoins true")
+	var getAllLPsParam string
+	flag.StringVar(&getAllLPsParam, "getalllps", "", "OrdDeFi-Virtual-Machine -getalllps true")
 	flag.Parse()
 
 	if parseTransactionParam != "" {
