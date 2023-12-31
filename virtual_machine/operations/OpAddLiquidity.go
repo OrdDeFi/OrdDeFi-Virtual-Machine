@@ -37,9 +37,15 @@ func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstructi
 	if cmpRes > 0 {
 		// addingX exceed mixed amount
 		consumingLAmt = rAmt.Multiply(lpRatio)
+		if consumingLAmt == nil {
+			return fmt.Errorf("calculate consumingLAmt error: %s * %s", rAmt.String(), lpRatio.String())
+		}
 	} else if cmpRes < 0 {
 		// addingY exceed mixed amount
 		consumingRAmt = lAmt.DivideBy(lpRatio)
+		if consumingRAmt == nil {
+			return fmt.Errorf("calculate consumingRAmt error: %s / %s", lAmt.String(), lpRatio.String())
+		}
 	}
 	addingLPRatio := consumingLAmt.DivideBy(x)
 	if addingLPRatio == nil {
