@@ -22,8 +22,6 @@ func updateIndex(dataDir string, logDir string, verbose bool) error {
 }
 
 func main() {
-	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
-
 	// DB path
 	var dataDirParam string
 	flag.StringVar(&dataDirParam, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
@@ -57,6 +55,8 @@ func main() {
 	flag.StringVar(&getAddressBalanceParam, "getaddressbalance", "", "OrdDeFi-Virtual-Machine -getaddressbalance [address]")
 	var getCoinHoldersParam string
 	flag.StringVar(&getCoinHoldersParam, "getcoinholders", "", "OrdDeFi-Virtual-Machine -getcoinholders [coin]")
+	var getCoinMetaParam string
+	flag.StringVar(&getCoinMetaParam, "getcoinmeta", "", "OrdDeFi-Virtual-Machine -getcoinmeta [coinName]")
 	var getLPMetaParam string
 	flag.StringVar(&getLPMetaParam, "getlpmeta", "", "OrdDeFi-Virtual-Machine -getlpmeta [coinA-coinB]")
 	var getAllCoinsParam string
@@ -74,16 +74,19 @@ func main() {
 	} else if checkUTXOTransferParam != "" {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else if getAddressBalanceParam != "" {
-		subcommands.GetAddressBalanceParam(getAddressBalanceParam, dataDirParam)
+		subcommands.GetAddressBalance(getAddressBalanceParam, dataDirParam)
 	} else if getCoinHoldersParam != "" {
-		subcommands.GetCoinHoldersParam(getCoinHoldersParam, dataDirParam)
+		subcommands.GetCoinHolders(getCoinHoldersParam, dataDirParam)
+	} else if getCoinMetaParam != "" {
+		subcommands.GetCoinMeta(getCoinMetaParam, dataDirParam)
 	} else if getLPMetaParam != "" {
-		subcommands.GetLPMetaParam(getLPMetaParam, dataDirParam)
+		subcommands.GetLPMeta(getLPMetaParam, dataDirParam)
 	} else if getAllCoinsParam != "" {
 		subcommands.GetAllCoins(dataDirParam)
 	} else if getAllLPsParam != "" {
 		subcommands.GetAllLPs(dataDirParam)
 	} else {
+		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 		verboseBool := strings.ToLower(verboseParam) == "true"
 		err := updateIndex(dataDirParam, logDirParam, verboseBool)
 		if err != nil {
