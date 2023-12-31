@@ -53,6 +53,10 @@ func main() {
 	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
 	var getAddressBalanceParam string
 	flag.StringVar(&getAddressBalanceParam, "getaddressbalance", "", "OrdDeFi-Virtual-Machine -getaddressbalance [address]")
+	var getAddressLPBalanceParam string
+	flag.StringVar(&getAddressLPBalanceParam, "getaddresslpbalance", "", "OrdDeFi-Virtual-Machine -getaddresslpbalance [address]")
+	var getLPAddressBalanceParam string
+	flag.StringVar(&getLPAddressBalanceParam, "getlpaddressbalance", "", "OrdDeFi-Virtual-Machine -getlpaddressbalance [coinA-coinB]")
 	var getCoinHoldersParam string
 	flag.StringVar(&getCoinHoldersParam, "getcoinholders", "", "OrdDeFi-Virtual-Machine -getcoinholders [coin]")
 	var getCoinMetaParam string
@@ -75,6 +79,10 @@ func main() {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else if getAddressBalanceParam != "" {
 		subcommands.GetAddressBalance(getAddressBalanceParam, dataDirParam)
+	} else if getAddressLPBalanceParam != "" {
+		subcommands.GetAddressLPBalance(getAddressLPBalanceParam, dataDirParam)
+	} else if getLPAddressBalanceParam != "" {
+		subcommands.GetLPAddressBalance(getLPAddressBalanceParam, dataDirParam)
 	} else if getCoinHoldersParam != "" {
 		subcommands.GetCoinHolders(getCoinHoldersParam, dataDirParam)
 	} else if getCoinMetaParam != "" {

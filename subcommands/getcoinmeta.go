@@ -10,19 +10,19 @@ func GetCoinMeta(coinName string, dataDir string) {
 	db, err := db_utils.OpenDB(dataDir)
 	if err != nil {
 		println("open db error:", err.Error())
-		os.Exit(12)
+		os.Exit(21)
 	}
 	defer db_utils.CloseDB(db)
 
 	coinMeta, err := memory_read.CoinMeta(db, coinName)
 	if err != nil {
 		println("GetCoinMeta read CoinMeta error:", err.Error())
-		os.Exit(13)
+		os.Exit(22)
 	}
 	minted, err := memory_read.TotalMintedBalance(db, coinName)
 	if err != nil {
 		println("GetCoinMeta read TotalMintedBalance error:", err.Error())
-		os.Exit(14)
+		os.Exit(23)
 	}
 	if coinMeta == nil {
 		println("Coin not exist:", coinName)
