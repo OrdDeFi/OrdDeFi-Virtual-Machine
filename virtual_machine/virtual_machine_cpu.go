@@ -33,7 +33,7 @@ func recordLog(logDB *db_utils.OrdDB, err error, instruction interface{}, blockN
 	batchKV = make(map[string]string)
 	key := memory_const.LogMainTable + ":" + strconv.Itoa(blockNumber) + ":" + strconv.Itoa(txIndex) + ":" + txId
 	key2 := memory_const.LogQueryTxTable + ":" + txId
-	value := result + ";;" + rawInstruction
+	value := result + ";;;;;" + rawInstruction
 	batchKV[key] = value
 	batchKV[key2] = value
 	storeLogErr := logDB.StoreKeyValues(batchKV)

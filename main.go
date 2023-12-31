@@ -29,6 +29,12 @@ func main() {
 	flag.StringVar(&dataDirParam, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
 	var logDirParam string
 	flag.StringVar(&logDirParam, "log-dir", "", "OrdDeFi-Virtual-Machine -log-dir /path/of/log")
+	if dataDirParam == "" {
+		dataDirParam = "./OrdDeFi_storage"
+	}
+	if logDirParam == "" {
+		logDirParam = "./OrdDeFi_log"
+	}
 	if dataDirParam == logDirParam && dataDirParam != "" {
 		println("-data-dir and -log-dir should be different")
 		os.Exit(2)

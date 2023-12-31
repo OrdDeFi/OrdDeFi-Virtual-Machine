@@ -4,6 +4,7 @@ import (
 	"OrdDeFi-Virtual-Machine/db_utils"
 	"OrdDeFi-Virtual-Machine/virtual_machine/memory/memory_const"
 	"os"
+	"strings"
 )
 
 func CheckExecuteResult(txId string, logDir string) {
@@ -20,5 +21,9 @@ func CheckExecuteResult(txId string, logDir string) {
 		println("read logDB error:", err.Error())
 		os.Exit(5)
 	}
-	println(res)
+	println(txId, "execute result:")
+	components := strings.Split(*res, ";;;;;")
+	for _, log := range components {
+		println(log)
+	}
 }
