@@ -1,5 +1,6 @@
 test/test_db/
 OrdDeFi_storage/
 OrdDeFi_log/
+OrdDeFi-Virtual-Machine
 .idea/
 .DS_Store
