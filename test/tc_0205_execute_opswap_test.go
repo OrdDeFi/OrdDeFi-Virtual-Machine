@@ -10,7 +10,10 @@ import (
 	"OrdDeFi-Virtual-Machine/virtual_machine/operations"
 	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func swapInstruction(
@@ -105,7 +108,6 @@ func testSwapForParams(t *testing.T, db *db_utils.OrdDB, txId string, address st
 	if err != nil {
 		t.Errorf("generate swap instruction failed, error: %s", err.Error())
 	}
-
 	println("swap", lTick, rTick, "by", spendingTick, "for", amt)
 	println("status before swap:")
 	checkStatusForSwap(t, db, address, lTick, rTick, spendingTick)
@@ -120,6 +122,8 @@ func testSwapForParams(t *testing.T, db *db_utils.OrdDB, txId string, address st
 }
 
 func TestSwapForODFILP(t *testing.T) {
+	os.RemoveAll(testDBPath)
+	TestAddLP(t)
 	// open db
 	db, err := db_utils.OpenDB(testDBPath)
 	if err != nil {
@@ -129,6 +133,11 @@ func TestSwapForODFILP(t *testing.T) {
 
 	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
 	address := "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90"
+
+	odgvAmt, err := memory_read.AvailableBalance(db, "odgv", address)
+	odfiAmt, err := memory_read.AvailableBalance(db, "odfi", address)
+	println("swap before, odgv: ", odgvAmt.String(), "odfi: ", odfiAmt.String())
+
 	println("Test 1")
 	testSwapForParams(t, db, txId, address, "odfi", "odgv", "odgv", "10")
 	println("Test 2")
@@ -137,6 +146,12 @@ func TestSwapForODFILP(t *testing.T) {
 	testSwapForParams(t, db, txId, address, "odgv", "odfi", "odgv", "10")
 	println("Test 4")
 	testSwapForParams(t, db, txId, address, "odgv", "odfi", "odfi", "10")
+
+	odgvAmt, _ = memory_read.AvailableBalance(db, "odgv", address)
+	odfiAmt, _ = memory_read.AvailableBalance(db, "odfi", address)
+	println("swap after, odgv: ", odgvAmt.String(), "odfi: ", odfiAmt.String())
+	assert.Equal(t, odgvAmt.String(), "916.501302624091591257")
+	assert.Equal(t, odfiAmt.String(), "940.064562497423904711")
 }
 
 func TestSwapForNoneODFILP(t *testing.T) {

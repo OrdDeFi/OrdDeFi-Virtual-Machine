@@ -72,11 +72,13 @@ func checkLP(t *testing.T, db *db_utils.OrdDB, address string, lTick string, rTi
 	if lpMeta == nil {
 		return
 	}
-	lpMetaJSON, err := lpMeta.JsonString()
-	if err != nil {
-		t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
+	if lpMeta != nil {
+		lpMetaJSON, err := lpMeta.JsonString()
+		if err != nil {
+			t.Errorf("checkUserBalance jpMeta convert JSON error: %s", err.Error())
+		}
+		println("LP Meta:", *lpMetaJSON)
 	}
-	println("LP Meta:", *lpMetaJSON)
 }
 
 func checkUserBalance(t *testing.T, db *db_utils.OrdDB, address string) {
