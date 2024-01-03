@@ -1,4 +1,5 @@
 test/test_db/
+test/test_lock_db/
 OrdDeFi_control/
 OrdDeFi_storage/
 OrdDeFi_log/

@@ -67,3 +67,11 @@ func CopyDir(srcPath, destPath string) error {
 	}
 	return nil
 }
+
+func RemoveDir(destPath string) error {
+	err := os.RemoveAll(destPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -8,6 +8,7 @@ import (
 
 const controlDBPath = "./OrdDeFi_control"
 const genesisBlockNumber = 829832
+const backupAlignment = 50
 
 func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
