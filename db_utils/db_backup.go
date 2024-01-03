@@ -1,6 +1,7 @@
 package db_utils
 
 import (
+	"OrdDeFi-Virtual-Machine/file_utils"
 	"path/filepath"
 	"strconv"
 )
@@ -14,11 +15,13 @@ func BackupPathForMainPath(mainDBPath string, blockNumber int) string {
 }
 
 func Backup(mainDBPath string, blockNumber int) error {
-
-	return nil
+	backupPath := BackupPathForMainPath(mainDBPath, blockNumber)
+	err := file_utils.CopyDir(mainDBPath, backupPath)
+	return err
 }
 
 func Restore(mainDBPath string, blockNumber int) error {
-
-	return nil
+	backupPath := BackupPathForMainPath(mainDBPath, blockNumber)
+	err := file_utils.CopyDir(backupPath, mainDBPath)
+	return err
 }
