@@ -37,14 +37,22 @@ func CopyFile(src, dest string) error {
 }
 
 func CopyDir(srcPath, destPath string) error {
-	err := os.RemoveAll(destPath)
+	// check if file exist at src path
+	_, err := os.Stat(srcPath)
 	if err != nil {
 		return err
 	}
+	// remove file or dir at destPath
+	err = os.RemoveAll(destPath)
+	if err != nil {
+		return err
+	}
+	// mkdir at destPath
 	err = os.MkdirAll(destPath, 0755)
 	if err != nil {
 		return err
 	}
+	// copy each dir from srcPath to destPath
 	entries, err := os.ReadDir(srcPath)
 	if err != nil {
 		return err
