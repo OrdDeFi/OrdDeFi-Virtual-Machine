@@ -7,6 +7,7 @@ import (
 )
 
 const BackupAlignment = 50
+const GenesisBlockNumber = 829832
 
 func BackupPathForMainPath(mainDBPath string, blockNumber int) string {
 	backupSuffix := "_backup_" + strconv.Itoa(blockNumber)
@@ -19,6 +20,11 @@ func BackupPathForMainPath(mainDBPath string, blockNumber int) string {
 func Backup(mainDBPath string, blockNumber int) error {
 	backupPath := BackupPathForMainPath(mainDBPath, blockNumber)
 	err := file_utils.CopyDir(mainDBPath, backupPath)
+	if err != nil {
+		return err
+	}
+	prevBackupPath := BackupPathForMainPath(mainDBPath, blockNumber-2*BackupAlignment)
+	err = file_utils.RemoveDir(prevBackupPath)
 	return err
 }
 

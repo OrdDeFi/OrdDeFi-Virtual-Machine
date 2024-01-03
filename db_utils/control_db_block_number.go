@@ -64,3 +64,21 @@ func SetLastUpdatedBlock(controlDB *OrdDB, blockNumber int, blockHash string) er
 	err := controlDB.StoreKeyValues(batchKV)
 	return err
 }
+
+func ResetLastUpdatedBlockTo(controlDB *OrdDB, toBlockNumber *int, lastUpdatedBlockNumber *int) error {
+	var batchKV map[string]string
+	batchKV = make(map[string]string)
+	if toBlockNumber == nil || lastUpdatedBlockNumber == nil {
+		// remove all
+		batchKV[lastUpdateBlockKey] = ""
+	} else {
+		// remove from toBlockNumber to lastUpdatedBlockNumber
+		batchKV[lastUpdateBlockKey] = strconv.Itoa(*toBlockNumber)
+		for i := *toBlockNumber + 1; i <= *lastUpdatedBlockNumber; i++ {
+			blockNumberStr := strconv.Itoa(i)
+			batchKV[blockNumberStr] = ""
+		}
+	}
+	err := controlDB.StoreKeyValues(batchKV)
+	return err
+}

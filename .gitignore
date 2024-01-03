@@ -2,7 +2,9 @@ test/test_db/
 test/test_lock_db/
 OrdDeFi_control/
 OrdDeFi_storage/
+OrdDeFi_storage_*/
 OrdDeFi_log/
+OrdDeFi_log_*/
 OrdDeFi-Virtual-Machine
 .idea/
 .DS_Store
