@@ -22,8 +22,8 @@ func Backup(mainDBPath string, blockNumber int) error {
 	return err
 }
 
-func Restore(mainDBPath string, blockNumber int) error {
-	backupPath := BackupPathForMainPath(mainDBPath, blockNumber)
+func Restore(mainDBPath string, restoreBlockNumber int) error {
+	backupPath := BackupPathForMainPath(mainDBPath, restoreBlockNumber)
 	err := file_utils.CopyDir(backupPath, mainDBPath)
 	return err
 }
