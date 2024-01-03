@@ -43,3 +43,14 @@ func TestBackupPath(t *testing.T) {
 		t.Errorf("TestBackupPath error: expected %s, got %s", "/Users/satoshi/OrdDeFi_storage_backup_825100", backupPath)
 	}
 }
+
+func TestRestoreNumber(t *testing.T) {
+	r1 := db_utils.RestoringBlockNumber(825050)
+	if r1 != 825000 {
+		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825000, r1)
+	}
+	r2 := db_utils.RestoringBlockNumber(825049)
+	if r2 != 825000 {
+		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825000, r2)
+	}
+}
