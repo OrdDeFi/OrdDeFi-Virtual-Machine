@@ -16,7 +16,7 @@ func ODFIMeta() *memory_const.CoinMeta {
 	result.Max = safe_number.SafeNumFromString("21000000")
 	result.Lim = safe_number.SafeNumFromString("1000")
 	result.AddrLim = safe_number.SafeNumFromString("1000")
-	result.Desc = "The major coin of OrdDeFi."
+	result.Desc = "The protocol major coin of OrdDeFi."
 	result.Icon = ""
 	return result
 }
