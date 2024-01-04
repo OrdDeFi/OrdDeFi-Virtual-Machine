@@ -34,9 +34,9 @@ func Restore(mainDBPath string, restoreBlockNumber int) error {
 	return err
 }
 
-func RestoringBlockNumber(lastUpdatedBlockNumber int) int {
+func RestoringBlockNumber(lastUpdatedBlockNumber int, removeCurrentBlock bool) int {
 	result := (lastUpdatedBlockNumber / BackupAlignment) * BackupAlignment
-	if result == lastUpdatedBlockNumber {
+	if result == lastUpdatedBlockNumber && removeCurrentBlock {
 		result -= BackupAlignment
 	}
 	return result

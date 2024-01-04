@@ -9,7 +9,7 @@ import (
 
 const controlDBPath = "./OrdDeFi_control"
 
-func restoreDB(controlDB *db_utils.OrdDB, dataDir string, logDir string, lastUpdatedBlockNumber *int) error {
+func restoreDB(controlDB *db_utils.OrdDB, dataDir string, logDir string, lastUpdatedBlockNumber *int, discardCurrentBlock bool) error {
 	if lastUpdatedBlockNumber == nil {
 		// if lastUpdatedBlockNumber is nil, delete the current data immediately, and index from begin
 		err := file_utils.RemoveDir(dataDir)
@@ -23,7 +23,7 @@ func restoreDB(controlDB *db_utils.OrdDB, dataDir string, logDir string, lastUpd
 		err = db_utils.ResetLastUpdatedBlockTo(controlDB, nil, nil)
 		return err
 	} else {
-		restoreBlockNumber := db_utils.RestoringBlockNumber(*lastUpdatedBlockNumber)
+		restoreBlockNumber := db_utils.RestoringBlockNumber(*lastUpdatedBlockNumber, discardCurrentBlock)
 		err := db_utils.Restore(dataDir, restoreBlockNumber)
 		if err != nil {
 			return err
@@ -77,7 +77,7 @@ func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 		// lastUpdatedBlock is *int, which could be nil.
 		// If it is nil, indicates that no block was updated succeed. Remove dataDir and logDir.
 		// Otherwise, restore dataDir and logDir
-		err = restoreDB(controlDB, dataDir, logDir, lastUpdatedBlock)
+		err = restoreDB(controlDB, dataDir, logDir, lastUpdatedBlock, false)
 		if err != nil {
 			return err
 		}
@@ -99,7 +99,7 @@ func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 				return errors.New("UpdateIndex GetBlockHash failed: bitcoinCliBlockHash is nil")
 			}
 			if *storedBlockHash != *bitcoinCliBlockHash {
-				err = restoreDB(controlDB, dataDir, logDir, lastUpdatedBlock)
+				err = restoreDB(controlDB, dataDir, logDir, lastUpdatedBlock, true)
 				if err != nil {
 					return err
 				}

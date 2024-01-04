@@ -45,12 +45,20 @@ func TestBackupPath(t *testing.T) {
 }
 
 func TestRestoreNumber(t *testing.T) {
-	r1 := db_utils.RestoringBlockNumber(825050)
+	r1 := db_utils.RestoringBlockNumber(825050, true)
 	if r1 != 825000 {
 		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825000, r1)
 	}
-	r2 := db_utils.RestoringBlockNumber(825049)
+	r2 := db_utils.RestoringBlockNumber(825049, true)
 	if r2 != 825000 {
 		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825000, r2)
+	}
+	r3 := db_utils.RestoringBlockNumber(825050, false)
+	if r3 != 825050 {
+		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825050, r3)
+	}
+	r4 := db_utils.RestoringBlockNumber(825049, false)
+	if r4 != 825000 {
+		t.Errorf("TestRestoreNumber failed, expected %d, got %d", 825000, r4)
 	}
 }
