@@ -14,7 +14,7 @@ See [docs/3.BuildAndUseIndexer.md](https://github.com/OrdDefi/OrdDefi-Virtual-Ma
 
 ## Operation Verification
 
-See [docs/4.1.OperationsVerify.md](https://github.com/OrdDefi/OrdDefi-Virtual-Machine/blob/main/docs/4.1.OperationsVerify.md).
+See [docs/4.1.OperationCompiler.md](https://github.com/OrdDefi/OrdDefi-Virtual-Machine/blob/main/docs/4.1.OperationCompiler.md).
 
 ## Deploy, Mint and Transfer
 
