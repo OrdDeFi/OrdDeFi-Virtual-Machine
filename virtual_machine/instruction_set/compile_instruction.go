@@ -302,7 +302,7 @@ func CompileInstruction(abstractInstruction AbstractInstruction) *interface{} {
 	if abstractInstruction.Rtick != "" && CheckTickLegal(abstractInstruction.Rtick) == false {
 		return nil
 	}
-	if abstractInstruction.To != "" && tx_utils.IsValidateBitcoinAddress(abstractInstruction.To) == false {
+	if abstractInstruction.To != "" && tx_utils.IsValidBitcoinAddress(abstractInstruction.To) == false {
 		return nil
 	}
 	op := abstractInstruction.Op

@@ -103,7 +103,7 @@ func ParseFirstOutputAddress(tx *wire.MsgTx) (*string, error) {
 	return &address, nil
 }
 
-func IsValidateBitcoinAddress(address string) bool {
+func IsValidBitcoinAddress(address string) bool {
 	if strings.ToLower(address) == "blackhole" || strings.ToLower(address) == "wormhole" {
 		return true
 	}
