@@ -7,6 +7,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
+	"strings"
 )
 
 /*
@@ -103,6 +104,9 @@ func ParseFirstOutputAddress(tx *wire.MsgTx) (*string, error) {
 }
 
 func IsValidateBitcoinAddress(address string) bool {
+	if strings.ToLower(address) == "blackhole" || strings.ToLower(address) == "wormhole" {
+		return true
+	}
 	_, err := btcutil.DecodeAddress(address, &chaincfg.MainNetParams)
 	if err != nil {
 		return false
