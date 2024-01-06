@@ -62,13 +62,16 @@ func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstructi
 			return fmt.Errorf("calculate consumingRAmt error: %s / %s", lAmt.String(), lpRatio.String())
 		}
 	}
-	addingLPRatio := consumingLAmt.DivideBy(x)
-	if addingLPRatio == nil {
-		return fmt.Errorf("calulate addingLPRatio error: %s / %s", consumingLAmt.String(), x.String())
+	// addingLPAmount = (consumingLAmt / x) * lpMeta.Total
+	// to avoid accuracy issue, calc multiply first
+	// addingLPAmount = lpMeta.Total * consumingLAmt / x
+	addingLPAmount0 := lpMeta.Total.Multiply(consumingLAmt)
+	if addingLPAmount0 == nil {
+		return fmt.Errorf("calulate addingLPAmount0 error: %s * %s", lpMeta.Total.String(), consumingLAmt.String())
 	}
-	addingLPAmount := addingLPRatio.Multiply(lpMeta.Total)
+	addingLPAmount := addingLPAmount0.DivideBy(x)
 	if addingLPAmount == nil {
-		return fmt.Errorf("calulate addingLPAmount error: %s * %s", addingLPRatio.String(), lpMeta.Total.String())
+		return fmt.Errorf("calulate addingLPAmount error: %s / %s", addingLPAmount0.String(), x.String())
 	}
 	err := memory_write.WriteAddToExistingLPInfo(db, *lTick, *rTick, consumingLAmt, consumingRAmt, addingLPAmount, lpMeta, address)
 	return err
