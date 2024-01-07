@@ -202,7 +202,21 @@ func TestAddLP2(t *testing.T) {
 	txId := "2ad883c0532fbbb69380b46f72d53b9426f89bdcb95a29805fc9a11e0cfd6997"
 	lTick := "odfi"
 	rTick := "odgv"
+	txIDInputAdd := "bc1qr35hws365juz5rtlsjtvmulu97957kqvr3zpw3"
+
+	//1. check user balance
+	lTickInitBalance, rTickInitBalance, _ := getBalanceData(db, lTick, rTick, txIDInputAdd)
+
+	//2. mint odfi and odgv
+	if lTickInitBalance.IsZero() {
+		TestingMintForParam(t, db, lTick, txId, "1000")
+	}
+	if rTickInitBalance.IsZero() {
+		TestingMintForParam(t, db, rTick, txId, "1000")
+	}
+
 	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "10", "10")
+	println("instruction:", instruction.TxInAddr)
 	if err != nil {
 		t.Errorf("compile instruction error: %s", err.Error())
 		return
@@ -229,8 +243,26 @@ func TestAddLP3(t *testing.T) {
 	fmt.Println("DB opened successfully.")
 
 	txId := "61de96170018ce878b1adf287b8ac9cf0e4f0ad8c5a69af203cc25bbde72a13e"
+	txIDInputAdd := "bc1q2f0tczgrukdxjrhhadpft2fehzpcrwrz549u90"
+
 	lTick := "half"
+	coinMeta, err := memory_read.CoinMeta(db, "half")
+	if coinMeta == nil {
+		TestDeployHalf(t)
+	}
 	rTick := "odgv"
+
+	//1. check user balance
+	lTickInitBalance, rTickInitBalance, _ := getBalanceData(db, lTick, rTick, txIDInputAdd)
+
+	//2. mint odfi and odgv
+	if lTickInitBalance.IsZero() {
+		TestingMintForParam(t, db, lTick, txId, "1000")
+	}
+	if rTickInitBalance.IsZero() {
+		TestingMintForParam(t, db, rTick, txId, "1000")
+	}
+
 	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "50", "100")
 	if err != nil {
 		t.Errorf("compile instruction error: %s", err.Error())
