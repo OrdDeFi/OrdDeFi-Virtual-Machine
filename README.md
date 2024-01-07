@@ -2,6 +2,12 @@
 
 In the financial sector, there are three crucial applications: asset issuance, trading, and lending. BRC-20 has made significant progress in asset issuance. OrdDeFi expands the BRC-20 instruction set and provides a native Automated Market Maker (AMM) protocol on Bitcoin L1, achieving the second application: trading.
 
+OrdDeFi protocol starts indexing at bitcoin block 829832:  
+
+```
+const GenesisBlockNumber = 829832
+```
+
 ### AMM Operations in OrdDeFi
 
 In addition to the deploy, mint, and transfer instructions in BRC-20, OrdDeFi introduces additional instructions: `addlp` (add liquidity provider), `swap`, and `rmlp` (remove liquidity provider). These instructions enable users to utilize AMM algorithms for automated market-making and trading of OrdDeFi protocol assets on L1.
@@ -162,3 +168,7 @@ See [docs/4.3.AMMOperations.md](https://github.com/OrdDefi/OrdDefi-Virtual-Machi
 # LICENSE
 
 [GNU GENERAL PUBLIC LICENSE](https://github.com/OrdDefi/OrdDefi-Virtual-Machine/blob/main/LICENSE)
+
+# Get the Latest News
+
+Follow the [Official OrdDeFi Twitter](https://twitter.com/OrdDeFi)
