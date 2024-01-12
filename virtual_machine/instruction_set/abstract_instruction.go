@@ -39,9 +39,6 @@ type AbstractInstruction struct {
 	Lamt string `json:"lamt"` // @required. Left coin amount to adding into liquidity provider
 	Ramt string `json:"ramt"` // @required. Right coin amount to adding into liquidity provider
 
-	// Keys for add liquidity
-	AllowSwap string `json:"as"` // @optional, default: 1. allow swap 1(true) / 0(false)
-
 	// Keys for swap
 	Spend     string `json:"spend"`     // @required. Spend which coin at swapping
 	Threshold string `json:"threshold"` // @optional, default: 1.0 (all slippage is allowed). Allowed threshold at swapping. If slippage > threshold, swap will be aborted. Format in 0.005, meaning 0.5%
