@@ -84,15 +84,15 @@ func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstru
 			abstractInstruction.PreviousOutputIndex = int(tx.TxIn[0].PreviousOutPoint.Index)
 			// parse input address if needed
 			if authentication.InstructionShouldBeAuthed(abstractInstruction) {
-				firstInputAddress, err := tx_utils.ParseFirstInputAddress(tx)
+				authResult, err := authentication.InstructionAuthenticate(tx)
 				if err != nil {
 					return nil, err
 				}
-				if firstInputAddress == nil {
-					return nil, errors.New("filterAbstractInstructions ParseFirstInputAddress got empty address")
+				if authResult == nil {
+					return nil, errors.New("")
 				}
-				if *firstInputAddress != abstractInstruction.TxOutAddr {
-					return nil, errors.New("no privileges on cross-address " + abstractInstruction.Op)
+				if *authResult == false {
+					return nil, nil
 				}
 			}
 			// save txid to abstract instruction
