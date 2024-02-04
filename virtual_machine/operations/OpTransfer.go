@@ -95,9 +95,6 @@ func performTransferBatchWriteKV(
 }
 
 func executeImmediateTransfer(instruction instruction_set.OpTransferInstruction, db *db_utils.OrdDB) error {
-	if instruction.TxInAddr != instruction.TxOutAddr {
-		return errors.New("no privileges on cross-address immediate transfer")
-	}
 	amountSafeNum := safe_number.SafeNumFromString(instruction.Amt)
 	if amountSafeNum == nil {
 		return nil

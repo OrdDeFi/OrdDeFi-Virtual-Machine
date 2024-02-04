@@ -280,9 +280,6 @@ func performSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.Ord
 }
 
 func ExecuteOpSwap(instruction instruction_set.OpSwapInstruction, db *db_utils.OrdDB) error {
-	if instruction.TxInAddr != instruction.TxOutAddr {
-		return errors.New("no privileges on cross-address swap")
-	}
 	address := instruction.TxOutAddr
 	tick := instruction.Spend
 	lTick, rTick, consumingAmt := instruction.ExtractParams()

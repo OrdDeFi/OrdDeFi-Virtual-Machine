@@ -216,7 +216,6 @@ func TestAddLP2(t *testing.T) {
 	}
 
 	instruction, err := addLiquidityProviderInstruction(txId, lTick, rTick, "10", "10")
-	println("instruction:", instruction.TxInAddr)
 	if err != nil {
 		t.Errorf("compile instruction error: %s", err.Error())
 		return

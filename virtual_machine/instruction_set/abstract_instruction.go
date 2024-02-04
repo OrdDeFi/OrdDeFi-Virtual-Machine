@@ -7,7 +7,6 @@ type AbstractInstruction struct {
 	TxId string
 
 	// Address
-	TxInAddr            string
 	TxOutAddr           string
 	PreviousOutputIndex int
 

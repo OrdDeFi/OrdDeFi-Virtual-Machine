@@ -85,7 +85,6 @@ type OpTransferInstruction struct {
 
 func compileOpTransferInstruction(instruction AbstractInstruction) *OpTransferInstruction {
 	op := OpTransferInstruction{}
-	op.TxInAddr = instruction.TxInAddr
 	op.TxOutAddr = instruction.TxOutAddr
 	op.TxId = instruction.TxId
 	op.Tick = instruction.Tick
@@ -142,7 +141,6 @@ func (op OpAddLiquidityProviderInstruction) ExtractParams() (*string, *string, *
 
 func compileOpAddLiquidityProviderInstruction(instruction AbstractInstruction) *OpAddLiquidityProviderInstruction {
 	op := OpAddLiquidityProviderInstruction{}
-	op.TxInAddr = instruction.TxInAddr
 	op.TxOutAddr = instruction.TxOutAddr
 	op.Ltick = instruction.Ltick
 	op.Rtick = instruction.Rtick
@@ -197,7 +195,6 @@ func (op OpRemoveLiquidityProviderInstruction) ExtractParams() (*string, *string
 
 func compileOpRemoveLiquidityProviderInstruction(instruction AbstractInstruction) *OpRemoveLiquidityProviderInstruction {
 	op := OpRemoveLiquidityProviderInstruction{}
-	op.TxInAddr = instruction.TxInAddr
 	op.TxOutAddr = instruction.TxOutAddr
 	op.Ltick = instruction.Ltick
 	op.Rtick = instruction.Rtick
@@ -257,7 +254,6 @@ func (op OpSwapInstruction) ExtractParams() (*string, *string, *safe_number.Safe
 
 func compileOpSwapInstruction(instruction AbstractInstruction) *OpSwapInstruction {
 	op := OpSwapInstruction{}
-	op.TxInAddr = instruction.TxInAddr
 	op.TxOutAddr = instruction.TxOutAddr
 	op.Ltick = instruction.Ltick
 	op.Rtick = instruction.Rtick

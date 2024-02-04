@@ -78,9 +78,6 @@ func addToExistingLP(instruction instruction_set.OpAddLiquidityProviderInstructi
 }
 
 func ExecuteOpAddLiquidityProvider(instruction instruction_set.OpAddLiquidityProviderInstruction, db *db_utils.OrdDB) error {
-	if instruction.TxInAddr != instruction.TxOutAddr {
-		return errors.New("no privileges on cross-address add liquidity provider")
-	}
 	lTick, rTick, lAmt, rAmt := instruction.ExtractParams()
 	if lTick == nil || rTick == nil || lAmt == nil || rAmt == nil {
 		return errors.New("OpAddLiquidityProvider error: params extracting error")

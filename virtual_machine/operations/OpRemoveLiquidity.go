@@ -45,9 +45,6 @@ func removeLP(instruction instruction_set.OpRemoveLiquidityProviderInstruction, 
 }
 
 func ExecuteOpRemoveLiquidityProvider(instruction instruction_set.OpRemoveLiquidityProviderInstruction, db *db_utils.OrdDB) error {
-	if instruction.TxInAddr != instruction.TxOutAddr {
-		return errors.New("no privileges on cross-address remove liquidity provider")
-	}
 	lTick, rTick, consumingLPAmount := instruction.ExtractParams()
 	if lTick == nil || rTick == nil || consumingLPAmount == nil {
 		return errors.New("ExecuteOpRemoveLiquidityProvider error: params extracting error")
