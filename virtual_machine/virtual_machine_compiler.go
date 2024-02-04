@@ -2,6 +2,7 @@ package virtual_machine
 
 import (
 	"OrdDeFi-Virtual-Machine/tx_utils"
+	"OrdDeFi-Virtual-Machine/virtual_machine/authentication"
 	"OrdDeFi-Virtual-Machine/virtual_machine/instruction_set"
 	"encoding/json"
 	"errors"
@@ -18,19 +19,6 @@ func isValidContentType(contentType string) bool {
 	primaryType := parts[0]
 	primaryType = strings.ToLower(primaryType)
 	if primaryType == "text/plain" {
-		return true
-	}
-	return false
-}
-
-func onlySelfTxAllowed(instruction instruction_set.AbstractInstruction) bool {
-	op := instruction.Op
-	if op == instruction_set.OpNameAddLiquidityProvider ||
-		op == instruction_set.OpNameRemoveLiquidityProvider ||
-		op == instruction_set.OpNameSwap {
-		return true
-	}
-	if op == instruction_set.OpNameTransfer && instruction.To != "" {
 		return true
 	}
 	return false
@@ -95,7 +83,7 @@ func filterAbstractInstructions(rawInstructions []instruction_set.AbstractInstru
 			abstractInstruction.TxOutAddr = *firstOutputAddress
 			abstractInstruction.PreviousOutputIndex = int(tx.TxIn[0].PreviousOutPoint.Index)
 			// parse input address if needed
-			if onlySelfTxAllowed(abstractInstruction) {
+			if authentication.InstructionShouldBeAuthed(abstractInstruction) {
 				firstInputAddress, err := tx_utils.ParseFirstInputAddress(tx)
 				if err != nil {
 					return nil, err
