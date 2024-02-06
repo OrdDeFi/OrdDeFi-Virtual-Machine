@@ -10,7 +10,8 @@ import (
 
 func InstructionShouldBeAuthed(instruction instruction_set.AbstractInstruction) bool {
 	op := instruction.Op
-	if op == instruction_set.OpNameAddLiquidityProvider ||
+	if op == instruction_set.OpNameMint ||
+		op == instruction_set.OpNameAddLiquidityProvider ||
 		op == instruction_set.OpNameRemoveLiquidityProvider ||
 		op == instruction_set.OpNameSwap {
 		return true
