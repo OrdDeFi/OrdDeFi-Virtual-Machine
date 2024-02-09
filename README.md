@@ -1,8 +1,12 @@
 # Introduction
 
-In the financial sector, there are three crucial applications: asset issuance, trading, and lending. BRC-20 has made significant progress in asset issuance. OrdDeFi expands the BRC-20 instruction set and provides a native Automated Market Maker (AMM) protocol on Bitcoin L1, achieving the second application: trading.
+The `OrdDeFi-Virtual-Machine` serves as an indexer / virtual machine specifically designed for the OrdDeFi ecosystem. Its primary function is to compute and query the asset balances within OrdDeFi. This tool plays a crucial role in ensuring accurate and up-to-date information regarding the holdings of various assets managed or utilized by OrdDeFi participants. By leveraging the capabilities of this virtual machine, users and developers alike can efficiently access detailed balance information, facilitating better decision-making and smoother operations within the OrdDeFi framework.  
+
+It is experimental software with no warranty. See [LICENSE] for more details.  
 
 ### AMM Operations in OrdDeFi
+
+In the financial sector, there are three crucial applications: asset issuance, trading, and lending. BRC-20 has made significant progress in asset issuance. OrdDeFi expands the BRC-20 instruction set and provides a native Automated Market Maker (AMM) protocol on Bitcoin L1, achieving the second application: trading.  
 
 In addition to the deploy, mint, and transfer instructions in BRC-20, OrdDeFi introduces additional instructions: `addlp` (add liquidity provider), `swap`, and `rmlp` (remove liquidity provider). These instructions enable users to utilize AMM algorithms for automated market-making and trading of OrdDeFi protocol assets on L1.
 
