@@ -143,6 +143,12 @@ A typical `rmlp` instruction:
 
 See [docs/4.2.Operations.md](https://github.com/OrdDefi/OrdDefi-Virtual-Machine/blob/main/docs/4.2.Operations.md) for details.
 
+# Inscriber
+
+For enhancing security during the inscription of operations such as mint, addlp, rmlp, swap, and direct-transfer (specified as transfer with a to parameter), it is crucial to adhere to specific transaction (tx) guidelines. These guidelines dictate that the first transaction input (TxIn[0]) in the commit transaction must match the first transaction output (TxOut[0]) in the reveal transaction. Additionally, the final transaction output (TxOut[-1]) in the commit transaction must be an OpReturn containing the data orddefi:auth. Any instruction failing to meet these criteria will be terminated for safety reasons.
+
+To successfully execute the operations mint, addlp, rmlp, swap, and transfer with a specified to parameter, utilize the [OrdDeFi-Inscribe](https://github.com/OrdDeFi/OrdDeFi-Inscribe) tool. For detailed guidance and to ensure compliance with the required transaction structures, thoroughly review the [readme file](https://github.com/OrdDeFi/OrdDeFi-Inscribe/blob/main/README.md) of the [OrdDeFi-Inscribe](https://github.com/OrdDeFi/OrdDeFi-Inscribe) repository.
+
 # LICENSE
 
 [GNU GENERAL PUBLIC LICENSE](https://github.com/OrdDefi/OrdDefi-Virtual-Machine/blob/main/LICENSE)
