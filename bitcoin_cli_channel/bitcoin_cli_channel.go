@@ -114,7 +114,7 @@ func GetVersion() *string {
 		return nil
 	}
 	outputStr := string(output)
-	outputStr = strings.Trim(outputStr, "\t\n")
+	outputStr = strings.TrimSpace(outputStr)
 	lines := strings.Split(outputStr, "\n")
 	outputStr = lines[0]
 	components := strings.Split(outputStr, "version ")
