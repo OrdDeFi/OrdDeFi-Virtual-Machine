@@ -22,12 +22,13 @@ func GetBlockCount() int {
 	args := []string{"bitcoin-cli", "getblockcount"}
 	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
+	outputStr := string(output)
 	if err != nil {
 		fmt.Println("GetBlockCount Error:", err)
+		println(outputStr)
 		return 0
 	}
-	outputStr := string(output)
 	outputStr = strings.TrimSpace(outputStr)
 	result, ok := strconv.Atoi(outputStr)
 	if ok == nil {
@@ -40,12 +41,13 @@ func GetBlockHash(blockNumber int) *string {
 	args := []string{"bitcoin-cli", "getblockhash", strconv.Itoa(blockNumber)}
 	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
+	outputStr := string(output)
 	if err != nil {
 		fmt.Println("GetBlockHash Error:", err)
+		println(outputStr)
 		return nil
 	}
-	outputStr := string(output)
 	outputStr = strings.TrimSpace(outputStr)
 	return &outputStr
 }
@@ -75,9 +77,11 @@ func GetBlock(blockHash string) *BitcoinBlock {
 	args := []string{"bitcoin-cli", "getblock", blockHash}
 	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("GetBlockHash Error:", err)
+		outputStr := string(output)
+		println(outputStr)
 		return nil
 	}
 	var res BitcoinBlock
@@ -93,12 +97,13 @@ func GetRawTransaction(txId string) *string {
 	args := []string{"bitcoin-cli", "getrawtransaction", txId}
 	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
+	outputStr := string(output)
 	if err != nil {
 		fmt.Println("GetRawTransaction Error:", err)
+		println(outputStr)
 		return nil
 	}
-	outputStr := string(output)
 	outputStr = strings.TrimSpace(outputStr)
 	return &outputStr
 }
@@ -124,12 +129,13 @@ func GetVersion() *string {
 	args := []string{"bitcoin-cli", "--version"}
 	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
+	outputStr := string(output)
 	if err != nil {
 		fmt.Println("GetVersion Error:", err)
+		fmt.Println(outputStr)
 		return nil
 	}
-	outputStr := string(output)
 	outputStr = strings.TrimSpace(outputStr)
 	lines := strings.Split(outputStr, "\n")
 	outputStr = lines[0]
