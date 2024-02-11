@@ -126,7 +126,7 @@ func GetVersion() *string {
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Println("GetRawTransaction Error:", err)
+		fmt.Println("GetVersion Error:", err)
 		return nil
 	}
 	outputStr := string(output)
