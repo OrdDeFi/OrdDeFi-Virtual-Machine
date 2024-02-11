@@ -21,7 +21,7 @@ func CheckUTXOTransfer(utxo string, dataDir string) {
 		println("CheckUTXOTransfer read UTXOCarryingBalance error:", err.Error())
 		os.Exit(7)
 	}
-	println("From address:", address)
-	println("Tick:", tick)
-	println("Amount:", amount)
+	println("From address:", *address)
+	println("Tick:", *tick)
+	println("Amount:", *amount)
 }
