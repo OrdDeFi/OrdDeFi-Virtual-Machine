@@ -20,7 +20,7 @@ func GetBlockCount() int {
 		return 0
 	}
 	outputStr := string(output)
-	outputStr = strings.Trim(outputStr, "\t\n")
+	outputStr = strings.TrimSpace(outputStr)
 	result, ok := strconv.Atoi(outputStr)
 	if ok == nil {
 		return result
@@ -36,7 +36,7 @@ func GetBlockHash(blockNumber int) *string {
 		return nil
 	}
 	outputStr := string(output)
-	outputStr = strings.Trim(outputStr, "\t\n")
+	outputStr = strings.TrimSpace(outputStr)
 	return &outputStr
 }
 
@@ -85,7 +85,7 @@ func GetRawTransaction(txId string) *string {
 		return nil
 	}
 	outputStr := string(output)
-	outputStr = strings.Trim(outputStr, "\t\n")
+	outputStr = strings.TrimSpace(outputStr)
 	return &outputStr
 }
 
