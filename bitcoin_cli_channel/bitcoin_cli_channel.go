@@ -12,8 +12,15 @@ import (
 	"strings"
 )
 
+func combinedCmdArgs(baseCmd []string) []string {
+	params := GlobalParams().Params
+	finalCmd := append(baseCmd[:1], append(params, baseCmd[1:]...)...)
+	return finalCmd
+}
+
 func GetBlockCount() int {
 	args := []string{"bitcoin-cli", "getblockcount"}
+	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
@@ -31,6 +38,7 @@ func GetBlockCount() int {
 
 func GetBlockHash(blockNumber int) *string {
 	args := []string{"bitcoin-cli", "getblockhash", strconv.Itoa(blockNumber)}
+	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
@@ -65,6 +73,7 @@ type BitcoinBlock struct {
 
 func GetBlock(blockHash string) *BitcoinBlock {
 	args := []string{"bitcoin-cli", "getblock", blockHash}
+	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
@@ -82,6 +91,7 @@ func GetBlock(blockHash string) *BitcoinBlock {
 
 func GetRawTransaction(txId string) *string {
 	args := []string{"bitcoin-cli", "getrawtransaction", txId}
+	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
@@ -112,6 +122,7 @@ func DecodeRawTransaction(rawTransactionString string) *wire.MsgTx {
 
 func GetVersion() *string {
 	args := []string{"bitcoin-cli", "--version"}
+	args = combinedCmdArgs(args)
 	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {

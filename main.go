@@ -1,6 +1,7 @@
 package main
 
 import (
+	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
 	"OrdDeFi-Virtual-Machine/subcommands"
 	"OrdDeFi-Virtual-Machine/updater"
 	"flag"
@@ -14,16 +15,10 @@ func main() {
 	flag.StringVar(&dataDirParam, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
 	var logDirParam string
 	flag.StringVar(&logDirParam, "log-dir", "", "OrdDeFi-Virtual-Machine -log-dir /path/of/log")
-	if dataDirParam == "" {
-		dataDirParam = "./OrdDeFi_storage"
-	}
-	if logDirParam == "" {
-		logDirParam = "./OrdDeFi_log"
-	}
-	if dataDirParam == logDirParam && dataDirParam != "" {
-		println("-data-dir and -log-dir should be different")
-		os.Exit(2)
-	}
+
+	// Bitcoin-cli path
+	var bitcoinCliParamPath string
+	flag.StringVar(&bitcoinCliParamPath, "bitcoin-cli-param-file", "", "OrdDeFi-Virtual-Machine -bitcoin-cli-param-file /path/of/bitcoin-cli-param-file")
 
 	// verbose
 	var verboseParam string
@@ -55,6 +50,20 @@ func main() {
 	var getAllLPsParam string
 	flag.StringVar(&getAllLPsParam, "getalllps", "", "OrdDeFi-Virtual-Machine -getalllps true")
 	flag.Parse()
+
+	if dataDirParam == "" {
+		dataDirParam = "./OrdDeFi_storage"
+	}
+	if logDirParam == "" {
+		logDirParam = "./OrdDeFi_log"
+	}
+	if dataDirParam == logDirParam && dataDirParam != "" {
+		println("-data-dir and -log-dir should be different")
+		os.Exit(2)
+	}
+
+	glBitcoinCliParams := bitcoin_cli_channel.GlobalParams()
+	glBitcoinCliParams.LoadConfigPath(bitcoinCliParamPath)
 
 	if parseTransactionParam != "" {
 		subcommands.ParseTransaction(parseTransactionParam)
