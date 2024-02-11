@@ -23,5 +23,5 @@ func CheckUTXOTransfer(utxo string, dataDir string) {
 	}
 	println("From address:", *address)
 	println("Tick:", *tick)
-	println("Amount:", *amount)
+	println("Amount:", amount.String())
 }
