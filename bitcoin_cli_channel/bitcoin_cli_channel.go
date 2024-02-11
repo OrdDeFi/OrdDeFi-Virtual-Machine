@@ -13,7 +13,8 @@ import (
 )
 
 func GetBlockCount() int {
-	cmd := exec.Command("bitcoin-cli", "getblockcount")
+	args := []string{"bitcoin-cli", "getblockcount"}
+	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetBlockCount Error:", err)
@@ -29,7 +30,8 @@ func GetBlockCount() int {
 }
 
 func GetBlockHash(blockNumber int) *string {
-	cmd := exec.Command("bitcoin-cli", "getblockhash", strconv.Itoa(blockNumber))
+	args := []string{"bitcoin-cli", "getblockhash", strconv.Itoa(blockNumber)}
+	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetBlockHash Error:", err)
@@ -62,7 +64,8 @@ type BitcoinBlock struct {
 }
 
 func GetBlock(blockHash string) *BitcoinBlock {
-	cmd := exec.Command("bitcoin-cli", "getblock", blockHash)
+	args := []string{"bitcoin-cli", "getblock", blockHash}
+	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetBlockHash Error:", err)
@@ -78,7 +81,8 @@ func GetBlock(blockHash string) *BitcoinBlock {
 }
 
 func GetRawTransaction(txId string) *string {
-	cmd := exec.Command("bitcoin-cli", "getrawtransaction", txId)
+	args := []string{"bitcoin-cli", "getrawtransaction", txId}
+	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetRawTransaction Error:", err)
@@ -107,7 +111,8 @@ func DecodeRawTransaction(rawTransactionString string) *wire.MsgTx {
 }
 
 func GetVersion() *string {
-	cmd := exec.Command("bitcoin-cli", "--version")
+	args := []string{"bitcoin-cli", "--version"}
+	cmd := exec.Command(args[0], args[1:]...)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("GetRawTransaction Error:", err)
