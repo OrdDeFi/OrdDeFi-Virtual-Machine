@@ -36,6 +36,10 @@ func UTXOCarryingBalancePath(txId string) string {
 	return UTXOCarryingBalanceTable + ":" + txId + ":0" /*indicates the output index, which is always 0 */
 }
 
+func UTXOCarryingListPath(tick string, address string, txId string) string {
+	return UTXOCarryingListTable + ":" + tick + ":" + address + ":" + txId + ":0"
+}
+
 func LPAddressPrefix(lCoin string, rCoin string) string {
 	lpName := LPNameByTicks(lCoin, rCoin)
 	if lpName == nil {

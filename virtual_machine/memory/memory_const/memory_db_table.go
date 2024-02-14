@@ -40,6 +40,13 @@ The balance cast from available status to transferable by OpTransfer.
 */
 const UTXOCarryingBalanceTable = "utxobalance"
 
+/*
+UTXOCarryingListTable stores token balance in UTXO.
+The balance cast from available status to transferable by OpTransfer.
+Double write for UTXOCarryingBalanceTable, to query by tick and address.
+*/
+const UTXOCarryingListTable = "utxocarryinglist"
+
 // LpListTable stores all lp names
 const LpListTable = "lplist"
 
