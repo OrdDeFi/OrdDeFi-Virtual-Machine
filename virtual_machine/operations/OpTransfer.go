@@ -301,8 +301,12 @@ func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 			if err != nil {
 				return false, err
 			}
-			// 5.3 Remove UTXO carrying coins info
-			batchKV[previousTxId] = ""
+			// 5.3 Remove UTXO carrying coins info (to trim storage)
+			// However it can be no-trimming as an option, to query history UTXO transfer info
+			utxoCarryingBalancePath := memory_const.UTXOCarryingBalancePath(previousTxId)
+			batchKV[utxoCarryingBalancePath] = ""
+			utxoCarryingListPath := memory_const.UTXOCarryingListPath(*tick, *address, previousTxId)
+			batchKV[utxoCarryingListPath] = ""
 			err = db.StoreKeyValues(batchKV)
 			if err != nil {
 				return false, err
