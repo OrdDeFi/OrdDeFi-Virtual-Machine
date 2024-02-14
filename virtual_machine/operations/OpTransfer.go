@@ -131,6 +131,8 @@ func executeUTXOTransfer(instruction instruction_set.OpTransferInstruction, db *
 	// save a record on UTXOCarryingBalance:txId:0:coinName, content: amountString
 	utxoCarryingBalancePath := memory_const.UTXOCarryingBalancePath(instruction.TxId)
 	batchKV[utxoCarryingBalancePath] = instruction.TxOutAddr + ":" + instruction.Tick + ":" + amountSafeNum.String()
+	utxoCarryingListPath := memory_const.UTXOCarryingListPath(instruction.Tick, instruction.TxOutAddr, instruction.TxId)
+	batchKV[utxoCarryingListPath] = amountSafeNum.String()
 	err = db.StoreKeyValues(batchKV)
 	return err
 }
