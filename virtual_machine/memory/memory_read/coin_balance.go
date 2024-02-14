@@ -63,3 +63,9 @@ func AllAddressBalanceForCoin(db *db_utils.OrdDB, coinName string) (map[string]s
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }
+
+func AllUTXOTransferForCoin(db *db_utils.OrdDB, coinName string) (map[string]string, error) {
+	prefix := memory_const.UTXOCarryingListPrefix(coinName)
+	result, err := db.ReadAllPrefix(prefix)
+	return result, err
+}

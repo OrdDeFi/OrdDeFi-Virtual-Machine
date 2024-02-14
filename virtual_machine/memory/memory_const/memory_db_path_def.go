@@ -1,6 +1,9 @@
 package memory_const
 
-import "OrdDeFi-Virtual-Machine/db_utils"
+import (
+	"OrdDeFi-Virtual-Machine/db_utils"
+	"strings"
+)
 
 func CoinAddressPrefix(coinName string) string {
 	path := CoinAddressBalanceTable + ":v" + db_utils.CurrentDBVersion + ":" + coinName + ":"
@@ -34,6 +37,13 @@ func AddressCoinTransferablePath(coinName string, address string) string {
 
 func UTXOCarryingBalancePath(txId string) string {
 	return UTXOCarryingBalanceTable + ":" + txId + ":0" /*indicates the output index, which is always 0 */
+}
+
+func UTXOCarryingListPrefix(tick string) string {
+	if strings.ToLower(tick) == "all" {
+		return UTXOCarryingListTable
+	}
+	return UTXOCarryingListTable + ":" + tick
 }
 
 func UTXOCarryingListPath(tick string, address string, txId string) string {

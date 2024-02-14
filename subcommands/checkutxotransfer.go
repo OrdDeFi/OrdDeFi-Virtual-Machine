@@ -29,3 +29,21 @@ func CheckUTXOTransfer(utxo string, dataDir string) {
 	println("Tick:", *tick)
 	println("Amount:", amount.String())
 }
+
+func GetUTXOTransferList(tick string, dataDir string) {
+	db, err := db_utils.OpenDB(dataDir)
+	if err != nil {
+		println("open db error:", err.Error())
+		os.Exit(27)
+	}
+	defer db_utils.CloseDB(db)
+
+	r, err := memory_read.AllUTXOTransferForCoin(db, tick)
+	if err != nil {
+		println("GetCoinHoldersParam read AllAddressBalanceForCoin error:", err.Error())
+		os.Exit(28)
+	}
+	for k, v := range r {
+		println(k, ":", v)
+	}
+}
