@@ -50,6 +50,13 @@ func UTXOCarryingListPath(tick string, address string, txId string) string {
 	return UTXOCarryingListTable + ":" + tick + ":" + address + ":" + txId + ":0"
 }
 
+func UTXOTransferHistoryPrefix(tick string) string {
+	if strings.ToLower(tick) == "all" {
+		return UTXOTransferHistoryTable
+	}
+	return UTXOTransferHistoryTable + ":" + tick
+}
+
 func UTXOTransferHistoryPath(tick string, senderAddress string, txId string) string {
 	return UTXOTransferHistoryTable + ":" + tick + ":" + senderAddress + ":" + txId + ":0"
 }
