@@ -51,7 +51,7 @@ func UpdateBlockNumber(blockNumber int, blockHash *string, dataDir string, logDi
 			err = errors.New("ParseRawTransaction -> DecodeRawTransaction Failed")
 			break
 		}
-		utxoTransferApplied, err := operations.ApplyUTXOTransfer(db, tx)
+		utxoTransferApplied, err := operations.ApplyUTXOTransfer(db, tx, blockNumber)
 		if err != nil {
 			break
 		}

@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/btcsuite/btcd/wire"
+	"strconv"
 )
 
 func performTransferBatchWriteKV(
@@ -228,7 +229,7 @@ func calculatingAddress(outputMap []outputLocationMap, satIndex int64, selfTrans
 	return selfTransferAddress
 }
 
-func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
+func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx, blockNumber int) (bool, error) {
 	if tx == nil {
 		return false, errors.New("tx is nil")
 	}
@@ -308,7 +309,7 @@ func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 			utxoCarryingListPath := memory_const.UTXOCarryingListPath(*tick, *address, previousTxId)
 			batchKV[utxoCarryingListPath] = ""
 			utxoHistoryPath := memory_const.UTXOTransferHistoryPath(*tick, *address, previousTxId)
-			batchKV[utxoHistoryPath] = toAddress + ":" + amount.String()
+			batchKV[utxoHistoryPath] = toAddress + ":" + strconv.Itoa(blockNumber) + ":" + amount.String()
 			err = db.StoreKeyValues(batchKV)
 			if err != nil {
 				return false, err
