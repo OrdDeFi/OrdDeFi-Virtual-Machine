@@ -31,6 +31,8 @@ func main() {
 	flag.StringVar(&parseRawTransactionParam, "parserawtransaction", "", "OrdDeFi-Virtual-Machine -parserawtransaction [raw transaction string]")
 	var executeResultParam string
 	flag.StringVar(&executeResultParam, "executeresult", "", "OrdDeFi-Virtual-Machine -executeresult [txid]")
+	var allExecuteResultParam string
+	flag.StringVar(&allExecuteResultParam, "allexecuteresult", "", "OrdDeFi-Virtual-Machine -allexecuteresult [block_number|all]")
 	var checkUTXOTransferParam string
 	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
 	var getUTXOTransferListParam string
@@ -75,6 +77,8 @@ func main() {
 		subcommands.ParseRawTransaction(parseRawTransactionParam)
 	} else if executeResultParam != "" {
 		subcommands.CheckExecuteResult(executeResultParam, logDirParam)
+	} else if allExecuteResultParam != "" {
+		subcommands.GetAllExecuteResult(allExecuteResultParam, logDirParam)
 	} else if checkUTXOTransferParam != "" {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else if getUTXOTransferListParam != "" {
