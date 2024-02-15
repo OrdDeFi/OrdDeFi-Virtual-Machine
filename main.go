@@ -35,6 +35,8 @@ func main() {
 	flag.StringVar(&checkUTXOTransferParam, "checkutxotransfer", "", "OrdDeFi-Virtual-Machine -checkutxotransfer [txid:0]")
 	var getUTXOTransferListParam string
 	flag.StringVar(&getUTXOTransferListParam, "getutxotransferlist", "", "OrdDeFi-Virtual-Machine -getutxotransferlist [tick|all]")
+	var getUTXOTransferHistoryParam string
+	flag.StringVar(&getUTXOTransferHistoryParam, "getutxotransferhistory", "", "OrdDeFi-Virtual-Machine -getutxotransferhistory [tick|all]")
 	var getAddressBalanceParam string
 	flag.StringVar(&getAddressBalanceParam, "getaddressbalance", "", "OrdDeFi-Virtual-Machine -getaddressbalance [address]")
 	var getAddressLPBalanceParam string
@@ -77,6 +79,8 @@ func main() {
 		subcommands.CheckUTXOTransfer(checkUTXOTransferParam, dataDirParam)
 	} else if getUTXOTransferListParam != "" {
 		subcommands.GetUTXOTransferList(getUTXOTransferListParam, dataDirParam)
+	} else if getUTXOTransferHistoryParam != "" {
+		subcommands.GetUTXOTransferHistory(getUTXOTransferHistoryParam, dataDirParam)
 	} else if getAddressBalanceParam != "" {
 		subcommands.GetAddressBalance(getAddressBalanceParam, dataDirParam)
 	} else if getAddressLPBalanceParam != "" {

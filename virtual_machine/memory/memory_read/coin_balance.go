@@ -69,3 +69,9 @@ func AllUTXOTransferForCoin(db *db_utils.OrdDB, coinName string) (map[string]str
 	result, err := db.ReadAllPrefix(prefix)
 	return result, err
 }
+
+func AllUTXOTransferHistoryForCoin(db *db_utils.OrdDB, coinName string) (map[string]string, error) {
+	prefix := memory_const.UTXOTransferHistoryPrefix(coinName)
+	result, err := db.ReadAllPrefix(prefix)
+	return result, err
+}
