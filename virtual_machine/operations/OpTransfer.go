@@ -307,6 +307,8 @@ func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx) (bool, error) {
 			batchKV[utxoCarryingBalancePath] = ""
 			utxoCarryingListPath := memory_const.UTXOCarryingListPath(*tick, *address, previousTxId)
 			batchKV[utxoCarryingListPath] = ""
+			utxoHistoryPath := memory_const.UTXOTransferHistoryPath(*tick, *address, previousTxId)
+			batchKV[utxoHistoryPath] = toAddress + ":" + amount.String()
 			err = db.StoreKeyValues(batchKV)
 			if err != nil {
 				return false, err
