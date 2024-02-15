@@ -47,6 +47,12 @@ Double write for UTXOCarryingBalanceTable, to query by tick and address.
 */
 const UTXOCarryingListTable = "utxocarryinglist"
 
+/*
+UTXOTransferHistoryTable stores UTXO transfer history.
+Format UTXOTransferHistoryTable:tick:sender_address:carrying_assets_UTXO
+*/
+const UTXOTransferHistoryTable = "utxotransferhistory"
+
 // LpListTable stores all lp names
 const LpListTable = "lplist"
 
