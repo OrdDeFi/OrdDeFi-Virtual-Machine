@@ -50,6 +50,10 @@ func UTXOCarryingListPath(tick string, address string, txId string) string {
 	return UTXOCarryingListTable + ":" + tick + ":" + address + ":" + txId + ":0"
 }
 
+func UTXOTransferHistoryPath(tick string, senderAddress string, txId string) string {
+	return UTXOTransferHistoryTable + ":" + tick + ":" + senderAddress + ":" + txId + ":0"
+}
+
 func LPAddressPrefix(lCoin string, rCoin string) string {
 	lpName := LPNameByTicks(lCoin, rCoin)
 	if lpName == nil {
