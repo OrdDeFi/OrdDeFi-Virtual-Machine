@@ -43,7 +43,7 @@ func testApplyUTXOTransfer(t *testing.T, db *db_utils.OrdDB, txId string) {
 		t.Errorf("TestingCompile DecodeRawTransaction error")
 		return
 	}
-	operations.ApplyUTXOTransfer(db, tx)
+	operations.ApplyUTXOTransfer(db, tx, 830000)
 }
 
 func testReadBalanceAfterUTXOTransfer(t *testing.T, db *db_utils.OrdDB, tick string) {
