@@ -100,6 +100,9 @@ func executeImmediateTransfer(instruction instruction_set.OpTransferInstruction,
 	if amountSafeNum == nil {
 		return nil
 	}
+	if instruction.TxOutAddr == instruction.To {
+		return nil
+	}
 	// remove from current address available, add to "to" address available
 	batchKV, err := performTransferBatchWriteKV(
 		db, instruction.Tick,
