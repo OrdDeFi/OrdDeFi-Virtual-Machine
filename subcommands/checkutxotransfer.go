@@ -33,6 +33,9 @@ func CheckUTXOTransfer(utxo string, dataDir string) {
 	println("Amount:", amount.String())
 }
 
+func GetAddressUTXOTransferList(address string, dataDir string) {
+}
+
 type utxoListSortingPair struct {
 	Key   string
 	Value float64
