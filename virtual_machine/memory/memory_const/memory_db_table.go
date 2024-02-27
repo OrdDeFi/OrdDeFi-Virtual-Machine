@@ -48,6 +48,13 @@ Double write for UTXOCarryingBalanceTable, to query by tick and address.
 const UTXOCarryingListTable = "utxocarryinglist"
 
 /*
+AddressUTXOCarryingListTable stores token balance in UTXO.
+The balance cast from available status to transferable by OpTransfer.
+Double write for UTXOCarryingBalanceTable, to query by address.
+*/
+const AddressUTXOCarryingListTable = "addressutxocarryinglist"
+
+/*
 UTXOTransferHistoryTable stores UTXO transfer history.
 Format UTXOTransferHistoryTable:tick:sender_address:carrying_assets_UTXO
 */
