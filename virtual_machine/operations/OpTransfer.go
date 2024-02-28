@@ -137,6 +137,8 @@ func executeUTXOTransfer(instruction instruction_set.OpTransferInstruction, db *
 	batchKV[utxoCarryingBalancePath] = instruction.TxOutAddr + ":" + instruction.Tick + ":" + amountSafeNum.String()
 	utxoCarryingListPath := memory_const.UTXOCarryingListPath(instruction.Tick, instruction.TxOutAddr, instruction.TxId)
 	batchKV[utxoCarryingListPath] = amountSafeNum.String()
+	addressUTXOCarryingListPath := memory_const.AddressUTXOCarryingListPath(instruction.Tick, instruction.TxOutAddr, instruction.TxId)
+	batchKV[addressUTXOCarryingListPath] = amountSafeNum.String()
 	err = db.StoreKeyValues(batchKV)
 	return err
 }
@@ -311,6 +313,8 @@ func ApplyUTXOTransfer(db *db_utils.OrdDB, tx *wire.MsgTx, blockNumber int) (boo
 			batchKV[utxoCarryingBalancePath] = ""
 			utxoCarryingListPath := memory_const.UTXOCarryingListPath(*tick, *address, previousTxId)
 			batchKV[utxoCarryingListPath] = ""
+			addressUTXOCarryingListPath := memory_const.AddressUTXOCarryingListPath(*tick, *address, previousTxId)
+			batchKV[addressUTXOCarryingListPath] = ""
 			utxoHistoryPath := memory_const.UTXOTransferHistoryPath(*tick, *address, previousTxId)
 			batchKV[utxoHistoryPath] = toAddress + ":" + strconv.Itoa(blockNumber) + ":" + amount.String()
 			err = db.StoreKeyValues(batchKV)
