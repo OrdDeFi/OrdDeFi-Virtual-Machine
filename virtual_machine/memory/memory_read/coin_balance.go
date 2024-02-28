@@ -70,6 +70,12 @@ func AllUTXOTransferForCoin(db *db_utils.OrdDB, coinName string) (map[string]str
 	return result, err
 }
 
+func AllUTXOTransferForAddress(db *db_utils.OrdDB, address string) (map[string]string, error) {
+	prefix := memory_const.AddressUTXOCarryingListPrefix(address)
+	result, err := db.ReadAllPrefix(prefix)
+	return result, err
+}
+
 func AllUTXOTransferHistoryForCoin(db *db_utils.OrdDB, coinName string) (map[string]string, error) {
 	prefix := memory_const.UTXOTransferHistoryPrefix(coinName)
 	result, err := db.ReadAllPrefix(prefix)
