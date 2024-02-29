@@ -38,9 +38,6 @@ func restoreDB(controlDB *db_utils.OrdDB, dataDir string, logDir string, lastUpd
 }
 
 func UpdateIndex(dataDir string, logDir string, verbose bool) error {
-	println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
-	println("OrdDeFi indexer begin to update.")
-
 	// 0.0 Check bitcoin-cli requirements
 	reachedMinRequirement, err := bitcoin_cli_channel.VersionGreaterThanMinRequirement()
 	if err != nil {
@@ -66,6 +63,10 @@ func UpdateIndex(dataDir string, logDir string, verbose bool) error {
 	lastUpdatedBlock, err := db_utils.GetLastUpdatedBlock(controlDB)
 	if err != nil {
 		return err
+	}
+
+	if *lastUpdatedBlock == currentBlockNumber {
+		return nil
 	}
 
 	// 2.1 Check control DB lock state. Locking status indicates the VM was exited by accident. Restore before running new instructions.

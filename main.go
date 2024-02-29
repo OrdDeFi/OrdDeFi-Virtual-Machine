@@ -6,7 +6,16 @@ import (
 	"OrdDeFi-Virtual-Machine/updater"
 	"flag"
 	"os"
+	"time"
 )
+
+func updateIndexTask(dataDirParam string, logDirParam string, verboseParam bool) {
+	err := updater.UpdateIndex(dataDirParam, logDirParam, verboseParam)
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
+	}
+}
 
 func main() {
 	// DB path
@@ -22,6 +31,9 @@ func main() {
 	// verbose
 	var verboseParam bool
 	flag.BoolVar(&verboseParam, "verbose", false, "OrdDeFi-Virtual-Machine -verbose")
+	// daemon
+	var daemonParam bool
+	flag.BoolVar(&daemonParam, "daemon", false, "OrdDeFi-Virtual-Machine -daemon")
 
 	// subcommands
 	var parseTransactionParam string
@@ -105,10 +117,15 @@ func main() {
 	} else if getAllLPsParam != "" {
 		subcommands.GetAllLPs(dataDirParam)
 	} else {
-		err := updater.UpdateIndex(dataDirParam, logDirParam, verboseParam)
-		if err != nil {
-			println(err.Error())
-			os.Exit(1)
+		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
+		println("OrdDeFi indexer begin to update.")
+		if daemonParam {
+			for {
+				updateIndexTask(dataDirParam, logDirParam, verboseParam)
+				time.Sleep(5 * time.Second)
+			}
+		} else {
+			updateIndexTask(dataDirParam, logDirParam, verboseParam)
 		}
 	}
 }
