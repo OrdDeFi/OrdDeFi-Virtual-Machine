@@ -35,6 +35,8 @@ func main() {
 	// daemon
 	var daemonParam bool
 	flag.BoolVar(&daemonParam, "daemon", false, "OrdDeFi-Virtual-Machine -daemon")
+	var portParam int
+	flag.IntVar(&portParam, "port", 9332, "OrdDeFi-Virtual-Machine -daemon -port [port_number], default port is 9332")
 
 	// subcommands
 	var parseTransactionParam string
@@ -121,7 +123,7 @@ func main() {
 		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 		println("OrdDeFi indexer begin to update.")
 		if daemonParam {
-			err := rpc_server.Serve(1234)
+			err := rpc_server.Serve(portParam)
 			if err != nil {
 				println(err)
 				os.Exit(1)
