@@ -6,7 +6,6 @@ import (
 	"OrdDeFi-Virtual-Machine/updater"
 	"flag"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -21,8 +20,8 @@ func main() {
 	flag.StringVar(&bitcoinCliParamPath, "bitcoin-cli-param-file", "", "OrdDeFi-Virtual-Machine -bitcoin-cli-param-file /path/of/bitcoin-cli-param-file")
 
 	// verbose
-	var verboseParam string
-	flag.StringVar(&verboseParam, "verbose", "", "OrdDeFi-Virtual-Machine -verbose true")
+	var verboseParam bool
+	flag.BoolVar(&verboseParam, "verbose", false, "OrdDeFi-Virtual-Machine -verbose")
 
 	// subcommands
 	var parseTransactionParam string
@@ -106,8 +105,7 @@ func main() {
 	} else if getAllLPsParam != "" {
 		subcommands.GetAllLPs(dataDirParam)
 	} else {
-		verboseBool := strings.ToLower(verboseParam) == "true"
-		err := updater.UpdateIndex(dataDirParam, logDirParam, verboseBool)
+		err := updater.UpdateIndex(dataDirParam, logDirParam, verboseParam)
 		if err != nil {
 			println(err.Error())
 			os.Exit(1)
