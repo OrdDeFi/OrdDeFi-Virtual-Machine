@@ -2,6 +2,7 @@ package main
 
 import (
 	"OrdDeFi-Virtual-Machine/bitcoin_cli_channel"
+	"OrdDeFi-Virtual-Machine/rpc_server"
 	"OrdDeFi-Virtual-Machine/subcommands"
 	"OrdDeFi-Virtual-Machine/updater"
 	"flag"
@@ -120,6 +121,11 @@ func main() {
 		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 		println("OrdDeFi indexer begin to update.")
 		if daemonParam {
+			err := rpc_server.Serve(1234)
+			if err != nil {
+				println(err)
+				os.Exit(1)
+			}
 			for {
 				updateIndexTask(dataDirParam, logDirParam, verboseParam)
 				time.Sleep(5 * time.Second)
