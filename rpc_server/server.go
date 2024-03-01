@@ -6,7 +6,11 @@ import (
 	"strconv"
 )
 
-func Serve(port int) error {
+var glDataDir string
+
+func Serve(port int, dataDir string) error {
+	glDataDir = dataDir
+
 	http.HandleFunc("/getaddressbalance", getAddressBalance)
 	http.HandleFunc("/checkutxotransfer", checkUTXOTransfer)
 	http.HandleFunc("/getaddressutxotransferlist", getAddressUTXOTransferList)

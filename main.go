@@ -133,7 +133,7 @@ func main() {
 		println("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
 		println("OrdDeFi indexer begin to update.")
 		if daemonParam {
-			err := rpc_server.Serve(portParam)
+			err := rpc_server.Serve(portParam, dataDirParam)
 			if err != nil {
 				println(err)
 				os.Exit(1)
