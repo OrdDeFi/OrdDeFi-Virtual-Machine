@@ -6,6 +6,7 @@ import (
 	"OrdDeFi-Virtual-Machine/subcommands"
 	"OrdDeFi-Virtual-Machine/updater"
 	"flag"
+	"fmt"
 	"os"
 	"time"
 )
@@ -19,6 +20,10 @@ func updateIndexTask(dataDirParam string, logDirParam string, verboseParam bool)
 }
 
 func main() {
+	// Version
+	var versionParam bool
+	flag.BoolVar(&versionParam, "version", false, "OrdDeFi-Virtual-Machine -version")
+
 	// DB path
 	var dataDirParam string
 	flag.StringVar(&dataDirParam, "data-dir", "", "OrdDeFi-Virtual-Machine -data-dir /path/of/storage")
@@ -72,6 +77,11 @@ func main() {
 	var getAllLPsParam string
 	flag.StringVar(&getAllLPsParam, "getalllps", "", "OrdDeFi-Virtual-Machine -getalllps true")
 	flag.Parse()
+
+	if versionParam {
+		fmt.Println("v1.6.0")
+		return
+	}
 
 	if dataDirParam == "" {
 		dataDirParam = "./OrdDeFi_storage"
