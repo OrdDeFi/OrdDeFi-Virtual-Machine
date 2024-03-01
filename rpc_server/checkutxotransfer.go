@@ -31,7 +31,7 @@ func checkUTXOTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 	var jsonRes map[string]interface{}
 	jsonRes = make(map[string]interface{})
-	jsonRes["utxo"] = utxoStr
+	jsonRes["utxo"] = subcommands.FormalizeUTXOString(utxoStr)
 	jsonRes["address"] = *addressPtr
 	jsonRes["tick"] = *tickPtr
 	jsonRes["amount"] = amount.String()
