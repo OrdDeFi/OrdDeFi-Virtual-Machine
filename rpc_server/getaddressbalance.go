@@ -32,6 +32,7 @@ func getAddressBalance(w http.ResponseWriter, req *http.Request) {
 	r, err := subcommands.GetAddressBalanceData(addressStr, glDataDir)
 	if err != nil {
 		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
 	}
 
 	var jsonRes map[string]interface{}
@@ -60,4 +61,5 @@ func getAddressBalance(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	_ = json.NewEncoder(w).Encode(jsonRes)
+	return
 }
