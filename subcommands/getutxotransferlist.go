@@ -14,20 +14,27 @@ type utxoListSortingPair struct {
 	Value float64
 }
 
-func GetUTXOTransferList(tick string, dataDir string) {
+func GetUTXOTransferListData(tick string, dataDir string) (map[string]string, error) {
 	db, err := db_utils.OpenDB(dataDir)
 	if err != nil {
 		println("open db error:", err.Error())
-		os.Exit(27)
+		return nil, err
 	}
 	defer db_utils.CloseDB(db)
 
 	r, err := memory_read.AllUTXOTransferForCoin(db, tick)
 	if err != nil {
 		println("GetUTXOTransferList read AllAddressBalanceForCoin error:", err.Error())
-		os.Exit(28)
+		return nil, err
 	}
+	return r, nil
+}
 
+func GetUTXOTransferList(tick string, dataDir string) {
+	r, err := GetUTXOTransferListData(tick, dataDir)
+	if err != nil {
+		os.Exit(27)
+	}
 	var pairs []utxoListSortingPair
 	for k, v := range r {
 		floatValue, err := strconv.ParseFloat(v, 64)
