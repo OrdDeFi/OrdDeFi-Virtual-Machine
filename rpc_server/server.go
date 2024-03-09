@@ -1,6 +1,8 @@
 package rpc_server
 
 import (
+	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -18,11 +20,14 @@ func Serve(port int, dataDir string) error {
 
 	l, e := net.Listen("tcp", ":"+strconv.Itoa(port))
 	if e != nil {
-		panic("listen error:" + e.Error())
+		return fmt.Errorf("listen error: %s", e)
 	}
-	err := http.Serve(l, nil)
-	if err != nil {
-		return err
-	}
+
+	go func() {
+		err := http.Serve(l, nil)
+		if err != nil {
+			log.Printf("serve error: %s", err)
+		}
+	}()
 	return nil
 }
