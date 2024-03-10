@@ -58,6 +58,11 @@ func UpdateBlockNumber(blockNumber int, blockHash *string, dataDir string, logDi
 	if dataDir == logDir {
 		return errors.New("-data-dir and -log-dir should be different")
 	}
+
+	// Prepare raw transactions before lock DB.
+	// Reducing DB locking time by pre-calling bitcoin-cli
+	rawTransactions := prepareRawTransaction(block.Tx)
+
 	db, err := db_utils.OpenDB(dataDir)
 	if err != nil {
 		return err
@@ -69,7 +74,6 @@ func UpdateBlockNumber(blockNumber int, blockHash *string, dataDir string, logDi
 	}
 	defer db_utils.CloseDB(logDB)
 
-	rawTransactions := prepareRawTransaction(block.Tx)
 	// enum txId, execute operations if exist
 	for txIndex, txId := range block.Tx {
 		//rawTx := bitcoin_cli_channel.GetRawTransaction(txId)
