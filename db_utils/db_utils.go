@@ -4,6 +4,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/util"
 	"log"
+	"sync"
 )
 
 const CurrentDBVersion = "1"
@@ -14,16 +15,32 @@ const (
 )
 
 type OrdDB struct {
-	db *leveldb.DB
+	db   *leveldb.DB
+	path string
 }
 
+var dbLocks = make(map[string]*sync.Mutex)
+var dbLocksMutex sync.Mutex
+
 func OpenDB(path string) (*OrdDB, error) {
+	dbLocksMutex.Lock()
+	lock, ok := dbLocks[path]
+	if !ok {
+		lock = &sync.Mutex{}
+		dbLocks[path] = lock
+	}
+	dbLocksMutex.Unlock()
+
+	lock.Lock()
+
 	levelDB, err := leveldb.OpenFile(path, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	ordDB := OrdDB{
-		db: levelDB,
+		db:   levelDB,
+		path: path,
 	}
 
 	return &ordDB, nil
@@ -34,6 +51,14 @@ func CloseDB(db *OrdDB) {
 	if err != nil {
 		log.Println("Failed to close DB:", err)
 	}
+	dbLocksMutex.Lock()
+	lock, ok := dbLocks[db.path]
+	if !ok {
+		lock = &sync.Mutex{}
+		dbLocks[db.path] = lock
+	}
+	dbLocksMutex.Unlock()
+	lock.Unlock()
 }
 
 /*
